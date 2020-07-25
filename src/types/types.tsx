@@ -4,12 +4,12 @@ export interface Task {
 }
 
 export interface DayTasks {
-    day: string;
+    date: string;
     tasks: Task[]
 }
 
 export enum DayType {
     TODAY = 'today',
     TOMORROW = 'tomorrow',
-    OTHER = 'other'
+    LATER = 'later'
 }

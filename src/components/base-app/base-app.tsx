@@ -49,7 +49,7 @@ export default function BaseApp() {
     let lists: JSX.Element[] = []
     {
         baseState.tasks.forEach((v, k) => {
-            lists.push(<ListContainer day={k} tasks={v}/>)
+            lists.push(<ListContainer date={k} tasks={v}/>)
         })
     }
 

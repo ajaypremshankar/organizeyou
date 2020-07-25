@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import {DayTasks} from "../../types/types";
 import Typography from '@material-ui/core/Typography';
+import {getDayTypeFromDate} from "../../utils/utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,7 +50,7 @@ export default function ListContainer(props: DayTasks) {
     return (
         <div>
             <Typography variant="subtitle1" gutterBottom className={classes.title}>
-                {props.day.toUpperCase()}:
+                {getDayTypeFromDate(props.date).toUpperCase()}:
             </Typography>
             <List className={classes.list}>
                 {props.tasks.map((value, index) => {

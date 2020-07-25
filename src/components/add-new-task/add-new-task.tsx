@@ -40,8 +40,6 @@ interface AddNewTaskProps {
 export default function AddNewTask(props: AddNewTaskProps) {
     const classes = useStyles();
 
-    console.log(props)
-
     const [addTaskState, setAddTaskState] = useState(
         {
             content: '',
@@ -76,7 +74,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
                             })}
                     />
 
-                    {getDayTypeFromDate(props.date) === DayType.OTHER &&
+                    {getDayTypeFromDate(props.date) === DayType.LATER &&
 
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
