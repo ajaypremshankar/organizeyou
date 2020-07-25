@@ -4,7 +4,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {makeStyles, createStyles, Theme} from '@material-ui/core/styles';
 import {format} from "date-fns";
 import Fade from '@material-ui/core/Fade';
-import {getToday, getTomorrow} from "../../utils/utils";
+import {getToday, getTomorrow} from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
             flexDirection: 'column',
             width: '100%',
             margin: 'auto',
-            maxWidth: 480,
+            maxWidth: 600,
             alignItems: 'center',
             '& > *': {
                 margin: theme.spacing(4),
@@ -28,7 +28,11 @@ export default function TopButtonGroup(props: any) {
     return (
         <Fade in={true}>
             <div className={classes.root}>
-                <ButtonGroup size="large" color="primary" aria-label="large outlined primary button group">
+                <ButtonGroup
+                    size="large"
+                    color="primary"
+                    aria-label="large outlined primary button group"
+                    fullWidth={true}>
                     <Button
                         onClick={() => props.showAddTask(getToday())}>Today</Button>
                     <Button

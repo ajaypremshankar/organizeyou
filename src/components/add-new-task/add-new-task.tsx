@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
-import {getDayTypeFromDate} from "../../utils/utils";
+import {getDayTypeFromDate} from "../../utils/date-utils";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import {format, parse} from "date-fns";
@@ -15,13 +14,16 @@ const useStyles = makeStyles((theme: Theme) =>
         container: {
             flexDirection: 'column',
             alignItems: 'center',
+            maxWidth: 600,
             '& > *': {
                 margin: theme.spacing(1),
             },
         },
         textField: {
-            marginLeft: theme.spacing(1),
-            marginRight: theme.spacing(1),
+            maxWidth: 600,
+            '& > *': {
+                margin: theme.spacing(1),
+            },
         },
         addButton: {
             '& > *': {
@@ -57,6 +59,18 @@ export default function AddNewTask(props: AddNewTaskProps) {
         }
     };
 
+    const handleValueChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
+
+        if (event.key === 'Enter') {
+
+            props.addTask({
+                id: new Date().getMilliseconds(),
+                plannedDate: props.date,
+                value: addTaskState.content
+            })
+        }
+    }
+
     return (
         <Fade in={props.showAdd}>
             <Grid container justify="space-around">
@@ -64,14 +78,18 @@ export default function AddNewTask(props: AddNewTaskProps) {
                 <form className={classes.container} noValidate>
 
                     <TextField
+                        className={classes.textField}
                         id="outlined-basic"
-                        label={`Add: ${getDayTypeFromDate(props.date)}`}
+                        label={`Add for ${getDayTypeFromDate(props.date)}`}
                         variant="outlined"
+                        size={'medium'}
+                        fullWidth={true}
                         onChange={(event) => setAddTaskState(
                             {
                                 ...addTaskState,
                                 content: event.target.value
                             })}
+                        onKeyDown={handleValueChange}
                     />
 
                     {getDayTypeFromDate(props.date) === DayType.LATER &&
@@ -94,17 +112,6 @@ export default function AddNewTask(props: AddNewTaskProps) {
                         />
                     </MuiPickersUtilsProvider>
                     }
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        className={classes.addButton}
-                        onClick={() => props.addTask({
-                            id: new Date().getMilliseconds(),
-                            plannedDate: props.date,
-                            value: addTaskState.content
-                        })}>
-                        Add
-                    </Button>
                 </form>
             </Grid>
         </Fade>

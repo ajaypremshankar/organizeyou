@@ -27,5 +27,5 @@ export const getDayTypeFromDate = (date: string) => {
 
     if (getTomorrow() === date) return DayType.TOMORROW;
 
-    else return DayType.LATER
+    else return date
 }

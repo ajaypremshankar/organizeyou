@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import ListContainer from "../list-container/list-container";
 import TopButtonGroup from "../top-button-group/top-button-group";
 import AddNewTask from "../add-new-task/add-new-task";
-import {RootState, Task} from "../../types/types";
+import {RootDataStore, Task} from "../../types/types";
 
 
 export default function BaseApp() {
 
-    const initState: RootState = {
+    const initState: RootDataStore = {
         showAdd: false,
         currentlySelectedDate: '',
         tasks: new Map<string, Set<Task>>()
@@ -16,6 +16,26 @@ export default function BaseApp() {
     const [baseState, setBaseState] = useState(
         initState
     );
+
+    const markTaskComplete = (task: Task) => {
+        const allActiveTasks = new Map<string, Set<Task>>(baseState.tasks);
+        const targetTaskList = new Set<Task>(allActiveTasks.get(task.plannedDate) || new Set<Task>())
+
+        targetTaskList.delete(task)
+        allActiveTasks.set(task.plannedDate, targetTaskList)
+
+        const completedTasks = baseState.archivedTasks ? [...baseState.archivedTasks] : []
+        completedTasks.push({
+            ...task,
+            completedDate: new Date()
+        })
+
+        setBaseState({
+            ...baseState,
+            tasks: allActiveTasks,
+            archivedTasks: completedTasks
+        })
+    }
 
     const showAddNewTask = (day: string) => {
 
@@ -44,8 +64,10 @@ export default function BaseApp() {
     let lists: JSX.Element[] = []
     {
         baseState.tasks.forEach((v, k) => {
-            lists.push(<ListContainer date={k} tasks={v}/>)
+            lists.push(<ListContainer title={k} tasks={Array.from(v)} complete={markTaskComplete} />)
         })
+
+        {baseState.archivedTasks && lists.push(<ListContainer title={'Completed'} tasks={baseState.archivedTasks} complete={markTaskComplete} />)}
     }
 
     return (
