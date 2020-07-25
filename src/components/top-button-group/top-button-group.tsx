@@ -4,7 +4,8 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {makeStyles, createStyles, Theme} from '@material-ui/core/styles';
 import {format} from "date-fns";
 import Fade from '@material-ui/core/Fade';
-import {getToday, getTomorrow} from "../../utils/date-utils";
+import {getDayAfterTomorrow, getToday, getTomorrow} from "../../utils/date-utils";
+import {DayType} from "../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,12 +34,13 @@ export default function TopButtonGroup(props: any) {
                     color="primary"
                     aria-label="large outlined primary button group"
                     fullWidth={true}>
+
                     <Button
                         onClick={() => props.showAddTask(getToday())}>Today</Button>
                     <Button
                         onClick={() => props.showAddTask(getTomorrow())}>Tomorrow</Button>
                     <Button
-                        onClick={() => props.showAddTask(format(new Date(), "yyyy-MM-dd'T'hh:mm"))}>Someday</Button>
+                        onClick={() => props.showAddTask(getDayAfterTomorrow())}>Date</Button>
                 </ButtonGroup>
             </div>
         </Fade>

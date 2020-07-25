@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import ListContainer from "../list-container/list-container";
+import DayBasedTaskList from "../task-lists-container/day-based-task-list";
 import TopButtonGroup from "../top-button-group/top-button-group";
 import AddNewTask from "../add-new-task/add-new-task";
 import {RootDataStore, Task} from "../../types/types";
+import TaskListsContainer from "../task-lists-container/task-lists-container";
 
 
 export default function BaseApp() {
@@ -61,15 +62,6 @@ export default function BaseApp() {
         console.log(baseState)
     }
 
-    let lists: JSX.Element[] = []
-    {
-        baseState.tasks.forEach((v, k) => {
-            lists.push(<ListContainer title={k} tasks={Array.from(v)} complete={markTaskComplete} />)
-        })
-
-        {baseState.archivedTasks && lists.push(<ListContainer title={'Completed'} tasks={baseState.archivedTasks} complete={markTaskComplete} />)}
-    }
-
     return (
         <div>
             {!baseState.showAdd &&
@@ -82,7 +74,11 @@ export default function BaseApp() {
                 showAdd={baseState.showAdd}
                 addTask={addTask}/>
             }
-            {lists}
+
+            <TaskListsContainer
+                tasks={baseState.tasks}
+                archivedTasks={baseState.archivedTasks || []}
+                complete={markTaskComplete}/>
         </div>
     );
 }

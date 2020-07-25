@@ -6,7 +6,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
-import {getDayTypeFromDate} from "../../utils/date-utils";
 import {Task} from "../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,7 +31,8 @@ interface DateTasks {
     complete: (task: Task) => void
 }
 
-export default function ListContainer(props: DateTasks) {
+export default function DayBasedTaskList(props: DateTasks) {
+
 
     const classes = useStyles();
 
@@ -41,14 +41,17 @@ export default function ListContainer(props: DateTasks) {
     return (
         <div>
             <Typography variant="subtitle1" gutterBottom className={classes.title}>
-                {getDayTypeFromDate(props.title).toUpperCase()}:
+                {props.title.toUpperCase()}:
             </Typography>
             <List className={classes.list}>
                 {tasks.map((value, index) => {
                     const labelId = `checkbox-list-label-${index}`;
 
                     return (
-                        <ListItem key={labelId} role={undefined} dense button onClick={() => props.complete(value)}>
+                        <ListItem
+                            divider={true}
+                            key={labelId}
+                            role={undefined} dense button onClick={() => props.complete(value)}>
                             <ListItemIcon>
                                 <Checkbox
                                     edge="start"

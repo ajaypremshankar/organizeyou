@@ -1,35 +1,46 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Fade from '@material-ui/core/Fade';
-import {getDayTypeFromDate} from "../../utils/date-utils";
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
+import {
+    eitherTodayOrTomorrow,
+    formatToDDMMyyyy,
+    parseFromDDMMyyyy
+} from "../../utils/date-utils";
+import {DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import {format, parse} from "date-fns";
 import Grid from '@material-ui/core/Grid';
-import {DayType, Task} from "../../types/types";
+import {Task} from "../../types/types";
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         container: {
-            flexDirection: 'column',
+            flexGrow: 1,
+            flexDirection: 'row',
             alignItems: 'center',
+            margin: 'auto',
+            align: 'center',
             maxWidth: 600,
             '& > *': {
                 margin: theme.spacing(1),
             },
         },
         textField: {
+            minWidth: 300,
             maxWidth: 600,
             '& > *': {
                 margin: theme.spacing(1),
             },
         },
-        addButton: {
+
+        datePicker: {
+            minWidth: 100,
+            maxWidth: 200,
             '& > *': {
                 margin: theme.spacing(1),
-            }
-        }
+            },
+        },
     }),
 );
 
@@ -41,11 +52,12 @@ interface AddNewTaskProps {
 
 export default function AddNewTask(props: AddNewTaskProps) {
     const classes = useStyles();
+    const textInput = useRef<HTMLElement>(null);
 
     const [addTaskState, setAddTaskState] = useState(
         {
             content: '',
-            date: props.date
+            date: parseFromDDMMyyyy(props.date),
         }
     );
 
@@ -54,8 +66,12 @@ export default function AddNewTask(props: AddNewTaskProps) {
             setAddTaskState(
                 {
                     ...addTaskState,
-                    date: format(date, 'dd/MM/yyyy')
+                    date: date,
                 })
+
+            if (textInput && textInput.current) {
+                textInput.current.focus()
+            }
         }
     };
 
@@ -65,7 +81,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
 
             props.addTask({
                 id: new Date().getMilliseconds(),
-                plannedDate: props.date,
+                plannedDate: formatToDDMMyyyy(addTaskState.date),
                 value: addTaskState.content
             })
         }
@@ -73,46 +89,43 @@ export default function AddNewTask(props: AddNewTaskProps) {
 
     return (
         <Fade in={props.showAdd}>
-            <Grid container justify="space-around">
+            <Grid className={classes.container} container justify="space-around">
 
-                <form className={classes.container} noValidate>
+                <MuiPickersUtilsProvider
+                    utils={DateFnsUtils}>
 
-                    <TextField
-                        className={classes.textField}
-                        id="outlined-basic"
-                        label={`Add for ${getDayTypeFromDate(props.date)}`}
-                        variant="outlined"
-                        size={'medium'}
-                        fullWidth={true}
-                        onChange={(event) => setAddTaskState(
-                            {
-                                ...addTaskState,
-                                content: event.target.value
-                            })}
-                        onKeyDown={handleValueChange}
+                    <DatePicker
+                        disableToolbar
+                        disablePast
+                        variant="dialog"
+                        label="I'll perform task on"
+                        value={addTaskState.date}
+                        onChange={handleDateChange}
+                        autoOk={true}
+                        onAccept={() => {
+                            console.log(textInput)
+                            if (textInput && textInput.current) {
+                                textInput.current.focus()
+                            }
+                        }}
                     />
+                </MuiPickersUtilsProvider>
 
-                    {getDayTypeFromDate(props.date) === DayType.LATER &&
-
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="dd/MM/yyyy"
-                            margin="normal"
-                            id="date-picker-inline"
-                            label="Date"
-                            autoOk={true}
-                            value={parse(addTaskState.date, 'dd/MM/yyyy', new Date())}
-                            onChange={handleDateChange}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
-                    </MuiPickersUtilsProvider>
-                    }
-                </form>
+                <TextField
+                    className={classes.textField}
+                    id="outlined-basic"
+                    label={'Start typing task'}
+                    variant="outlined"
+                    size={'medium'}
+                    inputRef={textInput}
+                    autoFocus={eitherTodayOrTomorrow(addTaskState.date)}
+                    onChange={(event) => setAddTaskState(
+                        {
+                            ...addTaskState,
+                            content: event.target.value
+                        })}
+                    onKeyDown={handleValueChange}
+                />
             </Grid>
         </Fade>
     );

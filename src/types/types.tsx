@@ -20,3 +20,9 @@ export interface RootDataStore {
     tasks: Map<string, Set<Task>>,
     archivedTasks?: CompletedTask[]
 }
+
+export interface DisplayableDay {
+    day: string,
+    ddmm: string
+    date: string,
+}
