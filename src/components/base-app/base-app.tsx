@@ -2,20 +2,15 @@ import React, {useState} from 'react';
 import ListContainer from "../list-container/list-container";
 import TopButtonGroup from "../top-button-group/top-button-group";
 import AddNewTask from "../add-new-task/add-new-task";
-import {Task} from "../../types/types";
+import {RootState, Task} from "../../types/types";
 
-interface BaseAppState {
-    showAdd: boolean,
-    currentlySelectedDate: string,
-    tasks: Map<string, Task[]>
-}
 
 export default function BaseApp() {
 
-    const initState: BaseAppState = {
+    const initState: RootState = {
         showAdd: false,
         currentlySelectedDate: '',
-        tasks: new Map<string, Task[]>()
+        tasks: new Map<string, Set<Task>>()
     }
 
     const [baseState, setBaseState] = useState(
@@ -33,9 +28,9 @@ export default function BaseApp() {
 
     const addTask = (task: Task) => {
         const tasks = baseState.tasks;
-        const dayList = baseState.tasks.get(baseState.currentlySelectedDate) || [];
+        const dayList = baseState.tasks.get(baseState.currentlySelectedDate) || new Set<Task>();
 
-        dayList.push(task)
+        dayList.add(task)
         tasks.set(baseState.currentlySelectedDate, dayList);
         setBaseState({
             ...baseState,

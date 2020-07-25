@@ -5,7 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import {DayTasks} from "../../types/types";
+import {DateTasks, Task} from "../../types/types";
 import Typography from '@material-ui/core/Typography';
 import {getDayTypeFromDate} from "../../utils/utils";
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-export default function ListContainer(props: DayTasks) {
+export default function ListContainer(props: DateTasks) {
 
     console.log(props)
 
@@ -47,13 +47,15 @@ export default function ListContainer(props: DayTasks) {
         setChecked(newChecked);
     };
 
+    const tasks = Array.from(props.tasks)
+
     return (
         <div>
             <Typography variant="subtitle1" gutterBottom className={classes.title}>
                 {getDayTypeFromDate(props.date).toUpperCase()}:
             </Typography>
             <List className={classes.list}>
-                {props.tasks.map((value, index) => {
+                {tasks.map((value, index) => {
                     const labelId = `checkbox-list-label-${index}`;
 
                     return (
@@ -66,8 +68,8 @@ export default function ListContainer(props: DayTasks) {
                                     inputProps={{'aria-labelledby': labelId}}
                                 />
                             </ListItemIcon>
-                            {console.log(value.content)}
-                            <ListItemText id={labelId} primary={value.content}/>
+                            {console.log(value.value)}
+                            <ListItemText id={labelId} primary={value.value}/>
                         </ListItem>
                     );
                 })}

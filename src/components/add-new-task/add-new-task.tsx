@@ -8,7 +8,7 @@ import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns';
 import {format, parse} from "date-fns";
 import Grid from '@material-ui/core/Grid';
-import {DayType} from "../../types/types";
+import {DayType, Task} from "../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface AddNewTaskProps {
     showAdd: boolean,
     date: string,
-    addTask: any
+    addTask: (task: Task) => void
 }
 
 export default function AddNewTask(props: AddNewTaskProps) {
@@ -99,8 +99,9 @@ export default function AddNewTask(props: AddNewTaskProps) {
                         color="primary"
                         className={classes.addButton}
                         onClick={() => props.addTask({
-                            date: props.date,
-                            content: addTaskState.content
+                            id: new Date().getMilliseconds(),
+                            plannedDate: props.date,
+                            value: addTaskState.content
                         })}>
                         Add
                     </Button>
