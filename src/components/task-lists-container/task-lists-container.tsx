@@ -8,6 +8,7 @@ import CompletedTaskList from "./completed-task-list";
 interface TaskListsContainerProps {
     tasks: Map<string, Task[]>,
     archivedTasks: CompletedTask[],
+    update: (task: Task) => void
     complete: (task: Task) => void
 }
 
@@ -15,7 +16,7 @@ const getTodayList = (props: TaskListsContainerProps) => {
     const key = getToday();
     const todays = props.tasks.get(key) || []
     if(todays.length === 0) return;
-    return <DayBasedTaskList title={'Today'} tasks={Array.from(todays)} complete={props.complete} />
+    return <DayBasedTaskList title={'Today'} update={props.update} tasks={Array.from(todays)} complete={props.complete} />
 
 }
 
@@ -24,7 +25,7 @@ const getTomorrowList = (props: TaskListsContainerProps) => {
     const tomm = props.tasks.get(key) || []
 
     if(tomm.length === 0) return;
-    return <DayBasedTaskList title={'Tomorrow'} tasks={Array.from(tomm)} complete={props.complete} />
+    return <DayBasedTaskList title={'Tomorrow'} update={props.update} tasks={Array.from(tomm)} complete={props.complete} />
 }
 
 const getRestList = (props: TaskListsContainerProps) => {
@@ -39,7 +40,7 @@ const getRestList = (props: TaskListsContainerProps) => {
     })
 
     if(restList.length === 0) return;
-    return <DayBasedTaskList title={'Later'} tasks={restList} complete={props.complete} />
+    return <DayBasedTaskList title={'Later'} update={props.update} tasks={restList} complete={props.complete} />
 }
 
 const getCompletedList = (props: TaskListsContainerProps) => {

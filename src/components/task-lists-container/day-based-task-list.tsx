@@ -7,6 +7,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import {Task} from "../../types/types";
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import TaskItem from "../task-item/task-item";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -28,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface DateTasks {
     title: string;
     tasks: Task[]
+    update: (task: Task) => void
     complete: (task: Task) => void
 }
 
@@ -45,20 +51,7 @@ export default function DayBasedTaskList(props: DateTasks) {
                     const labelId = `checkbox-list-label-${index}`;
 
                     return (
-                        <ListItem
-                            divider={true}
-                            key={labelId}
-                            role={undefined} dense button onClick={() => props.complete(value)}>
-                            <ListItemIcon>
-                                <Checkbox
-                                    edge="start"
-                                    tabIndex={-1}
-                                    disableRipple
-                                    inputProps={{'aria-labelledby': labelId}}
-                                />
-                            </ListItemIcon>
-                            <ListItemText id={labelId} primary={value.value}/>
-                        </ListItem>
+                        <TaskItem update={props.update} key={labelId} task={value} complete={props.complete} />
                     );
                 })}
             </List>

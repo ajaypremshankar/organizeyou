@@ -20,7 +20,6 @@ export const loadAppState = (): RootDataStore => {
 
     if (persistedState) {
         const state = JSON.parse(persistedState)
-        console.log(state)
         return {
             ...state,
             tasks: new Map(JSON.parse(state.tasks)),

@@ -66,7 +66,6 @@ export default function AddNewTask(props: AddNewTaskProps) {
 
     const handleDateChange = (date: Date | null) => {
         if (date) {
-            console.log(date)
             setAddTaskState(
                 {
                     ...addTaskState,
@@ -80,7 +79,6 @@ export default function AddNewTask(props: AddNewTaskProps) {
     const handleValueChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
 
         if (event.key === 'Enter') {
-
             props.addTask({
                 id: new Date().getMilliseconds(),
                 plannedOn: formatToDDMMyyyy(addTaskState.date),

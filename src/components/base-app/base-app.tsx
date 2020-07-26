@@ -48,18 +48,21 @@ export default function BaseApp() {
     }
 
     const addTask = (task: Task) => {
+        console.log(task)
         const tasks = baseState.tasks;
-        const dayList = baseState.tasks.get(task.plannedOn) || [];
+        // TODO Task update is not reflecting on the UI.
+        const dayList = [...baseState.tasks.get(task.plannedOn) || []];
+        const filteredList = [...dayList.filter( t => t.id !== task.id)];
 
-        dayList.push(task)
-        tasks.set(task.plannedOn, dayList);
+        filteredList.push(task)
+
+        tasks.set(task.plannedOn, filteredList);
+
         updateBaseState({
             ...baseState,
             showAdd: false,
             tasks: tasks
         })
-
-        console.log(baseState)
     }
 
     return (
@@ -77,6 +80,7 @@ export default function BaseApp() {
 
             <TaskListsContainer
                 tasks={baseState.tasks}
+                update={addTask}
                 archivedTasks={baseState.archivedTasks || []}
                 complete={markTaskComplete}/>
         </div>
