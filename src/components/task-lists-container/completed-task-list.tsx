@@ -6,7 +6,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
-import {Task} from "../../types/types";
+import {CompletedTask, Task} from "../../types/types";
+import {formatToDDMMyyyy} from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,17 +22,22 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
             margin: 'auto',
             maxWidth: 600,
-        }
+        },
+        listItem: {
+            textDecoration: 'line-through'
+        },
+        inline: {
+            display: 'inline',
+        },
     }),
 );
 
 interface DateTasks {
     title: string;
-    tasks: Task[]
-    complete: (task: Task) => void
+    tasks: CompletedTask[]
 }
 
-export default function DayBasedTaskList(props: DateTasks) {
+export default function CompletedTaskList(props: DateTasks) {
 
     const classes = useStyles();
 
@@ -48,16 +54,13 @@ export default function DayBasedTaskList(props: DateTasks) {
                         <ListItem
                             divider={true}
                             key={labelId}
-                            role={undefined} dense button onClick={() => props.complete(value)}>
-                            <ListItemIcon>
-                                <Checkbox
-                                    edge="start"
-                                    tabIndex={-1}
-                                    disableRipple
-                                    inputProps={{'aria-labelledby': labelId}}
-                                />
-                            </ListItemIcon>
-                            <ListItemText id={labelId} primary={value.value}/>
+                            role={undefined} dense button>
+                            <ListItemText
+                                className={classes.listItem}
+                                id={labelId}
+                                primary={value.value}
+                                secondary={` — On ${formatToDDMMyyyy(value.completedDate, true)}`}
+                            />
                         </ListItem>
                     );
                 })}

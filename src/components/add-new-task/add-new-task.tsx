@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Fade from '@material-ui/core/Fade';
@@ -52,7 +52,6 @@ interface AddNewTaskProps {
 
 export default function AddNewTask(props: AddNewTaskProps) {
     const classes = useStyles();
-    const textInput = useRef<HTMLElement>(null);
 
     const [addTaskState, setAddTaskState] = useState(
         {
@@ -61,18 +60,21 @@ export default function AddNewTask(props: AddNewTaskProps) {
         }
     );
 
+    const [datePickerState, setDatePickerState] = useState(
+        !eitherTodayOrTomorrow(parseFromDDMMyyyy(props.date))
+    );
+
     const handleDateChange = (date: Date | null) => {
         if (date) {
+            console.log(date)
             setAddTaskState(
                 {
                     ...addTaskState,
                     date: date,
                 })
-
-            if (textInput && textInput.current) {
-                textInput.current.focus()
-            }
         }
+
+        setDatePickerState(!datePickerState)
     };
 
     const handleValueChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -81,7 +83,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
 
             props.addTask({
                 id: new Date().getMilliseconds(),
-                plannedDate: formatToDDMMyyyy(addTaskState.date),
+                plannedOn: formatToDDMMyyyy(addTaskState.date),
                 value: addTaskState.content
             })
         }
@@ -90,35 +92,30 @@ export default function AddNewTask(props: AddNewTaskProps) {
     return (
         <Fade in={props.showAdd}>
             <Grid className={classes.container} container justify="space-around">
+                <div>
+                    <MuiPickersUtilsProvider
+                        utils={DateFnsUtils}>
 
-                <MuiPickersUtilsProvider
-                    utils={DateFnsUtils}>
-
-                    <DatePicker
-                        disableToolbar
-                        disablePast
-                        variant="dialog"
-                        label="I'll perform task on"
-                        value={addTaskState.date}
-                        onChange={handleDateChange}
-                        autoOk={true}
-                        onAccept={() => {
-                            console.log(textInput)
-                            if (textInput && textInput.current) {
-                                textInput.current.focus()
-                            }
-                        }}
-                    />
-                </MuiPickersUtilsProvider>
-
+                        <DatePicker
+                            disableToolbar
+                            disablePast
+                            variant="dialog"
+                            label="I'll perform task on"
+                            value={addTaskState.date}
+                            onChange={handleDateChange}
+                            autoOk={true}
+                            disabled={!datePickerState}
+                            open={datePickerState}
+                        />
+                    </MuiPickersUtilsProvider>
+                </div>
                 <TextField
                     className={classes.textField}
                     id="outlined-basic"
                     label={'Start typing task'}
                     variant="outlined"
                     size={'medium'}
-                    inputRef={textInput}
-                    autoFocus={eitherTodayOrTomorrow(addTaskState.date)}
+                    focused={!datePickerState}
                     onChange={(event) => setAddTaskState(
                         {
                             ...addTaskState,

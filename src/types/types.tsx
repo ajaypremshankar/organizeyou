@@ -1,7 +1,7 @@
 export interface Task {
     id: number,
     value: string;
-    plannedDate: string
+    plannedOn: string
 }
 
 export interface CompletedTask extends Task {
@@ -17,7 +17,7 @@ export enum DayType {
 export interface RootDataStore {
     showAdd: boolean,
     currentlySelectedDate: string,
-    tasks: Map<string, Set<Task>>,
+    tasks: Map<string, Task[]>,
     archivedTasks?: CompletedTask[]
 }
 

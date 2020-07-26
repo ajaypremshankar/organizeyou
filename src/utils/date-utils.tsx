@@ -5,7 +5,7 @@ export const formatToDDMMyyyy = (date: Date, withSlashes: boolean = false) => {
     return format(date, withSlashes ? 'dd/MM/yyyy' : 'ddMMyyyy')
 }
 
-export const parseFromDDMMyyyy = (date: string, defaultDate: Date = new Date(), withSlashes: boolean = false) => {
+export const parseFromDDMMyyyy = (date: string, withSlashes: boolean = false, defaultDate: Date = new Date()) => {
     return parse(date, withSlashes ? 'dd/MM/yyyy' : 'ddMMyyyy', defaultDate)
 }
 

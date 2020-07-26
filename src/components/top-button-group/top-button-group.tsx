@@ -2,10 +2,8 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {makeStyles, createStyles, Theme} from '@material-ui/core/styles';
-import {format} from "date-fns";
 import Fade from '@material-ui/core/Fade';
 import {getDayAfterTomorrow, getToday, getTomorrow} from "../../utils/date-utils";
-import {DayType} from "../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
