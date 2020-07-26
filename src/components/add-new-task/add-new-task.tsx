@@ -11,7 +11,10 @@ import {DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Grid from '@material-ui/core/Grid';
 import {Task} from "../../types/types";
-
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,7 +50,8 @@ const useStyles = makeStyles((theme: Theme) =>
 interface AddNewTaskProps {
     showAdd: boolean,
     date: string,
-    addTask: (task: Task) => void
+    addTask: (task: Task) => void,
+    goBack: () => void
 }
 
 export default function AddNewTask(props: AddNewTaskProps) {
@@ -91,6 +95,9 @@ export default function AddNewTask(props: AddNewTaskProps) {
         <Fade in={props.showAdd}>
             <Grid className={classes.container} container justify="space-around">
                 <div>
+                    <IconButton edge="start" aria-label="back" onClick={props.goBack}>
+                        <ArrowBackIosIcon/>
+                    </IconButton>
                     <MuiPickersUtilsProvider
                         utils={DateFnsUtils}>
 
