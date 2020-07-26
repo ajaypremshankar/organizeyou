@@ -4,6 +4,7 @@ import AddNewTask from "../add-new-task/add-new-task";
 import {Task} from "../../types/types";
 import TaskListsContainer from "../task-lists-container/task-lists-container";
 import {loadAppState, updateAppState} from "../../utils/local-storage";
+import {getToday} from "../../utils/date-utils";
 
 
 export default function BaseApp() {
@@ -51,6 +52,7 @@ export default function BaseApp() {
         console.log(task)
         const tasks = baseState.tasks;
         // TODO Task update is not reflecting on the UI.
+
         const dayList = [...baseState.tasks.get(task.plannedOn) || []];
         const filteredList = [...dayList.filter( t => t.id !== task.id)];
 
@@ -65,6 +67,14 @@ export default function BaseApp() {
         })
     }
 
+    const handleGoBack = () => {
+        updateBaseState({
+            ...baseState,
+            showAdd: false,
+            currentlySelectedDate: getToday()
+        })
+    }
+
     return (
         <div>
             {!baseState.showAdd &&
@@ -73,6 +83,7 @@ export default function BaseApp() {
 
             {baseState.showAdd &&
             <AddNewTask
+                goBack={handleGoBack}
                 date={baseState.currentlySelectedDate}
                 showAdd={baseState.showAdd}
                 addTask={addTask}/>
