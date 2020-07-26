@@ -7,26 +7,18 @@ import {getDayAfterTomorrow, getToday, getTomorrow} from "../../utils/date-utils
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        root: {
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-            margin: 'auto',
-            maxWidth: 600,
-            alignItems: 'center',
-            '& > *': {
-                margin: theme.spacing(4),
-            },
-        },
+        fullWidht: {
+            width: '100%'
+        }
     }),
 );
 
 
 export default function TopButtonGroup(props: any) {
-    const classes = useStyles();
+    const classes = useStyles()
     return (
         <Fade in={true}>
-            <div className={classes.root}>
+            <div className={classes.fullWidht}>
                 <ButtonGroup
                     size="large"
                     color="primary"
