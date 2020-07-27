@@ -15,7 +15,6 @@ export enum DayType {
 }
 
 export interface RootDataStore {
-    showAdd: boolean,
     currentlySelectedDate: string,
     tasks: Map<string, Task[]>,
     archivedTasks?: CompletedTask[]

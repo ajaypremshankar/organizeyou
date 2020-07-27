@@ -4,15 +4,20 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import {Task} from "../../types/types";
+import {Task} from "../../../types/types";
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import TextField from '@material-ui/core/TextField';
-import {formatToDDMMyyyy} from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
-    createStyles({}),
+    createStyles({
+        itemText: {
+            fontWeight: 'bold',
+            fontSize: '16px',
+            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+        }
+    }),
 );
 
 interface TaskItemProps {
@@ -65,9 +70,8 @@ export default function TaskItem(props: TaskItemProps) {
     const labelId = `task-item-label-${props.task.id}`;
     return (
         <ListItem
-            divider={true}
             key={labelId}
-            role={undefined} dense button>
+            role={undefined} dense>
             <ListItemIcon>
                 <Checkbox
                     edge="start"
@@ -77,7 +81,11 @@ export default function TaskItem(props: TaskItemProps) {
                     onClick={() => props.complete(props.task)}
                 />
             </ListItemIcon>
-            <ListItemText id={labelId} primary={taskItemState.element}/>
+            <ListItemText
+                className={classes.itemText}
+                id={labelId}
+                primary={taskItemState.element}
+            />
             {!taskItemState.editMode && <ListItemSecondaryAction>
                 <IconButton edge="start" aria-label="edit" onClick={handleEditClick}>
                     <EditIcon/>

@@ -1,18 +1,14 @@
 import React, {useState} from 'react';
-import {createStyles, makeStyles, Theme, fade} from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
+import {createStyles, makeStyles, Theme, withStyles} from '@material-ui/core/styles';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import List from '@material-ui/core/List';
-import Fade from '@material-ui/core/Fade';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
-import {CompletedTask, Task} from "../../types/types";
+import {CompletedTask} from "../../types/types";
 import {formatToDDMMyyyy} from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>

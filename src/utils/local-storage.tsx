@@ -1,4 +1,5 @@
 import {RootDataStore, Task} from "../types/types";
+import {getToday} from "./date-utils";
 
 export const updateAppState = (newState: RootDataStore) => {
 
@@ -34,8 +35,7 @@ export const loadAppState = (): RootDataStore => {
         }
     } else {
         return {
-            showAdd: false,
-            currentlySelectedDate: '',
+            currentlySelectedDate: getToday(),
             tasks: new Map<string, Task[]>(),
             archivedTasks: []
         }
