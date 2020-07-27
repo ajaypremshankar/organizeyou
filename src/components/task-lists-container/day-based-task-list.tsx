@@ -9,7 +9,8 @@ import {Task} from "../../types/types";
 import TaskItem from "./task-item/task-item";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
-
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import DoneAllIcon from '@material-ui/icons/DoneAll';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         list: {
@@ -92,11 +93,13 @@ export default function DayBasedTaskList(props: DateTasks) {
             return Array.of(<ListItem
                 key={'no-items-in-list'}
                 role={undefined} dense>
-
+                <ListItemIcon>
+                    <DoneAllIcon />
+                </ListItemIcon>
                 <ListItemText
                     className={classes.itemText}
                     id={'no-item'}
-                    primary={'Nothing awaits you here :) '}
+                    primary={'Nothing awaits you here :)'}
                 />
             </ListItem>)
         }
