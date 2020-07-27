@@ -8,8 +8,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import {CompletedTask} from "../../types/types";
+import {CompletedTask, Task} from "../../types/types";
 import {formatToDDMMyyyy} from "../../utils/date-utils";
+import IconButton from "@material-ui/core/IconButton";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import RestoreIcon from '@material-ui/icons/Restore';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -77,7 +80,8 @@ const Accordion = withStyles({
 
 interface DateTasks {
     title: string;
-    tasks: CompletedTask[]
+    tasks: CompletedTask[],
+    restore: (task: CompletedTask) => void,
 }
 
 export default function CompletedTaskList(props: DateTasks) {
@@ -117,6 +121,11 @@ export default function CompletedTaskList(props: DateTasks) {
                                         primary={value.value}
                                         secondary={` — On ${formatToDDMMyyyy(value.completedDate, true)}`}
                                     />
+                                    <ListItemSecondaryAction>
+                                        <IconButton edge="start" aria-label="restore" onClick={() =>props.restore(value)}>
+                                            <RestoreIcon/>
+                                        </IconButton>
+                                    </ListItemSecondaryAction>
                                 </ListItem>
                             );
                         })}

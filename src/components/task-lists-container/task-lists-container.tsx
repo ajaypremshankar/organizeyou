@@ -20,6 +20,7 @@ interface TaskListsContainerProps {
     completedTasks: CompletedTask[],
     update: (task: Task) => void
     complete: (task: Task) => void
+    restore: (task: CompletedTask) => void
 }
 
 const getTodayList = (props: TaskListsContainerProps) => {
@@ -65,7 +66,7 @@ const getRestList = (props: TaskListsContainerProps) => {
 const getCompletedList = (props: TaskListsContainerProps) => {
     const completedTaskList = props.completedTasks
     if (completedTaskList.length === 0) return;
-    return <CompletedTaskList title={'Completed'} tasks={completedTaskList}/>
+    return <CompletedTaskList title={'Completed'} tasks={completedTaskList} restore={props.restore}/>
 }
 
 export default function TaskListsContainer(props: TaskListsContainerProps) {

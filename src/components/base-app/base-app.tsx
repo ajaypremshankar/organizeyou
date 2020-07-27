@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Task} from "../../types/types";
+import {CompletedTask, Task} from "../../types/types";
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import TaskListsContainer from "../task-lists-container/task-lists-container";
 import {loadAppState, updateAppState} from "../../utils/local-storage";
@@ -79,6 +79,26 @@ export default function BaseApp() {
         })
     }
 
+    const restoreTask = (task: CompletedTask) => {
+        const newCompletedTaskList = new Set<Task>(baseState.archivedTasks || [])
+        newCompletedTaskList.delete(task)
+
+        const allActiveTasks = new Map<string, Task[]>(baseState.tasks);
+        const targetTaskList = [...allActiveTasks.get(task.plannedOn) || []]
+        targetTaskList.push({
+            id: task.id,
+            plannedOn: task.plannedOn,
+            value: task.value
+        })
+
+        allActiveTasks.set(task.plannedOn, targetTaskList)
+
+        updateBaseState({
+            tasks: allActiveTasks,
+            archivedTasks: Array.from(newCompletedTaskList)
+        })
+    }
+
     return (
         <div className={classes.root}>
             <AddTaskContainer
@@ -91,7 +111,9 @@ export default function BaseApp() {
                 tasks={baseState.tasks}
                 update={addTask}
                 completedTasks={baseState.archivedTasks || []}
-                complete={markTaskComplete}/>
+                complete={markTaskComplete}
+                restore={restoreTask}
+            />
         </div>
     );
 }
