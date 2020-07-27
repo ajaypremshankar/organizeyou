@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
-import TopButtonGroup from "../top-button-group/top-button-group";
-import AddNewTask from "../add-new-task/add-new-task";
 import {Task} from "../../types/types";
-import {makeStyles, createStyles, Theme} from '@material-ui/core/styles';
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import TaskListsContainer from "../task-lists-container/task-lists-container";
 import {loadAppState, updateAppState} from "../../utils/local-storage";
-import {getToday} from "../../utils/date-utils";
+import AddTaskContainer from "../add-task-container/add-task-container";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,6 +37,13 @@ export default function BaseApp() {
         updateAppState(deltaState)
     }
 
+    const updateCurrentlySelectedDate = (date: string) => {
+        updateBaseState({
+            ...baseState,
+            currentlySelectedDate: date
+        })
+    }
+
     const markTaskComplete = (task: Task) => {
         const allActiveTasks = new Map<string, Task[]>(baseState.tasks);
         const targetTaskList = new Set<Task>(allActiveTasks.get(task.plannedOn) || [])
@@ -57,17 +62,7 @@ export default function BaseApp() {
         })
     }
 
-    const showAddNewTask = (day: string) => {
-
-        updateBaseState({
-            ...baseState,
-            currentlySelectedDate: day,
-            showAdd: true,
-        })
-    }
-
     const addTask = (task: Task) => {
-        console.log(task)
         const tasks = baseState.tasks;
         // TODO Task update is not reflecting on the UI.
 
@@ -85,27 +80,12 @@ export default function BaseApp() {
         })
     }
 
-    const handleGoBack = () => {
-        updateBaseState({
-            ...baseState,
-            showAdd: false,
-            currentlySelectedDate: getToday()
-        })
-    }
-
     return (
         <div className={classes.root}>
-            {!baseState.showAdd &&
-            <TopButtonGroup showAddTask={showAddNewTask}></TopButtonGroup>
-            }
-
-            {baseState.showAdd &&
-            <AddNewTask
-                goBack={handleGoBack}
-                date={baseState.currentlySelectedDate}
-                showAdd={baseState.showAdd}
+            <AddTaskContainer
+                selectedDate={baseState.currentlySelectedDate}
+                changeSelectedDate={updateCurrentlySelectedDate}
                 addTask={addTask}/>
-            }
 
             <TaskListsContainer
                 tasks={baseState.tasks}
