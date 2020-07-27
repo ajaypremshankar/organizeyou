@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {createStyles, makeStyles, Theme, withStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import {Task} from "../../types/types";
 import TaskItem from "./task-item/task-item";
@@ -87,10 +86,9 @@ interface DateTasks {
 export default function DayBasedTaskList(props: DateTasks) {
 
     const classes = useStyles();
+    const getTasks = (tasks : Task[]) => {
 
-    const getTasks = () => {
-
-        if (!props.tasks || props.tasks.length == 0) {
+        if (tasks.length === 0) {
             return Array.of(<ListItem
                 key={'no-items-in-list'}
                 role={undefined} dense>
@@ -103,9 +101,8 @@ export default function DayBasedTaskList(props: DateTasks) {
             </ListItem>)
         }
 
-        return props.tasks.map((value, index) => {
-            const labelId = `checkbox-list-label-${index}`;
-
+        return tasks.map((value, index) => {
+            const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem update={props.update} key={labelId} task={value} complete={props.complete}/>
             );
@@ -125,7 +122,7 @@ export default function DayBasedTaskList(props: DateTasks) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <List className={classes.list}>
-                        {getTasks()}
+                        {getTasks(props.tasks)}
                     </List>
                 </AccordionDetails>
             </Accordion>

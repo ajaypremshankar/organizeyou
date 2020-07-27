@@ -9,14 +9,19 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import TextField from '@material-ui/core/TextField';
+import AddNewTask from "../../add-task-container/add-new-task/add-new-task";
+import EditTask from "../../edit-task/edit-task";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         itemText: {
             fontWeight: 'bold',
-            fontSize: '16px',
+            font: 'inherit',
             fontFamily: '"Helvetica-Neue", Helvetica, Arial',
-        }
+        },
+        textField: {
+            width: '100%',
+        },
     }),
 );
 
@@ -29,40 +34,42 @@ interface TaskItemProps {
 export default function TaskItem(props: TaskItemProps) {
 
     const classes = useStyles();
-
     const [taskItemState, setTaskItemState] = useState({
         element: <span>{props.task.value}</span>,
-        editMode: false,
+        editMode: false
     });
 
-    let updatedValue = {content: props.task.value}
+    const updateTask = (value: string) => {
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        props.update({
+            ...props.task,
+            value: value
+        })
+        setTaskItemState({
+            ...taskItemState,
+            element: <span>{value}</span>,
+        })
 
-        if (event.key === 'Enter') {
-            setTaskItemState({
-                ...taskItemState,
-                editMode: false
-            })
+    }
 
-            props.update({
-                ...props.task,
-                value: updatedValue.content
-            })
-        }
+    const handleEditBlur = () => {
+        setTaskItemState({
+            ...taskItemState,
+            element: <span>{props.task.value}</span>,
+            editMode: false
+        })
     }
 
     const handleEditClick = () => {
+
         setTaskItemState(
             {
                 ...taskItemState,
-                element: <TextField
-                    id={props.task.value}
-                    defaultValue={updatedValue.content}
-                    onChange={(event) => updatedValue.content = event.target.value}
-                    onKeyDown={handleKeyDown}
-                />,
-                editMode: true
+                element: <EditTask
+                    editBlur={handleEditBlur}
+                    defaultValue={props.task.value}
+                    updateTask={updateTask}/>,
+                editMode: !taskItemState.editMode
             }
         )
     }

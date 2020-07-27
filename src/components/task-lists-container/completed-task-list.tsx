@@ -104,7 +104,7 @@ export default function CompletedTaskList(props: DateTasks) {
                 <AccordionDetails>
                     <List className={classes.list}>
                         {props.tasks.map((value, index) => {
-                            const labelId = `checkbox-list-label-${index}`;
+                            const labelId = `completed-task-list-label-${value.id}`;
 
                             return (
                                 <ListItem

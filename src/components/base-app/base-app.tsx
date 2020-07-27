@@ -75,7 +75,6 @@ export default function BaseApp() {
 
         updateBaseState({
             ...baseState,
-            showAdd: false,
             tasks: tasks
         })
     }
