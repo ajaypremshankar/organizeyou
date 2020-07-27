@@ -2,12 +2,30 @@ import React, {useState} from 'react';
 import TopButtonGroup from "../top-button-group/top-button-group";
 import AddNewTask from "../add-new-task/add-new-task";
 import {Task} from "../../types/types";
+import {makeStyles, createStyles, Theme} from '@material-ui/core/styles';
 import TaskListsContainer from "../task-lists-container/task-lists-container";
 import {loadAppState, updateAppState} from "../../utils/local-storage";
 import {getToday} from "../../utils/date-utils";
 
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            margin: 'auto',
+            maxWidth: 600,
+            alignItems: 'center',
+            '& > *': {
+                margin: theme.spacing(4),
+            },
+        },
+    }),
+);
+
 export default function BaseApp() {
+    const classes = useStyles();
 
     const [baseState, setBaseState] = useState(
         loadAppState()
@@ -76,7 +94,7 @@ export default function BaseApp() {
     }
 
     return (
-        <div>
+        <div className={classes.root}>
             {!baseState.showAdd &&
             <TopButtonGroup showAddTask={showAddNewTask}></TopButtonGroup>
             }
