@@ -65,6 +65,7 @@ export default function TopButtonGroup(props: TopButtonGroupProps) {
                                 onChange={handleDateChange}
                                 autoOk={true}
                                 open={datePickerState}
+                                onClose={()=>setDatePickerState(false)}
                             />
                         </MuiPickersUtilsProvider>
                     </div>

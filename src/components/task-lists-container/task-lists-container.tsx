@@ -1,6 +1,6 @@
 import React from 'react';
 import {CompletedTask, Task} from "../../types/types";
-import {getToday, getTomorrow} from "../../utils/date-utils";
+import {getDisplayableDateFromDDMMYYYY, getToday, getTomorrow} from "../../utils/date-utils";
 import DayBasedTaskList from "./day-based-task-list";
 import CompletedTaskList from "./completed-task-list";
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
@@ -15,8 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 interface TaskListsContainerProps {
+    selectedDate: string,
     tasks: Map<string, Task[]>,
-    archivedTasks: CompletedTask[],
+    completedTasks: CompletedTask[],
     update: (task: Task) => void
     complete: (task: Task) => void
 }
@@ -27,7 +28,6 @@ const getTodayList = (props: TaskListsContainerProps) => {
     if (todays.length === 0) return;
     return <DayBasedTaskList title={'Today'} update={props.update} tasks={Array.from(todays)} complete={props.complete}
                              expanded={true}/>
-
 }
 
 const getTomorrowList = (props: TaskListsContainerProps) => {
@@ -37,6 +37,13 @@ const getTomorrowList = (props: TaskListsContainerProps) => {
     if (tomm.length === 0) return;
     return <DayBasedTaskList title={'Tomorrow'} update={props.update} tasks={Array.from(tomm)} complete={props.complete}
                              expanded={false}/>
+}
+
+const getSelectedDateList = (props: TaskListsContainerProps) => {
+    const key = props.selectedDate;
+    const dateList = props.tasks.get(key) || []
+    return <DayBasedTaskList title={getDisplayableDateFromDDMMYYYY(key)} update={props.update} tasks={Array.from(dateList)} complete={props.complete}
+                             expanded={true}/>
 }
 
 const getRestList = (props: TaskListsContainerProps) => {
@@ -56,7 +63,7 @@ const getRestList = (props: TaskListsContainerProps) => {
 }
 
 const getCompletedList = (props: TaskListsContainerProps) => {
-    const completedTaskList = props.archivedTasks
+    const completedTaskList = props.completedTasks
     if (completedTaskList.length === 0) return;
     return <CompletedTaskList title={'Completed'} tasks={completedTaskList}/>
 }
@@ -65,9 +72,7 @@ export default function TaskListsContainer(props: TaskListsContainerProps) {
     const classes = useStyles();
     return (
         <div className={classes.fullWidth}>
-            {getTodayList(props)}
-            {getTomorrowList(props)}
-            {getRestList(props)}
+            {getSelectedDateList(props)}
             {getCompletedList(props)}
         </div>
     )

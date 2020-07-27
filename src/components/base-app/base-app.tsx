@@ -88,9 +88,10 @@ export default function BaseApp() {
                 addTask={addTask}/>
 
             <TaskListsContainer
+                selectedDate={baseState.currentlySelectedDate}
                 tasks={baseState.tasks}
                 update={addTask}
-                archivedTasks={baseState.archivedTasks || []}
+                completedTasks={baseState.archivedTasks || []}
                 complete={markTaskComplete}/>
         </div>
     );

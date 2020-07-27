@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import Fade from '@material-ui/core/Fade';
 import TopButtonGroup from "./top-button-group/top-button-group";
 import AddNewTask from "./add-new-task/add-new-task";
 import {Task} from "../../types/types";
@@ -55,7 +54,6 @@ export default function AddTaskContainer(props: AddTaskContainerProps) {
     }
 
 return (
-    <Fade in={true}>
         <Grid className={classes.container} container justify="space-around">
             <TopButtonGroup
                 selectedDate={addTaskState.date}
@@ -64,6 +62,5 @@ return (
                 date={addTaskState.date}
                 addTask={handleAddTask}/>
         </Grid>
-    </Fade>
 );
 }

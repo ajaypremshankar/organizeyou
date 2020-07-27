@@ -12,6 +12,11 @@ import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        itemText: {
+            fontWeight: 'bold',
+            fontSize: '16px',
+            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+        }
     }),
 );
 
@@ -76,7 +81,11 @@ export default function TaskItem(props: TaskItemProps) {
                     onClick={() => props.complete(props.task)}
                 />
             </ListItemIcon>
-            <ListItemText id={labelId} primary={taskItemState.element}/>
+            <ListItemText
+                className={classes.itemText}
+                id={labelId}
+                primary={taskItemState.element}
+            />
             {!taskItemState.editMode && <ListItemSecondaryAction>
                 <IconButton edge="start" aria-label="edit" onClick={handleEditClick}>
                     <EditIcon/>

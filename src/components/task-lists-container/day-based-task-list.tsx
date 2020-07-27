@@ -8,6 +8,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import {Task} from "../../types/types";
 import TaskItem from "./task-item/task-item";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItem from "@material-ui/core/ListItem";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,7 +25,13 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
             margin: 'auto',
             flexShrink: 0,
+            fontWeight: 'bold',
         },
+        itemText: {
+            fontWeight: 'bold',
+            fontSize: '16px',
+            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+        }
     }),
 );
 
@@ -50,9 +58,9 @@ const AccordionSummary = withStyles({
     root: {
         backgroundColor: 'rgba(0, 0, 0, .03)',
         marginBottom: -1,
-        minHeight: 20,
+        minHeight: 56,
         '&$expanded': {
-            minHeight: 20,
+            minHeight: 56,
         },
     },
     content: {
@@ -64,8 +72,7 @@ const AccordionSummary = withStyles({
 })(MuiAccordionSummary);
 
 const AccordionDetails = withStyles((theme) => ({
-    root: {
-    },
+    root: {},
 }))(MuiAccordionDetails);
 
 interface DateTasks {
@@ -76,21 +83,39 @@ interface DateTasks {
     expanded?: boolean
 }
 
+
 export default function DayBasedTaskList(props: DateTasks) {
 
     const classes = useStyles();
 
-    const [expandedState, setExpandedState] = useState(props.expanded)
+    const getTasks = () => {
 
-    const handleChange = () => {
-        setExpandedState(!expandedState)
-    };
+        if (!props.tasks || props.tasks.length == 0) {
+            return Array.of(<ListItem
+                key={'no-items-in-list'}
+                role={undefined} dense>
+
+                <ListItemText
+                    className={classes.itemText}
+                    id={'no-item'}
+                    primary={'Nothing awaits you here :) '}
+                />
+            </ListItem>)
+        }
+
+        return props.tasks.map((value, index) => {
+            const labelId = `checkbox-list-label-${index}`;
+
+            return (
+                <TaskItem update={props.update} key={labelId} task={value} complete={props.complete}/>
+            );
+        })
+    }
 
     return (
         <div>
-            <Accordion square expanded={expandedState} onChange={handleChange}>
+            <Accordion square expanded={true}>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -100,13 +125,7 @@ export default function DayBasedTaskList(props: DateTasks) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <List className={classes.list}>
-                        {props.tasks.map((value, index) => {
-                            const labelId = `checkbox-list-label-${index}`;
-
-                            return (
-                                <TaskItem update={props.update} key={labelId} task={value} complete={props.complete}/>
-                            );
-                        })}
+                        {getTasks()}
                     </List>
                 </AccordionDetails>
             </Accordion>

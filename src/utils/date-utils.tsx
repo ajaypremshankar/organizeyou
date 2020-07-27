@@ -18,17 +18,7 @@ export const getTomorrow = (): string => {
     return formatToDDMMyyyy(addDays(today, 1))
 }
 
-export const getDayAfterTomorrow = (): string => {
-    const today = new Date();
-    return formatToDDMMyyyy(addDays(today, 2))
-}
-
-export const formatToSlashes = (withoutSlashes: string): string => {
-    const date = parseFromDDMMyyyy(withoutSlashes)
-    return formatToDDMMyyyy(date, true)
-}
-
-export const getDayTypeFromDate = (date: string) => {
+export const getDisplayableDateFromDDMMYYYY = (date: string) => {
 
     if (getToday() === date) return DayType.TODAY;
 
