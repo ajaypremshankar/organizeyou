@@ -5,8 +5,8 @@ import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import {
     eitherTodayOrTomorrow,
-    formatToDDMMyyyy,
     formatFromKeyToDisplayable,
+    formatToDDMMyyyy,
     getToday,
     getTomorrow,
 } from "../../../utils/date-utils";

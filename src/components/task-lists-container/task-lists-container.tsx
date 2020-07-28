@@ -1,6 +1,6 @@
 import React from 'react';
-import {CompletedTask, DayType, Task} from "../../types/types";
-import {getDisplayableDateFromDDMMYYYY} from "../../utils/date-utils";
+import {CompletedTask, Task, TaskListType} from "../../types/types";
+import {getListTitleFromKey} from "../../utils/date-utils";
 import DayBasedTaskList from "./day-based-task-list";
 import CompletedTaskList from "./completed-task-list";
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
@@ -20,24 +20,25 @@ interface TaskListsContainerProps {
     tasks: Map<string, Task[]>,
     completedTasks: CompletedTask[],
     overdueTasks?: Task[]
-    update: (task: Task) => void
-    complete: (task: Task) => void
+    update: (key: string, task: Task) => void
+    complete: (key: string, task: Task) => void
     delete: (key: string, task: Task) => void
     restore: (task: CompletedTask) => void
 }
 
 const getOverdueList = (props: TaskListsContainerProps) => {
 
-    if (!props.overdueTasks) return;
-    return <OverdueTaskList title={DayType.OVERDUE} update={props.update} tasks={Array.from(props.overdueTasks || [])}
+    if (!props.overdueTasks || props.overdueTasks.length === 0) return;
+
+    return <OverdueTaskList title={TaskListType.OVERDUE} update={props.update} tasks={Array.from(props.overdueTasks || [])}
                             complete={props.complete} delete={props.delete}
-                             expanded={true}/>
+                            expanded={true}/>
 }
 
 const getSelectedDateList = (props: TaskListsContainerProps) => {
     const key = props.selectedDate;
     const dateList = props.tasks.get(key) || []
-    return <DayBasedTaskList title={getDisplayableDateFromDDMMYYYY(key)} update={props.update} tasks={Array.from(dateList)}
+    return <DayBasedTaskList title={getListTitleFromKey(key)} update={props.update} tasks={Array.from(dateList)}
                              complete={props.complete} delete={props.delete}
                              expanded={true}/>
 }

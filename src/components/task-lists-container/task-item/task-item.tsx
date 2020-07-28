@@ -9,7 +9,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditTask from "../../edit-task/edit-task";
-import {getKeyFromDisplayableDay} from "../../../utils/date-utils";
+import {getFromKeyToDisplayableDay} from "../../../utils/date-utils";
 import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
 interface TaskItemProps {
     listKey: string
     task: Task
-    update: (task: Task) => void
-    complete: (task: Task) => void
+    update: (key: string, task: Task) => void
+    complete: (key: string, task: Task) => void
     delete: (key: string, task: Task) => void
 }
 
@@ -43,11 +43,12 @@ export default function TaskItem(props: TaskItemProps) {
     });
 
     const updateTask = (value: string) => {
-
-        props.update({
-            ...props.task,
-            value: value
-        })
+        props.update(
+            getFromKeyToDisplayableDay(props.listKey),
+            {
+                ...props.task,
+                value: value
+            })
         setTaskItemState({
             ...taskItemState,
             element: <span>{value}</span>,
@@ -90,7 +91,7 @@ export default function TaskItem(props: TaskItemProps) {
                     tabIndex={-1}
                     disableRipple
                     inputProps={{'aria-labelledby': labelId}}
-                    onClick={() => props.complete(props.task)}
+                    onClick={() => props.complete(getFromKeyToDisplayableDay(props.listKey), props.task)}
                 />
             </ListItemIcon>
             <ListItemText
@@ -102,7 +103,7 @@ export default function TaskItem(props: TaskItemProps) {
             {!taskItemState.editMode &&
             <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label={`delete-${labelId}`}
-                            onClick={() => props.delete(getKeyFromDisplayableDay(props.listKey), props.task)}>
+                            onClick={() => props.delete(getFromKeyToDisplayableDay(props.listKey), props.task)}>
                     <DeleteIcon/>
                 </IconButton>
             </ListItemSecondaryAction>}

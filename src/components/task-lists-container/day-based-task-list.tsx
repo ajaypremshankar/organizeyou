@@ -5,7 +5,7 @@ import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
-import {CompletedTask, Task} from "../../types/types";
+import {Task} from "../../types/types";
 import TaskItem from "./task-item/task-item";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
@@ -79,8 +79,8 @@ const AccordionDetails = withStyles((theme) => ({
 interface DateTasks {
     title: string;
     tasks: Task[]
-    update: (task: Task) => void
-    complete: (task: Task) => void
+    update: (key: string, task: Task) => void
+    complete: (key: string, task: Task) => void
     expanded?: boolean
     delete: (key: string, task: Task) => void
 }
@@ -119,8 +119,8 @@ export default function DayBasedTaskList(props: DateTasks) {
         <div>
             <Accordion square expanded={true}>
                 <AccordionSummary
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
+                    aria-controls={`${props.title}-task-content`}
+                    id={`${props.title}-task-header`}
                 >
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
                         {props.title.toUpperCase()}

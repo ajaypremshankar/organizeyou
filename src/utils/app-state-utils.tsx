@@ -1,8 +1,8 @@
-import {RootDataStore, Task} from "../types/types";
+import {AppDataStore, DeltaAppDataStore, Task} from "../types/types";
 import {getToday, parseFromDDMMyyyy} from "./date-utils";
 
-export const initOrRefreshAppStateData = (): RootDataStore => {
-    const appData: RootDataStore = deserializeAppState();
+export const initOrRefreshAppStateData = (): AppDataStore => {
+    const appData: AppDataStore = deserializeAppState();
 
     serializeAppState({
         ...computeOverdueTaskList(appData)
@@ -11,20 +11,20 @@ export const initOrRefreshAppStateData = (): RootDataStore => {
     return deserializeAppState()
 }
 
-export const serializeAppState = (updatedState: RootDataStore) => {
+export const serializeAppState = (updatedState: DeltaAppDataStore) => {
 
     const currentState = deserializeAppState();
     const state = {
         ...currentState,
         ...updatedState,
-        tasks: JSON.stringify(Array.from(updatedState.tasks.entries()))
+        tasks: JSON.stringify(Array.from(updatedState.tasks ? updatedState.tasks.entries() : new Map()))
     }
 
     localStorage.setItem("organizeyou-base-app", JSON.stringify(state))
 }
 
 
-export const deserializeAppState = (): RootDataStore => {
+export const deserializeAppState = (): AppDataStore => {
 
     const persistedState = localStorage.getItem("organizeyou-base-app");
 
@@ -51,7 +51,7 @@ export const deserializeAppState = (): RootDataStore => {
     }
 }
 
-const computeOverdueTaskList = (appData: RootDataStore): RootDataStore => {
+export const computeOverdueTaskList = (appData: AppDataStore): AppDataStore => {
     const allActiveTasks = new Map<string, Task[]>(appData.tasks);
     const overdueTasks: Task[] = appData.overdueTasks || []
     const today: Date = parseFromDDMMyyyy(getToday())

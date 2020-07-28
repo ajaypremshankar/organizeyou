@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import {getDisplayableDateFromDDMMYYYY} from "../../../utils/date-utils";
+import {getListTitleFromKey} from "../../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +32,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
         <TextField
             className={classes.textField}
             id="outlined-basic"
-            label={`Add task for ${getDisplayableDateFromDDMMYYYY(props.date)}`}
+            label={`Add task for ${getListTitleFromKey(props.date)}`}
             variant="outlined"
             size={'medium'}
             value={taskContentState}

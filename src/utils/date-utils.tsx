@@ -1,5 +1,5 @@
 import {addDays, format, parse} from "date-fns";
-import {DayType} from "../types/types";
+import {TaskListType} from "../types/types";
 
 export const formatToDDMMyyyy = (date: Date, withSlashes: boolean = false): string => {
     return format(date, withSlashes ? 'dd/MM/yyyy' : 'ddMMyyyy')
@@ -18,22 +18,15 @@ export const getTomorrow = (): string => {
     return formatToDDMMyyyy(addDays(today, 1))
 }
 
-export const getDisplayableDateFromDDMMYYYY = (date: string) => {
+export const getFromKeyToDisplayableDay = (day: string) => {
 
-    if (getToday() === date) return DayType.TODAY;
+    if (TaskListType.TODAY === day) return getToday();
 
-    if (getTomorrow() === date) return DayType.TOMORROW;
+    if (TaskListType.TOMORROW === day) return getTomorrow();
 
-    else return formatFromKeyToDisplayable(date)
-}
+    if(TaskListType.OVERDUE === day) return TaskListType.OVERDUE;
 
-export const getKeyFromDisplayableDay = (day: string) => {
-
-    if (DayType.TODAY === day) return getToday();
-
-    if (DayType.TOMORROW === day) return getTomorrow();
-
-    if(DayType.OVERDUE === day) return DayType.OVERDUE;
+    if(TaskListType.COMPLETED === day) return TaskListType.COMPLETED;
 
     else return formatFromDisplayableToKey(day)
 }
@@ -51,4 +44,18 @@ export const formatFromKeyToDisplayable = (date: Date | string): string => {
 export const formatFromDisplayableToKey = (date: Date | string): string => {
     const dateObj = typeof date === "string" ? parseFromDDMMyyyy(date) : date
     return format(dateObj, 'do MMM')
+}
+
+export const getListTitleFromKey = (key: string) => {
+
+    const date: Date = parseFromDDMMyyyy(key)
+    const today: Date = parseFromDDMMyyyy(getToday())
+
+    if(today > date) return TaskListType.OVERDUE;
+
+    if (getToday() === key) return TaskListType.TODAY;
+
+    if (getTomorrow() === key) return TaskListType.TOMORROW;
+
+    else return formatFromKeyToDisplayable(key)
 }

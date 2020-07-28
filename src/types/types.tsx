@@ -8,15 +8,24 @@ export interface CompletedTask extends Task {
     completedDate: Date;
 }
 
-export enum DayType {
+export enum TaskListType {
     TODAY = 'today',
     TOMORROW = 'tomorrow',
-    OVERDUE = 'overdue'
+    OVERDUE = 'overdue',
+    COMPLETED = 'completed'
 }
 
-export interface RootDataStore {
+export interface AppDataStore {
     currentlySelectedDate: string,
     tasks: Map<string, Task[]>,
+    completedTasks?: CompletedTask[]
+    overdueTasks?: Task[]
+}
+
+// Used for state updates
+export interface DeltaAppDataStore {
+    currentlySelectedDate?: string,
+    tasks?: Map<string, Task[]>,
     completedTasks?: CompletedTask[]
     overdueTasks?: Task[]
 }

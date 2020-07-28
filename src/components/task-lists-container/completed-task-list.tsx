@@ -98,8 +98,8 @@ export default function CompletedTaskList(props: DateTasks) {
             <Accordion square expanded={expanded} onChange={handleChange}>
                 <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
+                aria-controls="completed-task-content"
+                id="completed-task-header"
                 >
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
                         {props.title.toUpperCase()}

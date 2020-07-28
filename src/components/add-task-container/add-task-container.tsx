@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface AddTaskContainerProps {
     selectedDate: string,
     changeSelectedDate: (date: string) => void,
-    addTask: (task: Task) => void,
+    addTask: (key: string, task: Task) => void,
 }
 
 export default function AddTaskContainer(props: AddTaskContainerProps) {
@@ -46,14 +46,16 @@ export default function AddTaskContainer(props: AddTaskContainerProps) {
     }
 
     const handleAddTask = (value: string) => {
-        props.addTask({
-            id: new Date().getTime(),
-            plannedOn: addTaskState.date,
-            value: value
-        })
+        props.addTask(
+            addTaskState.date,
+            {
+                id: new Date().getTime(),
+                plannedOn: addTaskState.date,
+                value: value
+            })
     }
 
-return (
+    return (
         <Grid className={classes.container} container justify="space-around">
             <TopButtonGroup
                 selectedDate={addTaskState.date}
@@ -62,5 +64,5 @@ return (
                 date={addTaskState.date}
                 addTask={handleAddTask}/>
         </Grid>
-);
+    );
 }

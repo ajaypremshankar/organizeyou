@@ -5,7 +5,7 @@ import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
-import {CompletedTask, Task} from "../../types/types";
+import {Task} from "../../types/types";
 import TaskItem from "./task-item/task-item";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -71,8 +71,8 @@ const AccordionDetails = withStyles((theme) => ({
 interface DateTasks {
     title: string;
     tasks: Task[]
-    update: (task: Task) => void
-    complete: (task: Task) => void
+    update: (key: string, task: Task) => void
+    complete: (key: string, task: Task) => void
     delete: (key: string, task: Task) => void
     expanded?: boolean
 }
@@ -94,10 +94,10 @@ export default function OverdueTaskList(props: DateTasks) {
 
     return (
         <div>
-            <Accordion square expanded={true} id={'overdue-panel1a-accordian'}>
+            <Accordion square expanded={true} id={'overdue-task-accordian'}>
                 <AccordionSummary
-                    aria-controls="overdue-panel1a-content"
-                    id="overdue-panel1a-header">
+                    aria-controls="overdue-task-content"
+                    id="overdue-task-header">
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
                         {props.title.toUpperCase()}
                     </Typography>
