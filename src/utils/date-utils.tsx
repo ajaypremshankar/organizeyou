@@ -24,7 +24,18 @@ export const getDisplayableDateFromDDMMYYYY = (date: string) => {
 
     if (getTomorrow() === date) return DayType.TOMORROW;
 
-    else return formatToDOMMM(date)
+    else return formatFromKeyToDisplayable(date)
+}
+
+export const getKeyFromDisplayableDay = (day: string) => {
+
+    if (DayType.TODAY === day) return getToday();
+
+    if (DayType.TOMORROW === day) return getTomorrow();
+
+    if(DayType.OVERDUE === day) return DayType.OVERDUE;
+
+    else return formatFromDisplayableToKey(day)
 }
 
 export const eitherTodayOrTomorrow = (date: Date | string): boolean => {
@@ -32,7 +43,12 @@ export const eitherTodayOrTomorrow = (date: Date | string): boolean => {
     return dateStr === getToday() || dateStr === getTomorrow()
 }
 
-export const formatToDOMMM = (date: Date | string): string => {
+export const formatFromKeyToDisplayable = (date: Date | string): string => {
+    const dateObj = typeof date === "string" ? parseFromDDMMyyyy(date) : date
+    return format(dateObj, 'do MMM')
+}
+
+export const formatFromDisplayableToKey = (date: Date | string): string => {
     const dateObj = typeof date === "string" ? parseFromDDMMyyyy(date) : date
     return format(dateObj, 'do MMM')
 }

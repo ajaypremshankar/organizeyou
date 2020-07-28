@@ -11,13 +11,14 @@ export interface CompletedTask extends Task {
 export enum DayType {
     TODAY = 'today',
     TOMORROW = 'tomorrow',
-    LATER = 'later'
+    OVERDUE = 'overdue'
 }
 
 export interface RootDataStore {
     currentlySelectedDate: string,
     tasks: Map<string, Task[]>,
-    archivedTasks?: CompletedTask[]
+    completedTasks?: CompletedTask[]
+    overdueTasks?: Task[]
 }
 
 export interface DisplayableDay {

@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {CompletedTask, Task} from "../../types/types";
+import {CompletedTask, DayType, RootDataStore, Task} from "../../types/types";
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import TaskListsContainer from "../task-lists-container/task-lists-container";
-import {loadAppState, updateAppState} from "../../utils/local-storage";
 import AddTaskContainer from "../add-task-container/add-task-container";
-
+import {initOrRefreshAppStateData, serializeAppState} from "../../utils/app-state-utils";
+import {getToday, parseFromDDMMyyyy} from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,77 +26,143 @@ export default function BaseApp() {
     const classes = useStyles();
 
     const [baseState, setBaseState] = useState(
-        loadAppState()
+        initOrRefreshAppStateData()
     );
 
-    const updateBaseState = (deltaState: any) => {
+    const updateBaseStateAndSaveAppState = (deltaState: RootDataStore) => {
         setBaseState({
             ...baseState,
             ...deltaState
         })
-        updateAppState(deltaState)
+
+        serializeAppState(deltaState)
     }
 
     const updateCurrentlySelectedDate = (date: string) => {
-        updateBaseState({
+        updateBaseStateAndSaveAppState({
             ...baseState,
             currentlySelectedDate: date
         })
     }
 
     const markTaskComplete = (task: Task) => {
+        console.log(task)
         const allActiveTasks = new Map<string, Task[]>(baseState.tasks);
-        const targetTaskList = new Set<Task>(allActiveTasks.get(task.plannedOn) || [])
-        targetTaskList.delete(task)
-        allActiveTasks.set(task.plannedOn, Array.from(targetTaskList))
 
-        const completedTasks = baseState.archivedTasks ? [...baseState.archivedTasks] : []
+        const newOverdueTasks: Task[] = []
+
+        if (allActiveTasks.get(task.plannedOn)) {
+            const targetTaskList = new Set<Task>(allActiveTasks.get(task.plannedOn) || baseState.overdueTasks || [])
+            targetTaskList.delete(task)
+            allActiveTasks.set(task.plannedOn, Array.from(targetTaskList))
+        } else {
+            const targetTaskList = new Set<Task>(baseState.overdueTasks || [])
+            targetTaskList.delete(task)
+            newOverdueTasks.push(...Array.from(targetTaskList))
+        }
+        const completedTasks = baseState.completedTasks ? [...baseState.completedTasks] : []
         completedTasks.push({
             ...task,
             completedDate: new Date()
         })
 
-        updateBaseState({
+        updateBaseStateAndSaveAppState({
+            ...baseState,
             tasks: allActiveTasks,
-            archivedTasks: completedTasks
+            completedTasks: completedTasks,
+            overdueTasks: newOverdueTasks
         })
     }
 
     const addTask = (task: Task) => {
-        const tasks = baseState.tasks;
-        // TODO Task update is not reflecting on the UI.
+        const today: Date = parseFromDDMMyyyy(getToday())
 
-        const dayList = [...baseState.tasks.get(task.plannedOn) || []];
-        const filteredList = [...dayList.filter( t => t.id !== task.id)];
+        if (today > parseFromDDMMyyyy(task.plannedOn)) {
+            const overdueTasks = [...baseState.overdueTasks || []].filter(t => t.id !== task.id)
+            overdueTasks.push(task)
 
-        filteredList.push(task)
+            console.log(overdueTasks)
+            updateBaseStateAndSaveAppState({
+                ...baseState,
+                overdueTasks: overdueTasks,
+            })
+        } else {
 
-        tasks.set(task.plannedOn, filteredList);
+            const tasks = baseState.tasks;
+            const dayList = [...baseState.tasks.get(task.plannedOn) || []];
+            const filteredList = [...dayList.filter(t => t.id !== task.id)];
+            filteredList.push(task)
+            tasks.set(task.plannedOn, filteredList);
 
-        updateBaseState({
-            ...baseState,
-            tasks: tasks
-        })
+            updateBaseStateAndSaveAppState({
+                ...baseState,
+                tasks: tasks
+            })
+        }
     }
 
     const restoreTask = (task: CompletedTask) => {
-        const newCompletedTaskList = new Set<Task>(baseState.archivedTasks || [])
+        const newCompletedTaskList = new Set<CompletedTask>(baseState.completedTasks || [])
         newCompletedTaskList.delete(task)
 
-        const allActiveTasks = new Map<string, Task[]>(baseState.tasks);
-        const targetTaskList = [...allActiveTasks.get(task.plannedOn) || []]
-        targetTaskList.push({
-            id: task.id,
-            plannedOn: task.plannedOn,
-            value: task.value
-        })
+        const today: Date = parseFromDDMMyyyy(getToday())
 
-        allActiveTasks.set(task.plannedOn, targetTaskList)
+        if (today > parseFromDDMMyyyy(task.plannedOn)) {
+            const overdueTasks = [...baseState.overdueTasks || []]
+            overdueTasks.push(task)
 
-        updateBaseState({
-            tasks: allActiveTasks,
-            archivedTasks: Array.from(newCompletedTaskList)
-        })
+            updateBaseStateAndSaveAppState({
+                ...baseState,
+                overdueTasks: overdueTasks,
+                completedTasks: Array.from(newCompletedTaskList)
+            })
+
+        } else {
+
+            const allActiveTasks = new Map<string, Task[]>(baseState.tasks);
+            const targetTaskList = [...allActiveTasks.get(task.plannedOn) || []]
+            targetTaskList.push({
+                id: task.id,
+                plannedOn: task.plannedOn,
+                value: task.value
+            })
+
+            allActiveTasks.set(task.plannedOn, targetTaskList)
+
+            updateBaseStateAndSaveAppState({
+                ...baseState,
+                tasks: allActiveTasks,
+                completedTasks: Array.from(newCompletedTaskList)
+            })
+        }
+
+    }
+
+    const deleteTask = (key: string, task: Task) => {
+
+        console.log(key)
+        console.log(task)
+
+        if(key === DayType.OVERDUE) {
+            const overdueTasks = new Set<Task>(baseState.overdueTasks || [])
+            overdueTasks.delete(task)
+
+            updateBaseStateAndSaveAppState({
+                ...baseState,
+                overdueTasks: Array.from(overdueTasks),
+            })
+        } else {
+            const allActiveTasks = new Map<string, Task[]>(baseState.tasks);
+            const targetTaskList = new Set<Task>(allActiveTasks.get(task.plannedOn) || [])
+            targetTaskList.delete(task)
+
+            allActiveTasks.set(task.plannedOn, Array.from(targetTaskList))
+
+            updateBaseStateAndSaveAppState({
+                ...baseState,
+                tasks: allActiveTasks,
+            })
+        }
     }
 
     return (
@@ -109,9 +175,11 @@ export default function BaseApp() {
             <TaskListsContainer
                 selectedDate={baseState.currentlySelectedDate}
                 tasks={baseState.tasks}
+                overdueTasks={baseState.overdueTasks}
                 update={addTask}
-                completedTasks={baseState.archivedTasks || []}
+                completedTasks={baseState.completedTasks || []}
                 complete={markTaskComplete}
+                delete={deleteTask}
                 restore={restoreTask}
             />
         </div>

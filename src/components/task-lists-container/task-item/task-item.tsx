@@ -7,28 +7,31 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {Task} from "../../../types/types";
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import TextField from '@material-ui/core/TextField';
-import AddNewTask from "../../add-task-container/add-new-task/add-new-task";
+import DeleteIcon from '@material-ui/icons/Delete';
 import EditTask from "../../edit-task/edit-task";
+import {getKeyFromDisplayableDay} from "../../../utils/date-utils";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         itemText: {
-            fontWeight: 'bold',
             font: 'inherit',
-            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+            width: '100%',
+            cursor: 'pointer',
         },
         textField: {
+            font: 'inherit',
             width: '100%',
         },
     }),
 );
 
 interface TaskItemProps {
+    listKey: string
     task: Task
     update: (task: Task) => void
     complete: (task: Task) => void
+    delete: (key: string, task: Task) => void
 }
 
 export default function TaskItem(props: TaskItemProps) {
@@ -55,7 +58,9 @@ export default function TaskItem(props: TaskItemProps) {
     const handleEditBlur = () => {
         setTaskItemState({
             ...taskItemState,
-            element: <span>{props.task.value}</span>,
+            element: <Tooltip title="Click to edit" aria-label={`tooltip-${labelId}`}>
+                <span>{props.task.value}</span>
+            </Tooltip>,
             editMode: false
         })
     }
@@ -92,13 +97,15 @@ export default function TaskItem(props: TaskItemProps) {
                 className={classes.itemText}
                 id={labelId}
                 primary={taskItemState.element}
+                onClick={handleEditClick}
             />
-            {!taskItemState.editMode && <ListItemSecondaryAction>
-                <IconButton edge="start" aria-label="edit" onClick={handleEditClick}>
-                    <EditIcon/>
+            {!taskItemState.editMode &&
+            <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label={`delete-${labelId}`}
+                            onClick={() => props.delete(getKeyFromDisplayableDay(props.listKey), props.task)}>
+                    <DeleteIcon/>
                 </IconButton>
-            </ListItemSecondaryAction>
-            }
+            </ListItemSecondaryAction>}
         </ListItem>
     );
 }

@@ -47,7 +47,7 @@ export default function AddTaskContainer(props: AddTaskContainerProps) {
 
     const handleAddTask = (value: string) => {
         props.addTask({
-            id: new Date().getMilliseconds(),
+            id: new Date().getTime(),
             plannedOn: addTaskState.date,
             value: value
         })

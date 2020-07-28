@@ -7,10 +7,6 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import {CompletedTask, Task} from "../../types/types";
 import TaskItem from "./task-item/task-item";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import DoneAllIcon from '@material-ui/icons/DoneAll';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -27,12 +23,8 @@ const useStyles = makeStyles((theme: Theme) =>
             margin: 'auto',
             flexShrink: 0,
             fontWeight: 'bold',
+            color: 'orange'
         },
-        itemText: {
-            fontWeight: 'bold',
-            fontSize: '16px',
-            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
-        }
     }),
 );
 
@@ -81,47 +73,31 @@ interface DateTasks {
     tasks: Task[]
     update: (task: Task) => void
     complete: (task: Task) => void
-    expanded?: boolean
     delete: (key: string, task: Task) => void
+    expanded?: boolean
 }
 
 
-export default function DayBasedTaskList(props: DateTasks) {
+export default function OverdueTaskList(props: DateTasks) {
 
     const classes = useStyles();
     const getTasks = (tasks : Task[]) => {
-
-        if (tasks.length === 0) {
-            return Array.of(<ListItem
-                key={'no-items-in-list'}
-                role={undefined} dense>
-                <ListItemIcon>
-                    <DoneAllIcon />
-                </ListItemIcon>
-                <ListItemText
-                    className={classes.itemText}
-                    id={'no-item'}
-                    primary={'Nothing awaits you here :)'}
-                />
-            </ListItem>)
-        }
-
         return tasks.map((value, index) => {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
-                <TaskItem listKey={props.title} update={props.update} key={labelId} task={value}
-                          complete={props.complete} delete={props.delete}/>
+                <TaskItem
+                    listKey={props.title} update={props.update} key={labelId} task={value}
+                    complete={props.complete} delete={props.delete}/>
             );
         })
     }
 
     return (
         <div>
-            <Accordion square expanded={true}>
+            <Accordion square expanded={true} id={'overdue-panel1a-accordian'}>
                 <AccordionSummary
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
+                    aria-controls="overdue-panel1a-content"
+                    id="overdue-panel1a-header">
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
                         {props.title.toUpperCase()}
                     </Typography>

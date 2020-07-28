@@ -6,7 +6,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import {
     eitherTodayOrTomorrow,
     formatToDDMMyyyy,
-    formatToDOMMM,
+    formatFromKeyToDisplayable,
     getToday,
     getTomorrow,
 } from "../../../utils/date-utils";
@@ -81,7 +81,7 @@ export default function TopButtonGroup(props: TopButtonGroupProps) {
                         variant={!eitherTodayOrTomorrow(props.selectedDate) ? 'contained': 'outlined'}
                         onClick={() => {
                             setDatePickerState(true)
-                        }}>{!eitherTodayOrTomorrow(props.selectedDate) ? formatToDOMMM(props.selectedDate) : 'Date'}</Button>
+                        }}>{!eitherTodayOrTomorrow(props.selectedDate) ? formatFromKeyToDisplayable(props.selectedDate) : 'Date'}</Button>
                 </ButtonGroup>
             </div>
     );
