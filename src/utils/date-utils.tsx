@@ -25,3 +25,16 @@ export const formatToListTitle = (date: Date | number): string => {
 export const neitherTodayNorTomorrow = (key: number): boolean => {
     return key !== getTodayKey() && key !== getTomorrowKey()
 }
+
+export const getLocaleTime = () =>{
+    return new Date().toLocaleTimeString()
+}
+
+export const getDate = () =>{
+    return format(new Date(),'EEE, dd MMM, yyyy')
+}
+
+
+
+
+

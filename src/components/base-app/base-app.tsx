@@ -8,6 +8,9 @@ import DayBasedTaskList from "../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../task-lists-container/completed-task-list";
 import {BaseTasksState} from "../../types/base-tasks-state";
 import {UserSettings} from "../../types/user-settings";
+import Clock from '../clock/clock';
+// import {Clock} from "../clock/clock";
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -96,6 +99,7 @@ export default function BaseApp(props: BaseAppProps) {
 
     return (
         <div className={classes.root}>
+            <Clock></Clock>
             <AddTaskContainer
                 keyTitle={baseState.getKeyTitle()}
                 changeSelectedDate={updateCurrentlySelectedDate}
