@@ -1,76 +1,35 @@
-import {AppDataStore, DeltaAppDataStore, Task} from "../types/types";
-import {getToday, parseFromDDMMyyyy} from "./date-utils";
+import {CompletedTask, Task} from "../types/types";
+import {BaseTasksState} from "../types/base-tasks-state";
+import {getTodayKey} from "./date-utils";
 
-export const initOrRefreshAppStateData = (): AppDataStore => {
-    const appData: AppDataStore = deserializeAppState();
+export const updateAppState = (updatedState: BaseTasksState): BaseTasksState => {
 
-    serializeAppState({
-        ...computeOverdueTaskList(appData)
-    })
-
-    return deserializeAppState()
-}
-
-export const serializeAppState = (updatedState: DeltaAppDataStore) => {
-
-    const currentState = deserializeAppState();
     const state = {
-        ...currentState,
-        ...updatedState,
-        tasks: JSON.stringify(Array.from(updatedState.tasks ? updatedState.tasks.entries() : new Map()))
+         selectedDate: updatedState.selectedDate,
+        tasks: [...Array.from(updatedState.tasks)]
     }
 
-    localStorage.setItem("organizeyou-base-app", JSON.stringify(state))
+    localStorage.setItem("organizeyou-base-app-2", JSON.stringify(state))
+
+    return new BaseTasksState(state.selectedDate, new Map<number, Task[]|CompletedTask[]>(state.tasks))
 }
 
 
-export const deserializeAppState = (): AppDataStore => {
+export const loadAppState = (): BaseTasksState => {
 
-    const persistedState = localStorage.getItem("organizeyou-base-app");
+    const persistedState = localStorage.getItem("organizeyou-base-app-2");
 
     if (persistedState) {
         const state = JSON.parse(persistedState)
-        return {
-            ...state,
-            tasks: new Map(JSON.parse(state.tasks)),
-            completedTasks: state.completedTasks.map((ct: any) => {
-                return {
-                    id: ct.id,
-                    value: ct.value,
-                    plannedDate: ct.plannedDate,
-                    completedDate: new Date(ct.completedDate)
-                }
-            })
-        }
+        return new BaseTasksState(
+            state.selectedDate,
+            new Map<number, Task[] | CompletedTask[]>(state.tasks),
+            true
+        )
     } else {
-        return {
-            currentlySelectedDate: getToday(),
-            tasks: new Map<string, Task[]>(),
-            completedTasks: []
-        }
-    }
-}
-
-export const computeOverdueTaskList = (appData: AppDataStore): AppDataStore => {
-    const allActiveTasks = new Map<string, Task[]>(appData.tasks);
-    const overdueTasks: Task[] = appData.overdueTasks || []
-    const today: Date = parseFromDDMMyyyy(getToday())
-    const overdueKeys: string[] = []
-
-    allActiveTasks.forEach((value, key) => {
-        if (today > parseFromDDMMyyyy(key)) {
-            overdueTasks.push(...value)
-            overdueKeys.push(key)
-        }
-    })
-
-    overdueKeys.forEach(value => {
-        allActiveTasks.delete(value)
-    })
-
-    return {
-        ...appData,
-        tasks: new Map<string, Task[]>(allActiveTasks),
-        overdueTasks
+        return new BaseTasksState(
+            getTodayKey(),
+            new Map<number, Task[] | CompletedTask[]>()
+        )
     }
 }

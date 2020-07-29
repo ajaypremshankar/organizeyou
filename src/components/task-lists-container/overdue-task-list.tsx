@@ -7,6 +7,7 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import {Task} from "../../types/types";
 import TaskItem from "./task-item/task-item";
+import {DisplayableTaskList} from "../../types/displayable-task-list";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -69,12 +70,10 @@ const AccordionDetails = withStyles((theme) => ({
 }))(MuiAccordionDetails);
 
 interface DateTasks {
-    title: string;
-    tasks: Task[]
-    update: (key: string, task: Task) => void
-    complete: (key: string, task: Task) => void
-    delete: (key: string, task: Task) => void
-    expanded?: boolean
+    content: DisplayableTaskList
+    update: (key: number, task: Task) => void
+    complete: (key: number, task: Task) => void
+    delete: (key: number, task: Task) => void
 }
 
 
@@ -86,7 +85,7 @@ export default function OverdueTaskList(props: DateTasks) {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem
-                    listKey={props.title} update={props.update} key={labelId} task={value}
+                    listKey={props.content.key} update={props.update} key={labelId} task={value}
                     complete={props.complete} delete={props.delete}/>
             );
         })
@@ -99,12 +98,12 @@ export default function OverdueTaskList(props: DateTasks) {
                     aria-controls="overdue-task-content"
                     id="overdue-task-header">
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {props.title.toUpperCase()}
+                        {props.content.title.toUpperCase()}
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <List className={classes.list}>
-                        {getTasks(props.tasks)}
+                        {getTasks(props.content.tasks)}
                     </List>
                 </AccordionDetails>
             </Accordion>

@@ -11,6 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DoneAllIcon from '@material-ui/icons/DoneAll';
+import {DisplayableTaskList} from "../../types/displayable-task-list";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -77,12 +78,11 @@ const AccordionDetails = withStyles((theme) => ({
 }))(MuiAccordionDetails);
 
 interface DateTasks {
-    title: string;
-    tasks: Task[]
-    update: (key: string, task: Task) => void
-    complete: (key: string, task: Task) => void
+    content: DisplayableTaskList
+    update: (key: number, task: Task) => void
+    complete: (key: number, task: Task) => void
     expanded?: boolean
-    delete: (key: string, task: Task) => void
+    delete: (key: number, task: Task) => void
 }
 
 
@@ -109,7 +109,7 @@ export default function DayBasedTaskList(props: DateTasks) {
         return tasks.map((value, index) => {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
-                <TaskItem listKey={props.title} update={props.update} key={labelId} task={value}
+                <TaskItem listKey={props.content.key} update={props.update} key={labelId} task={value}
                           complete={props.complete} delete={props.delete}/>
             );
         })
@@ -119,16 +119,16 @@ export default function DayBasedTaskList(props: DateTasks) {
         <div>
             <Accordion square expanded={true}>
                 <AccordionSummary
-                    aria-controls={`${props.title}-task-content`}
-                    id={`${props.title}-task-header`}
+                    aria-controls={`${props.content.title}-task-content`}
+                    id={`${props.content.title}-task-header`}
                 >
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {props.title.toUpperCase()}
+                        {props.content.title.toUpperCase()}
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <List className={classes.list}>
-                        {getTasks(props.tasks)}
+                        {getTasks(props.content.tasks)}
                     </List>
                 </AccordionDetails>
             </Accordion>

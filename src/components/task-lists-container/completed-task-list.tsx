@@ -9,10 +9,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import {CompletedTask} from "../../types/types";
-import {formatToDDMMyyyy} from "../../utils/date-utils";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RestoreIcon from '@material-ui/icons/Restore';
+import {DisplayableTaskList} from "../../types/displayable-task-list";
+import {formatToListTitle} from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -39,49 +40,48 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Accordion = withStyles({
     root: {
-      border: '0px solid rgba(0, 0, 0, .125)',
-      marginBottom:'20px',
-      boxShadow: 'none',
-      '&:not(:last-child)': {
-        borderBottom: 0,
-      },
-      '&:before': {
-        display: 'none',
-      },
-      '&$expanded': {
-        margin: 'auto',
-      },
+        border: '0px solid rgba(0, 0, 0, .125)',
+        marginBottom: '20px',
+        boxShadow: 'none',
+        '&:not(:last-child)': {
+            borderBottom: 0,
+        },
+        '&:before': {
+            display: 'none',
+        },
+        '&$expanded': {
+            margin: 'auto',
+        },
     },
     expanded: {},
-  })(MuiAccordion);
-  
-  const AccordionSummary = withStyles({
+})(MuiAccordion);
+
+const AccordionSummary = withStyles({
     root: {
-      backgroundColor: 'rgba(0, 0, 0, .03)',
-      marginBottom: -1,
-      minHeight: 56,
-      '&$expanded': {
+        backgroundColor: 'rgba(0, 0, 0, .03)',
+        marginBottom: -1,
         minHeight: 56,
-      },
+        '&$expanded': {
+            minHeight: 56,
+        },
     },
     content: {
-      '&$expanded': {
-        margin: '12px 0',
-      },
+        '&$expanded': {
+            margin: '12px 0',
+        },
     },
     expanded: {},
-  })(MuiAccordionSummary);
-  
-  const AccordionDetails = withStyles((theme) => ({
+})(MuiAccordionSummary);
+
+const AccordionDetails = withStyles((theme) => ({
     root: {
-      padding: theme.spacing(2),
+        padding: theme.spacing(2),
     },
-  }))(MuiAccordionDetails);
+}))(MuiAccordionDetails);
 
 interface DateTasks {
-    title: string;
-    tasks: CompletedTask[],
-    restore: (task: CompletedTask) => void,
+    content: DisplayableTaskList
+    undoComplete: (task: CompletedTask) => void,
 }
 
 export default function CompletedTaskList(props: DateTasks) {
@@ -89,7 +89,7 @@ export default function CompletedTaskList(props: DateTasks) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false)
 
-    const handleChange =  () => {
+    const handleChange = () => {
         setExpanded(!expanded)
     };
 
@@ -97,38 +97,41 @@ export default function CompletedTaskList(props: DateTasks) {
         <div>
             <Accordion square expanded={expanded} onChange={handleChange}>
                 <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="completed-task-content"
-                id="completed-task-header"
+                    expandIcon={<ExpandMoreIcon/>}
+                    aria-controls="completed-task-content"
+                    id="completed-task-header"
                 >
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {props.title.toUpperCase()}
+                        {props.content.title.toUpperCase()}
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <List className={classes.list}>
-                        {props.tasks.map((value, index) => {
-                            const labelId = `completed-task-list-label-${value.id}`;
+                        {
+                            (props.content.tasks as CompletedTask[])
+                                .map((value, index) => {
+                                    const labelId = `completed-task-list-label-${value.id}`;
 
-                            return (
-                                <ListItem
-                                    divider={true}
-                                    key={labelId}
-                                    role={undefined} dense button>
-                                    <ListItemText
-                                        className={classes.listItem}
-                                        id={labelId}
-                                        primary={value.value}
-                                        secondary={` — On ${formatToDDMMyyyy(value.completedDate, true)}`}
-                                    />
-                                    <ListItemSecondaryAction>
-                                        <IconButton edge="start" aria-label="restore" onClick={() =>props.restore(value)}>
-                                            <RestoreIcon/>
-                                        </IconButton>
-                                    </ListItemSecondaryAction>
-                                </ListItem>
-                            );
-                        })}
+                                    return (
+                                        <ListItem
+                                            divider={true}
+                                            key={labelId}
+                                            role={undefined} dense button>
+                                            <ListItemText
+                                                className={classes.listItem}
+                                                id={labelId}
+                                                primary={value.value}
+                                                secondary={` — On ${formatToListTitle(new Date(value.completedDate))}`}
+                                            />
+                                            <ListItemSecondaryAction>
+                                                <IconButton edge="start" aria-label="restore"
+                                                            onClick={() => props.undoComplete(value)}>
+                                                    <RestoreIcon/>
+                                                </IconButton>
+                                            </ListItemSecondaryAction>
+                                        </ListItem>
+                                    );
+                                })}
                     </List>
                 </AccordionDetails>
             </Accordion>

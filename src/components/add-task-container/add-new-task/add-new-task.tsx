@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import {getListTitleFromKey} from "../../../utils/date-utils";
+import {KeyTitlePair} from "../../../types/key-title-pair";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface AddNewTaskProps {
-    date: string,
+    keyTitle: KeyTitlePair,
     addTask: (value: string) => void
 }
 
@@ -32,7 +32,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
         <TextField
             className={classes.textField}
             id="outlined-basic"
-            label={`Add task for ${getListTitleFromKey(props.date)}`}
+            label={`Add task for ${props.keyTitle.title}`}
             variant="outlined"
             size={'medium'}
             value={taskContentState}

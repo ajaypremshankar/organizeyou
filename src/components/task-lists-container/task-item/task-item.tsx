@@ -9,7 +9,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditTask from "../../edit-task/edit-task";
-import {getFromKeyToDisplayableDay} from "../../../utils/date-utils";
 import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,11 +26,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface TaskItemProps {
-    listKey: string
+    listKey: number
     task: Task
-    update: (key: string, task: Task) => void
-    complete: (key: string, task: Task) => void
-    delete: (key: string, task: Task) => void
+    update: (key: number, task: Task) => void
+    complete: (key: number, task: Task) => void
+    delete: (key: number, task: Task) => void
 }
 
 export default function TaskItem(props: TaskItemProps) {
@@ -43,8 +42,7 @@ export default function TaskItem(props: TaskItemProps) {
     });
 
     const updateTask = (value: string) => {
-        props.update(
-            getFromKeyToDisplayableDay(props.listKey),
+        props.update(props.listKey,
             {
                 ...props.task,
                 value: value
@@ -53,7 +51,6 @@ export default function TaskItem(props: TaskItemProps) {
             ...taskItemState,
             element: <span>{value}</span>,
         })
-
     }
 
     const handleEditBlur = () => {
@@ -91,7 +88,7 @@ export default function TaskItem(props: TaskItemProps) {
                     tabIndex={-1}
                     disableRipple
                     inputProps={{'aria-labelledby': labelId}}
-                    onClick={() => props.complete(getFromKeyToDisplayableDay(props.listKey), props.task)}
+                    onClick={() => props.complete(props.listKey, props.task)}
                 />
             </ListItemIcon>
             <ListItemText
@@ -103,7 +100,7 @@ export default function TaskItem(props: TaskItemProps) {
             {!taskItemState.editMode &&
             <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label={`delete-${labelId}`}
-                            onClick={() => props.delete(getFromKeyToDisplayableDay(props.listKey), props.task)}>
+                            onClick={() => props.delete(props.listKey, props.task)}>
                     <DeleteIcon/>
                 </IconButton>
             </ListItemSecondaryAction>}

@@ -4,6 +4,7 @@ import TopButtonGroup from "./top-button-group/top-button-group";
 import AddNewTask from "./add-new-task/add-new-task";
 import {Task} from "../../types/types";
 import Grid from "@material-ui/core/Grid";
+import {KeyTitlePair} from "../../types/key-title-pair";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -22,35 +23,27 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface AddTaskContainerProps {
-    selectedDate: string,
-    changeSelectedDate: (date: string) => void,
-    addTask: (key: string, task: Task) => void,
+    keyTitle: KeyTitlePair,
+    changeSelectedDate: (date: number) => void,
+    addTask: (key: number, task: Task) => void,
 }
 
 export default function AddTaskContainer(props: AddTaskContainerProps) {
     const classes = useStyles()
 
-    const [addTaskState, setAddTaskState] = useState(
-        {
-            date: props.selectedDate,
-        }
-    )
+    const [addTaskState, setAddTaskState] = useState(props.keyTitle)
 
-    const handleDateChange = (date: string) => {
-        setAddTaskState(
-            {
-                ...addTaskState,
-                date: date,
-            })
+    const handleDateChange = (date: number) => {
+        setAddTaskState(new KeyTitlePair(date))
         props.changeSelectedDate(date)
     }
 
     const handleAddTask = (value: string) => {
         props.addTask(
-            addTaskState.date,
+            addTaskState.key,
             {
                 id: new Date().getTime(),
-                plannedOn: addTaskState.date,
+                plannedOn: addTaskState.key,
                 value: value
             })
     }
@@ -58,10 +51,10 @@ export default function AddTaskContainer(props: AddTaskContainerProps) {
     return (
         <Grid className={classes.container} container justify="space-around">
             <TopButtonGroup
-                selectedDate={addTaskState.date}
+                keyTitle={addTaskState}
                 chooseDate={handleDateChange}/>
             <AddNewTask
-                date={addTaskState.date}
+                keyTitle={addTaskState}
                 addTask={handleAddTask}/>
         </Grid>
     );
