@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import BaseApp from "./components/base-app/base-app";
+import AppSkeleton from "./components/app-skeleton/app-skeleton";
 
 function App() {
     return (
         <div className="App">
-            <BaseApp/>
+            <AppSkeleton/>
         </div>
     );
 }

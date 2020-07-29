@@ -7,6 +7,7 @@ import OverdueTaskList from "../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../task-lists-container/completed-task-list";
 import {BaseTasksState} from "../../types/base-tasks-state";
+import {UserSettings} from "../../types/user-settings";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -27,7 +28,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function BaseApp() {
+interface BaseAppProps {
+    userSettings: UserSettings
+}
+
+export default function BaseApp(props: BaseAppProps) {
     const classes = useStyles();
 
     const [baseState, setBaseState] = useState(
