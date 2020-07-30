@@ -21,6 +21,8 @@ export const loadAppState = (): BaseTasksState => {
 
     if(persistedState && !persistedState.includes('createdDate')) {
         const updatedState = migrateFromV200ToV210(persistedState)
+        updateAppState(updatedState)
+
         return new BaseTasksState(
             updatedState.selectedDate,
             new Map<number, Task[] | CompletedTask[]>(updatedState.tasks),
