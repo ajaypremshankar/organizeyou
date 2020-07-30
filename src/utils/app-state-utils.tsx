@@ -19,7 +19,16 @@ export const loadAppState = (): BaseTasksState => {
 
     const persistedState = localStorage.getItem("organizeyou-base-app-2");
 
-    if (persistedState) {
+    if(persistedState && !persistedState.includes('createdDate')) {
+        const updatedState = migrateFromV200ToV210(persistedState)
+        updateAppState(updatedState)
+
+        return new BaseTasksState(
+            updatedState.selectedDate,
+            new Map<number, Task[] | CompletedTask[]>(updatedState.tasks),
+            true
+        )
+    } else if (persistedState) {
         const state = JSON.parse(persistedState)
         return new BaseTasksState(
             state.selectedDate,
@@ -31,5 +40,35 @@ export const loadAppState = (): BaseTasksState => {
             getTodayKey(),
             new Map<number, Task[] | CompletedTask[]>()
         )
+    }
+}
+
+
+/***
+ * Add createdDate and updatedDate to currently created tasks.
+ * @param persistedState
+ */
+function migrateFromV200ToV210(persistedState: string) {
+    const state = JSON.parse(persistedState)
+    const now = new Date().getTime()
+
+    const tasks = state.tasks.map((stateKeyValue: [number, any[]]) => {
+        const taskArr = stateKeyValue[1].map(value => {
+            if(!value.createdDate) {
+                return {
+                    ...value,
+                    createdOn: now,
+                    updatedOn: now
+                }
+            }
+            return value
+        })
+
+        return [stateKeyValue[0], [...taskArr]]
+    })
+
+    return {
+        ...state,
+        tasks: tasks
     }
 }

@@ -89,14 +89,14 @@ interface DateTasks {
 export default function DayBasedTaskList(props: DateTasks) {
 
     const classes = useStyles();
-    const getTasks = (tasks : Task[]) => {
+    const getTasks = () => {
 
-        if (tasks.length === 0) {
+        if (props.content.isEmpty()) {
             return Array.of(<ListItem
                 key={'no-items-in-list'}
                 role={undefined} dense>
                 <ListItemIcon>
-                    <DoneAllIcon />
+                    <DoneAllIcon/>
                 </ListItemIcon>
                 <ListItemText
                     className={classes.itemText}
@@ -106,7 +106,7 @@ export default function DayBasedTaskList(props: DateTasks) {
             </ListItem>)
         }
 
-        return tasks.map((value, index) => {
+        return (props.content.tasks as Task[]).map((value, index) => {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem listKey={props.content.key} update={props.update} key={labelId} task={value}
@@ -128,7 +128,7 @@ export default function DayBasedTaskList(props: DateTasks) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <List className={classes.list}>
-                        {getTasks(props.content.tasks)}
+                        {getTasks()}
                     </List>
                 </AccordionDetails>
             </Accordion>

@@ -45,7 +45,8 @@ export default function TaskItem(props: TaskItemProps) {
         props.update(props.listKey,
             {
                 ...props.task,
-                value: value
+                value: value,
+                updatedOn: new Date().getTime()
             })
         setTaskItemState({
             ...taskItemState,

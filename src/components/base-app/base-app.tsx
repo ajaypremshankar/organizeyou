@@ -60,31 +60,29 @@ export default function BaseApp() {
     }
 
     const getOverdueList = () => {
-
-        return baseState.getOverdueTasks().isNotEmpty() ?
+        const overdueTaskList = baseState.getOverdueTasks()
+        return overdueTaskList.isNotEmpty() ?
             <OverdueTaskList
-                content={baseState.getOverdueTasks()}
+                content={overdueTaskList}
                 update={handleTaskAddition}
                 complete={handleTaskCompletion} delete={handleTaskDeletion}/>
             : null
     }
 
     const getSelectedDateList = () => {
-        const dateList = baseState.getSelectedDateTasks()
 
-        return dateList.isNotEmpty() ?
-            <DayBasedTaskList content={dateList}
+        return <DayBasedTaskList content={baseState.getSelectedDateTasks()}
                               update={handleTaskAddition}
                               complete={handleTaskCompletion}
                               delete={handleTaskDeletion}
                               expanded={true}/>
-            : null
     }
 
     const getCompletedList = () => {
-        return baseState.getCompletedTasks().isNotEmpty() ?
+        const completedTaskList = baseState.getCompletedTasks()
+        return completedTaskList.isNotEmpty() ?
             <CompletedTaskList
-                content={baseState.getCompletedTasks()}
+                content={completedTaskList}
                 undoComplete={handleUndoComplete}/>
             : null
     }
