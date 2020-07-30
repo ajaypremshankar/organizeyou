@@ -21,5 +21,12 @@ export enum ListTitleType {
 }
 
 export interface UserSettings {
-    selectedDate: number
+    rememberSelectedDate: boolean,
+    neverSignIn: boolean
+}
+
+export enum SettingsType {
+    REMEMBER_SELECTED_DATE = 'Remember selected Date',
+    SHOW_SECONDS = 'Show seconds on clock',
+    SHOW_ALL_TASKS = 'Show all tasks list'
 }
