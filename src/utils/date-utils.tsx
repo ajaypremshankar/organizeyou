@@ -31,7 +31,7 @@ export const getLocaleTime = () =>{
 }
 
 export const getDate = () =>{
-    return format(new Date(),'EEE, dd MMM, yyyy')
+    return format(new Date(),'EEE, do MMM, yyyy')
 }
 
 
