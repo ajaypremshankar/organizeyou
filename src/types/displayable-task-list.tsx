@@ -6,9 +6,9 @@ export class DisplayableTaskList {
     private readonly _keyTitle: KeyTitlePair;
     private readonly _tasks: Task[] | CompletedTask[];
 
-    constructor(key: number, tasks: Task[] | CompletedTask[]) {
+    constructor(key: number, tasks: Task[] | CompletedTask[], sorter = DisplayableTaskList.defaultDescSorting) {
         this._keyTitle = new KeyTitlePair(key);
-        this._tasks = tasks
+        this._tasks = tasks.sort(sorter)
     }
 
     get key(): number {
@@ -29,7 +29,14 @@ export class DisplayableTaskList {
 
 
     public isNotEmpty(): boolean {
-        return this._tasks.length !== 0
+        return !this.isEmpty()
     }
 
+    public isEmpty(): boolean {
+        return this._tasks.length === 0
+    }
+
+    private static defaultDescSorting = (a: Task|CompletedTask, b: Task|CompletedTask) => {
+        return b.updatedOn - a.updatedOn
+    }
 }

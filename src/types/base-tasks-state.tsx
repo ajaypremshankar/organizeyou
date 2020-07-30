@@ -22,29 +22,31 @@ export class BaseTasksState {
         return this._keyTitle.key;
     }
 
-    public getOverdueTasks(): DisplayableTaskList {
+    public getOverdueTasks(sorter?: (a: Task|CompletedTask, b: Task|CompletedTask) => number): DisplayableTaskList {
         const newTasks: Map<number, Task[] | CompletedTask[]> = BaseTasksState.computeOverdueTasks(this._tasks)
         const reducedList: Task[] | CompletedTask[] = newTasks.get(ListType.OVERDUE) || []
-        return new DisplayableTaskList(ListType.OVERDUE, reducedList)
+        return new DisplayableTaskList(ListType.OVERDUE, reducedList, sorter)
     }
 
-    public getCompletedTasks(): DisplayableTaskList {
+    public getCompletedTasks(sorter?: (a: Task|CompletedTask, b: Task|CompletedTask) => number): DisplayableTaskList {
         const reducedList: CompletedTask[] = []
         const tempList = [...this._tasks.get(ListType.COMPLETED) || []]
         tempList.map(t => reducedList.push(t as CompletedTask))
-        return new DisplayableTaskList(ListType.COMPLETED, reducedList)
+        return new DisplayableTaskList(ListType.COMPLETED, reducedList, sorter)
     }
 
-    public getSelectedDateTasks(): DisplayableTaskList {
+    public getSelectedDateTasks(sorter?: (a: Task|CompletedTask, b: Task|CompletedTask) => number): DisplayableTaskList {
         const reducedList: Task[] = []
         reducedList.push(...this._tasks.get(this._selectedDate) || [])
-        return new DisplayableTaskList(this._selectedDate, reducedList)
+        return new DisplayableTaskList(this._selectedDate, reducedList, sorter)
     }
 
     public completeTask(task: Task): BaseTasksState {
+        const now = new Date().getTime()
         const newTasks = this.internalAddTask(ListType.COMPLETED, {
             ...task,
-            completedDate: new Date().getTime()
+            completedDate: now,
+            updatedOn: now
         }, this.tasks)
 
         const removedTasks: Map<number, Task[] | CompletedTask[]> = this.internalRemoveTask(task.plannedOn, task, newTasks)
@@ -103,6 +105,8 @@ export class BaseTasksState {
         removedKeys.forEach(k => {
             newTasks.delete(k)
         })
+
+        newTasks.set(ListType.OVERDUE, reducedList)
 
         return newTasks
     }

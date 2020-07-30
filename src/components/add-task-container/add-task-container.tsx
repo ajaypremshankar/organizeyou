@@ -39,12 +39,15 @@ export default function AddTaskContainer(props: AddTaskContainerProps) {
     }
 
     const handleAddTask = (value: string) => {
+        const now = new Date().getTime()
         props.addTask(
             addTaskState.key,
             {
-                id: new Date().getTime(),
+                id: now,
                 plannedOn: addTaskState.key,
-                value: value
+                value: value,
+                createdOn: now,
+                updatedOn: now
             })
     }
 

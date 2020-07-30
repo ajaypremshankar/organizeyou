@@ -1,7 +1,9 @@
 export interface Task {
     id: number,
     value: string;
-    plannedOn: number
+    plannedOn: number;
+    createdOn: number;
+    updatedOn: number;
 }
 
 export interface CompletedTask extends Task {
