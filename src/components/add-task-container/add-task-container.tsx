@@ -5,6 +5,7 @@ import AddNewTask from "./add-new-task/add-new-task";
 import {Task} from "../../types/types";
 import Grid from "@material-ui/core/Grid";
 import {KeyTitlePair} from "../../types/key-title-pair";
+import {getCurrentMillis} from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -39,7 +40,7 @@ export default function AddTaskContainer(props: AddTaskContainerProps) {
     }
 
     const handleAddTask = (value: string) => {
-        const now = new Date().getTime()
+        const now = getCurrentMillis()
         props.addTask(
             addTaskState.key,
             {

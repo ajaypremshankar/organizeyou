@@ -1,6 +1,6 @@
 import {CompletedTask, ListType, SettingsType, Task} from "./types";
 import {DisplayableTaskList} from "./displayable-task-list";
-import {getTodayKey} from "../utils/date-utils";
+import {getCurrentMillis, getTodayKey} from "../utils/date-utils";
 import {KeyTitlePair} from "./key-title-pair";
 
 export class BaseTasksState {
@@ -50,7 +50,7 @@ export class BaseTasksState {
     }
 
     public completeTask(task: Task): BaseTasksState {
-        const now = new Date().getTime()
+        const now = getCurrentMillis()
         const newTasks = this.internalAddTask(ListType.COMPLETED, {
             ...task,
             completedDate: now,

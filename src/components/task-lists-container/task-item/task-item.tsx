@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditTask from "../../edit-task/edit-task";
 import Tooltip from '@material-ui/core/Tooltip';
+import {getCurrentMillis} from "../../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -46,7 +47,7 @@ export default function TaskItem(props: TaskItemProps) {
             {
                 ...props.task,
                 value: value,
-                updatedOn: new Date().getTime()
+                updatedOn: getCurrentMillis()
             })
         setTaskItemState({
             ...taskItemState,

@@ -1,6 +1,6 @@
 import {CompletedTask, SettingsType, Task} from "../types/types";
 import {BaseTasksState} from "../types/base-tasks-state";
-import {getTodayKey} from "./date-utils";
+import {getCurrentMillis, getTodayKey} from "./date-utils";
 
 export const updateAppState = (updatedState: BaseTasksState): BaseTasksState => {
 
@@ -58,7 +58,7 @@ export const loadAppState = (): BaseTasksState => {
  */
 function migrateFromV200ToV210(persistedState: string) {
     const state = JSON.parse(persistedState)
-    const now = new Date().getTime()
+    const now = getCurrentMillis()
 
     const tasks = state.tasks.map((stateKeyValue: [number, any[]]) => {
         const taskArr = stateKeyValue[1].map(value => {

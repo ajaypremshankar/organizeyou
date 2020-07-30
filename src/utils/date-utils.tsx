@@ -35,6 +35,11 @@ export const getDate = () =>{
 }
 
 
+export const getCurrentMillis = (): number =>{
+    return new Date().getTime()
+}
+
+
 
 
 
