@@ -7,9 +7,7 @@ import OverdueTaskList from "../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../task-lists-container/completed-task-list";
 import {BaseTasksState} from "../../types/base-tasks-state";
-import {UserSettings} from "../../types/user-settings";
 import Clock from '../clock/clock';
-// import {Clock} from "../clock/clock";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,11 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface BaseAppProps {
-    userSettings: UserSettings
-}
-
-export default function BaseApp(props: BaseAppProps) {
+export default function BaseApp() {
     const classes = useStyles();
 
     const [baseState, setBaseState] = useState(
@@ -68,31 +62,29 @@ export default function BaseApp(props: BaseAppProps) {
     }
 
     const getOverdueList = () => {
-
-        return baseState.getOverdueTasks().isNotEmpty() ?
+        const overdueTaskList = baseState.getOverdueTasks()
+        return overdueTaskList.isNotEmpty() ?
             <OverdueTaskList
-                content={baseState.getOverdueTasks()}
+                content={overdueTaskList}
                 update={handleTaskAddition}
                 complete={handleTaskCompletion} delete={handleTaskDeletion}/>
             : null
     }
 
     const getSelectedDateList = () => {
-        const dateList = baseState.getSelectedDateTasks()
 
-        return dateList.isNotEmpty() ?
-            <DayBasedTaskList content={dateList}
+        return <DayBasedTaskList content={baseState.getSelectedDateTasks()}
                               update={handleTaskAddition}
                               complete={handleTaskCompletion}
                               delete={handleTaskDeletion}
                               expanded={true}/>
-            : null
     }
 
     const getCompletedList = () => {
-        return baseState.getCompletedTasks().isNotEmpty() ?
+        const completedTaskList = baseState.getCompletedTasks()
+        return completedTaskList.isNotEmpty() ?
             <CompletedTaskList
-                content={baseState.getCompletedTasks()}
+                content={completedTaskList}
                 undoComplete={handleUndoComplete}/>
             : null
     }

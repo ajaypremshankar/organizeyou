@@ -1,7 +1,9 @@
 export interface Task {
     id: number,
     value: string;
-    plannedOn: number
+    plannedOn: number;
+    createdOn: number;
+    updatedOn: number;
 }
 
 export interface CompletedTask extends Task {
@@ -16,4 +18,8 @@ export enum ListType {
 export enum ListTitleType {
     TODAY = 'today',
     TOMORROW = 'tomorrow',
+}
+
+export interface UserSettings {
+    selectedDate: number
 }
