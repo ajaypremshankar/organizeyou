@@ -28,5 +28,7 @@ export interface UserSettings {
 export enum SettingsType {
     REMEMBER_SELECTED_DATE = 'Remember selected Date',
     SHOW_SECONDS = 'Show seconds on clock',
-    SHOW_ALL_TASKS = 'Show all tasks list'
+    SHOW_AM_PM = "Show AM/PM",
+    SHOW_ALL_TASKS = 'Show all tasks list',
+    ABOUT_US = 'Who are we?'
 }

@@ -11,10 +11,11 @@ import {SettingsType} from "../../types/types";
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
+import InfoIcon from '@material-ui/icons/Info';
 
 const useStyles = makeStyles({
     listItemReleased: {
-        width: '100%'
+        width: '100%',
     },
 
 });
@@ -26,6 +27,10 @@ interface SettingsListProps {
 
 export default function SettingsList(props: SettingsListProps) {
     const classes = useStyles();
+
+    function showAboutUs() {
+        //TODO
+    }
 
     return (
         <List className={classes.listItemReleased}>
@@ -46,15 +51,14 @@ export default function SettingsList(props: SettingsListProps) {
                     />
                 </ListItemSecondaryAction>
             </ListItem>
-            <ListItem  disabled className={classes.listItemReleased}>
+            <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.SHOW_SECONDS}
                     primary={SettingsType.SHOW_SECONDS}
                     secondary={`${props.settings.get(SettingsType.SHOW_SECONDS)?'Hides': 'Shows'} seconds in clock`}/>
-                <ListItemSecondaryAction >
+                <ListItemSecondaryAction>
                     <Switch
-                        disabled
                         color={'primary'}
                         edge="end"
                         onChange={() => props.handleToggle(SettingsType.SHOW_SECONDS)}
@@ -63,12 +67,29 @@ export default function SettingsList(props: SettingsListProps) {
                     />
                 </ListItemSecondaryAction>
             </ListItem>
-            <ListItem  disabled className={classes.listItemReleased}>
+            <ListItem className={classes.listItemReleased}>
+                <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
+                <ListItemText
+                    id={SettingsType.SHOW_AM_PM}
+                    primary={SettingsType.SHOW_AM_PM}
+                    secondary={`${props.settings.get(SettingsType.SHOW_AM_PM)?'Hides': 'Shows'} AM/PM`}/>
+                <ListItemSecondaryAction>
+                    <Switch
+                        color={'primary'}
+                        edge="end"
+                        onChange={() => props.handleToggle(SettingsType.SHOW_AM_PM)}
+                        checked={props.settings.get(SettingsType.SHOW_AM_PM)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_AM_PM}`}}
+                    />
+                </ListItemSecondaryAction>
+            </ListItem>
+
+            <ListItem className={classes.listItemReleased} disabled>
                 <ListItemIcon><FormatListBulletedIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.SHOW_ALL_TASKS}
                     primary={SettingsType.SHOW_ALL_TASKS}
-                    secondary={`${props.settings.get(SettingsType.SHOW_ALL_TASKS)?'Hides': 'Shows'} all tasks`}/>
+                    secondary={`${props.settings.get(SettingsType.SHOW_ALL_TASKS)?'Hides': 'Shows'} all task list`}/>
                 <ListItemSecondaryAction>
                     <Switch
                         disabled
@@ -80,5 +101,14 @@ export default function SettingsList(props: SettingsListProps) {
                     />
                 </ListItemSecondaryAction>
             </ListItem>
+
+            <ListItem  disabled className={classes.listItemReleased}>
+                <ListItemIcon><InfoIcon/></ListItemIcon>
+                <ListItemText
+                    id={SettingsType.ABOUT_US}
+                    primary={SettingsType.ABOUT_US}
+                />
+            </ListItem>
+
         </List>);
 }

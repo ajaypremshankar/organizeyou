@@ -6,6 +6,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import IconButton from '@material-ui/core/IconButton';
 import SettingsList from "./settings-list";
 import {SettingsType} from "../../types/types";
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles({
     list: {
@@ -43,10 +44,7 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
     };
 
     return (
-        <div style={{
-            position: 'absolute',
-            right: '10px',
-        }}>
+        <Box display="block" width="100%" className={classes.settingArrowButton}>
             <React.Fragment key={'right'}>
                 <IconButton
                     className={classes.settingArrowButton}
@@ -67,6 +65,6 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
                     </div>
                 </SwipeableDrawer>
             </React.Fragment>
-        </div>
+        </Box>
     );
 }
