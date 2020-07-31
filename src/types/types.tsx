@@ -20,6 +20,10 @@ export enum ListTitleType {
     TOMORROW = 'tomorrow',
 }
 
-export interface UserSettings {
-    selectedDate: number
+export enum SettingsType {
+    REMEMBER_SELECTED_DATE = 'Remember selected Date',
+    SHOW_SECONDS = 'Seconds on clock',
+    SHOW_AM_PM = "Show AM/PM",
+    SHOW_ALL_TASKS = 'Show all tasks list',
+    ABOUT_US = 'Who are we?'
 }

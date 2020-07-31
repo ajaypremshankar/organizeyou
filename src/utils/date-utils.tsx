@@ -26,12 +26,17 @@ export const neitherTodayNorTomorrow = (key: number): boolean => {
     return key !== getTodayKey() && key !== getTomorrowKey()
 }
 
-export const getLocaleTime = () =>{
-    return new Date().toLocaleTimeString()
+export const getLocaleTime = (options: any) =>{
+    return new Date().toLocaleTimeString([], options)
 }
 
 export const getDate = () =>{
     return format(new Date(),'EEE, do MMM, yyyy')
+}
+
+
+export const getCurrentMillis = (): number =>{
+    return new Date().getTime()
 }
 
 

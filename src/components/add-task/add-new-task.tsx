@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import InputBase from '@material-ui/core/InputBase';
+import TextField from '@material-ui/core/TextField';
+import {KeyTitlePair} from "../../types/key-title-pair";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -11,31 +12,31 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface AddNewTaskProps {
-    defaultValue: string,
-    editBlur: () => void
-    updateTask: (value: string) => void
+    keyTitle: KeyTitlePair,
+    addTask: (value: string) => void
 }
 
-export default function EditTask(props: AddNewTaskProps) {
+export default function AddNewTask(props: AddNewTaskProps) {
     const classes = useStyles();
 
-    const [taskContentState, setTaskContentState] = useState(props.defaultValue || '');
+    const [taskContentState, setTaskContentState] = useState('');
 
     const handleKeyPressChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            props.updateTask(taskContentState)
+            props.addTask(taskContentState)
             setTaskContentState('')
         }
     }
 
     return (
-        <InputBase
+        <TextField
             className={classes.textField}
-            id="input-base-edit-task"
-            defaultValue={taskContentState}
+            id="outlined-basic"
+            label={`Add task for ${props.keyTitle.title}`}
+            variant="outlined"
+            size={'medium'}
+            value={taskContentState}
             autoFocus
-            inputProps={{ 'aria-label': 'naked' }}
-            onBlur={props.editBlur}
             onChange={(event) => setTaskContentState(event.target.value)}
             onKeyDown={handleKeyPressChange}
         />

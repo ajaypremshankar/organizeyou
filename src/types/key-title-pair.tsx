@@ -10,7 +10,6 @@ export class KeyTitlePair {
         this._title = ListType[key] ? ListType[key] : KeyTitlePair.getTitleByKey(key);
     }
 
-
     get key(): number {
         return this._key;
     }

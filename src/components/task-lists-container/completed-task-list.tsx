@@ -20,17 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
         list: {
             width: '100%',
             margin: 'auto',
-            maxWidth: 600,
             backgroundColor: theme.palette.background.paper,
         },
         title: {
             textAlign: 'left',
             width: '100%',
             margin: 'auto',
-            maxWidth: 600,
-        },
-        listItem: {
-            textDecoration: 'line-through'
         },
         inline: {
             display: 'inline',
@@ -118,8 +113,10 @@ export default function CompletedTaskList(props: DateTasks) {
                                             key={labelId}
                                             role={undefined} dense button>
                                             <ListItemText
-                                                className={classes.listItem}
                                                 id={labelId}
+                                                primaryTypographyProps={{style: {
+                                                        textDecoration: 'line-through'
+                                                    }}}
                                                 primary={value.value}
                                                 secondary={` — On ${formatToListTitle(new Date(value.completedDate))}`}
                                             />
