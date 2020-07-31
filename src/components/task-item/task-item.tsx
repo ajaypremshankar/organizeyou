@@ -109,7 +109,6 @@ export default function TaskItem(props: TaskItemProps) {
                     id={labelId}
                     classes={{primary: classes.itemText}}
                     primary={getTaskText()}
-                    //secondary={props.overdue ? `${formatToListTitle(props.task.plannedOn)}` : ''}
                     onClick={handleEditClick}
                 />
             </Tooltip>

@@ -54,7 +54,6 @@ export const loadAppState = (): BaseTasksState => {
 
 /***
  * Add createdDate and updatedDate to currently created tasks.
- * Add current list field to existing tasks
  * @param persistedState
  */
 function migrateFromV200ToV210(persistedState: string) {

@@ -1,7 +1,7 @@
 import {SettingsType} from "../types/types";
 import {getTodayKey} from "./date-utils";
 
-export const getClockSettings = (settings: Map<SettingsType, boolean>) => {
+export const getClockOptions = (settings: Map<SettingsType, boolean>) => {
     return {
         hour: '2-digit', minute: '2-digit',
         second: settings.get(SettingsType.SHOW_SECONDS) ? '2-digit' : undefined,
@@ -9,6 +9,6 @@ export const getClockSettings = (settings: Map<SettingsType, boolean>) => {
     }
 }
 
-export const getSelectedDate = (settings: Map<SettingsType, boolean>, defaultValue: number) => {
+export const getEffectiveSelectedDate = (settings: Map<SettingsType, boolean>, defaultValue: number) => {
     return settings.get(SettingsType.REMEMBER_SELECTED_DATE) ? defaultValue : getTodayKey()
 }

@@ -63,7 +63,6 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
     };
 
     return (
-        <Box display="block" width="100%" className={classes.settingsBox}>
             <React.Fragment key={'right'}>
                 <Tooltip title="Click to open settings"
                          aria-label="settings-button-tool-tip">
@@ -87,6 +86,5 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
                     </div>
                 </SwipeableDrawer>
             </React.Fragment>
-        </Box>
     );
 }

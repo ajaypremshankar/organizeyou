@@ -2,7 +2,7 @@ import {CompletedTask, ListType, SettingsType, Task} from "./types";
 import {DisplayableTaskList} from "./displayable-task-list";
 import {getCurrentMillis, getTodayKey} from "../utils/date-utils";
 import {KeyTitlePair} from "./key-title-pair";
-import {getSelectedDate} from "../utils/settings-utils";
+import {getEffectiveSelectedDate} from "../utils/settings-utils";
 
 export class BaseTasksState {
     private readonly _selectedDate: number;
@@ -14,7 +14,7 @@ export class BaseTasksState {
                 settings: Map<SettingsType, boolean>,
                 refreshOverdue: boolean = false) {
 
-        selectedDate = getSelectedDate(settings, selectedDate)
+        selectedDate = getEffectiveSelectedDate(settings, selectedDate)
         this._selectedDate = selectedDate;
         this._keyTitle = new KeyTitlePair(selectedDate)
         this._tasks = refreshOverdue ? BaseTasksState.computeOverdueTasks(tasks) : tasks;
@@ -126,7 +126,7 @@ export class BaseTasksState {
         const settings = new Map<SettingsType, boolean>(this.settings)
         settings.set(type, !this.settings.get(type))
 
-        const selectedDate = getSelectedDate(settings, this.selectedDate)
+        const selectedDate = getEffectiveSelectedDate(settings, this.selectedDate)
         return new BaseTasksState(selectedDate, this.tasks, settings);
     }
 
