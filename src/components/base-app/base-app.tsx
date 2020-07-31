@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
             maxWidth: 700,
             alignItems: 'center',
             '& > *': {
-                margin: theme.spacing(4),
+                margin: theme.spacing(2),
             },
         },
         fullWidth: {
