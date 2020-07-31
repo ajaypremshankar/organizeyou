@@ -14,6 +14,8 @@ import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import InfoIcon from '@material-ui/icons/Info';
 import SettingsIcon from "@material-ui/icons/Settings";
 import {Divider} from "@material-ui/core";
+import Paper from '@material-ui/core/Paper';
+import AboutUs from "./about-us";
 
 const useStyles = makeStyles({
     listItemReleased: {
@@ -96,13 +98,13 @@ export default function SettingsList(props: SettingsListProps) {
                 </ListItemSecondaryAction>
             </ListItem>
 
-            <ListItem className={classes.listItemReleased} disabled>
+            <ListItem className={classes.listItemReleased} disabled style={{display: 'none'}}>
                 <ListItemIcon><FormatListBulletedIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.SHOW_ALL_TASKS}
                     primary={SettingsType.SHOW_ALL_TASKS}
                     secondary={`${props.settings.get(SettingsType.SHOW_ALL_TASKS) ? 'Hides' : 'Shows'} all task list`}/>
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction style={{display: 'none'}}>
                     <Switch
                         disabled
                         color={'primary'}
@@ -113,14 +115,11 @@ export default function SettingsList(props: SettingsListProps) {
                     />
                 </ListItemSecondaryAction>
             </ListItem>
-
-            <ListItem className={classes.listItemReleased}
-            onClick={showAboutUs}
-            >
-                <ListItemIcon><InfoIcon/></ListItemIcon>
+            <Divider />
+            <ListItem className={classes.listItemReleased}>
                 <ListItemText
                     id={SettingsType.ABOUT_US}
-                    primary={SettingsType.ABOUT_US}
+                    primary={<AboutUs/>}
                 />
             </ListItem>
 
