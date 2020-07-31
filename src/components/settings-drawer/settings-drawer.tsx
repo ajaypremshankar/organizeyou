@@ -7,15 +7,34 @@ import IconButton from '@material-ui/core/IconButton';
 import SettingsList from "./settings-list";
 import {SettingsType} from "../../types/types";
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import SettingsIcon from '@material-ui/icons/Settings';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles({
     list: {
-        width: '100%',
+        width: '25vw',
+        minWidth: '300',
     },
-    settingArrowButton: {
+    settingsBox: {
+        position: 'fixed',
+
+        top: '0px',
+        opacity: '0.6',
+    },
+    BackdropProps: {
+        background: 'transparent'
+    },
+    arrow: {
         position: 'absolute',
-        right: '10px',
-        top: '5px'
+        right: '30px',
+        top: '40px',
+        opacity: '0.4',
+        '&:hover': {
+            cursor: 'pointer',
+            opacity: '1.0',
+            color: 'blue'
+        }
     }
 });
 
@@ -44,14 +63,17 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
     };
 
     return (
-        <Box display="block" width="100%" className={classes.settingArrowButton}>
+        <Box display="block" width="100%" className={classes.settingsBox}>
             <React.Fragment key={'right'}>
+                <Tooltip title="Click to open settings"
+                         aria-label="settings-button-tool-tip">
                 <IconButton
-                    className={classes.settingArrowButton}
+                    className={classes.arrow}
                     onClick={toggleDrawer(true)}
                     aria-label="arrow" color="primary">
                     <ArrowBackIosIcon/>
                 </IconButton>
+                </Tooltip>
                 <SwipeableDrawer
                     className={classes.list}
                     anchor={'right'}

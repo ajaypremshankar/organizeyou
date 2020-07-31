@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import TopButtonGroup from "./top-button-group/top-button-group";
-import AddNewTask from "./add-new-task/add-new-task";
+import TopButtonGroup from "./top-button-group";
+import AddNewTask from "./add-new-task";
 import {Task} from "../../types/types";
 import Grid from "@material-ui/core/Grid";
 import {KeyTitlePair} from "../../types/key-title-pair";
@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
             margin: 'auto',
             align: 'center',
-            maxWidth: 600,
             '& > *': {
                 margin: theme.spacing(1),
             },

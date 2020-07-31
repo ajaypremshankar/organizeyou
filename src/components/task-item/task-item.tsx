@@ -4,13 +4,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import {Task} from "../../../types/types";
+import {Task} from "../../types/types";
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditTask from "../../edit-task/edit-task";
+import EditTaskItem from "./edit-task-item";
 import Tooltip from '@material-ui/core/Tooltip';
-import {getCurrentMillis} from "../../../utils/date-utils";
+import {formatToListTitle, getCurrentMillis} from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) =>
             cursor: 'pointer',
         },
         textField: {
-            font: 'inherit',
             width: '100%',
         },
     }),
@@ -29,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface TaskItemProps {
     listKey: number
     task: Task
+    overdue?: boolean
     update: (key: number, task: Task) => void
     complete: (key: number, task: Task) => void
     delete: (key: number, task: Task) => void
@@ -70,13 +70,22 @@ export default function TaskItem(props: TaskItemProps) {
         setTaskItemState(
             {
                 ...taskItemState,
-                element: <EditTask
+                element: <EditTaskItem
                     editBlur={handleEditBlur}
                     defaultValue={props.task.value}
                     updateTask={updateTask}/>,
                 editMode: !taskItemState.editMode
             }
         )
+    }
+
+    const getTaskText = () => {
+        return (<span>
+            {taskItemState.element}
+            <span style={{color: 'lightgray', font: 'caption'}}>
+                {props.overdue ? ` (since ${formatToListTitle(props.task.plannedOn)})` : ''}
+            </span>
+        </span>)
     }
 
     const labelId = `task-item-label-${props.task.id}`;
@@ -93,12 +102,17 @@ export default function TaskItem(props: TaskItemProps) {
                     onClick={() => props.complete(props.listKey, props.task)}
                 />
             </ListItemIcon>
-            <ListItemText
-                className={classes.itemText}
-                id={labelId}
-                primary={taskItemState.element}
-                onClick={handleEditClick}
-            />
+            <Tooltip title="Click to edit task"
+                     aria-label="task-item-edit-tool-tip">
+                <ListItemText
+                    className={classes.itemText}
+                    id={labelId}
+                    classes={{primary: classes.itemText}}
+                    primary={getTaskText()}
+                    //secondary={props.overdue ? `${formatToListTitle(props.task.plannedOn)}` : ''}
+                    onClick={handleEditClick}
+                />
+            </Tooltip>
             {!taskItemState.editMode &&
             <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label={`delete-${labelId}`}

@@ -6,19 +6,18 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import {Task} from "../../types/types";
-import TaskItem from "./task-item/task-item";
+import TaskItem from "../task-item/task-item";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import {DisplayableTaskList} from "../../types/displayable-task-list";
-
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         list: {
             width: '100%',
             margin: 'auto',
-            maxWidth: 600,
             backgroundColor: theme.palette.background.paper,
         },
         title: {
@@ -101,7 +100,7 @@ export default function DayBasedTaskList(props: DateTasks) {
                 <ListItemText
                     className={classes.itemText}
                     id={'no-item'}
-                    primary={'Nothing awaits you here :)'}
+                    primary={`Nothing awaits you here (✿´‿\`)`}
                 />
             </ListItem>)
         }

@@ -2,6 +2,7 @@ import {CompletedTask, ListType, SettingsType, Task} from "./types";
 import {DisplayableTaskList} from "./displayable-task-list";
 import {getCurrentMillis, getTodayKey} from "../utils/date-utils";
 import {KeyTitlePair} from "./key-title-pair";
+import {getSelectedDate} from "../utils/settings-utils";
 
 export class BaseTasksState {
     private readonly _selectedDate: number;
@@ -12,6 +13,8 @@ export class BaseTasksState {
     constructor(selectedDate: number, tasks: Map<number, Task[] | CompletedTask[]>,
                 settings: Map<SettingsType, boolean>,
                 refreshOverdue: boolean = false) {
+
+        selectedDate = getSelectedDate(settings, selectedDate)
         this._selectedDate = selectedDate;
         this._keyTitle = new KeyTitlePair(selectedDate)
         this._tasks = refreshOverdue ? BaseTasksState.computeOverdueTasks(tasks) : tasks;
@@ -49,7 +52,7 @@ export class BaseTasksState {
         return new DisplayableTaskList(this._selectedDate, reducedList, sorter)
     }
 
-    public completeTask(task: Task): BaseTasksState {
+    public completeTask(from: number, task: Task): BaseTasksState {
         const now = getCurrentMillis()
         const newTasks = this.internalAddTask(ListType.COMPLETED, {
             ...task,
@@ -57,7 +60,7 @@ export class BaseTasksState {
             updatedOn: now
         }, this.tasks)
 
-        const removedTasks: Map<number, Task[] | CompletedTask[]> = this.internalRemoveTask(task.plannedOn, task, newTasks)
+        const removedTasks: Map<number, Task[] | CompletedTask[]> = this.internalRemoveTask(from, task, newTasks)
 
         return new BaseTasksState(this.selectedDate, removedTasks, this._settings)
     }
@@ -123,11 +126,8 @@ export class BaseTasksState {
         const settings = new Map<SettingsType, boolean>(this.settings)
         settings.set(type, !this.settings.get(type))
 
-        if (settings.get(SettingsType.REMEMBER_SELECTED_DATE)) {
-            return new BaseTasksState(this.selectedDate, this.tasks, settings);
-        } else {
-            return new BaseTasksState(getTodayKey(), this.tasks, settings);
-        }
+        const selectedDate = getSelectedDate(settings, this.selectedDate)
+        return new BaseTasksState(selectedDate, this.tasks, settings);
     }
 
     public getKeyTitle(): KeyTitlePair {

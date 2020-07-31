@@ -6,7 +6,7 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import {Task} from "../../types/types";
-import TaskItem from "./task-item/task-item";
+import TaskItem from "../task-item/task-item";
 import {DisplayableTaskList} from "../../types/displayable-task-list";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme: Theme) =>
         list: {
             width: '100%',
             margin: 'auto',
-            maxWidth: 600,
             backgroundColor: theme.palette.background.paper,
         },
         title: {
@@ -85,7 +84,9 @@ export default function OverdueTaskList(props: DateTasks) {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem
-                    listKey={props.content.key} update={props.update} key={labelId} task={value}
+                    listKey={props.content.key}
+                    overdue={true}
+                    update={props.update} key={labelId} task={value}
                     complete={props.complete} delete={props.delete}/>
             );
         })

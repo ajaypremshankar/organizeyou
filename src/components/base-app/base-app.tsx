@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {CompletedTask, SettingsType, Task} from "../../types/types";
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import AddTaskContainer from "../add-task-container/add-task-container";
+import AddTaskContainer from "../add-task/add-task-container";
 import {loadAppState, updateAppState} from "../../utils/app-state-utils";
 import OverdueTaskList from "../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../task-lists-container/day-based-task-list";
@@ -9,7 +9,7 @@ import CompletedTaskList from "../task-lists-container/completed-task-list";
 import {BaseTasksState} from "../../types/base-tasks-state";
 import SettingsDrawer from "../settings-drawer/settings-drawer";
 import Clock from '../clock/clock';
-import {getClockSettings} from "../../utils/clock-utils";
+import {getClockSettings} from "../../utils/settings-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
             flexDirection: 'column',
             width: '100%',
             margin: 'auto',
-            maxWidth: 600,
+            maxWidth: 700,
             alignItems: 'center',
             '& > *': {
                 margin: theme.spacing(4),
@@ -47,7 +47,7 @@ export default function BaseApp() {
     }
 
     const handleTaskCompletion = (key: number, task: Task) => {
-        updateBaseState(baseState.completeTask(task))
+        updateBaseState(baseState.completeTask(key, task))
     }
 
     const handleTaskAddition = (key: number, task: Task) => {

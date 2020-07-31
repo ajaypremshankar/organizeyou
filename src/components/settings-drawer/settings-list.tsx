@@ -12,12 +12,15 @@ import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import InfoIcon from '@material-ui/icons/Info';
+import SettingsIcon from "@material-ui/icons/Settings";
+import {Divider} from "@material-ui/core";
 
 const useStyles = makeStyles({
     listItemReleased: {
         width: '100%',
+        margin: 'auto',
+        marginBottom: '5px'
     },
-
 });
 
 interface SettingsListProps {
@@ -29,18 +32,27 @@ export default function SettingsList(props: SettingsListProps) {
     const classes = useStyles();
 
     function showAboutUs() {
-        //TODO
+        alert('Developed by Ajay & Surya')
     }
 
     return (
         <List className={classes.listItemReleased}>
+            <ListItem color={'primary'} className={classes.listItemReleased}>
+                <ListItemIcon><SettingsIcon/></ListItemIcon>
+                <ListItemText primary={'Settings'}/>
+            </ListItem>
+            <Divider/>
             <ListItem button key={'Sign-in'} disabled className={classes.listItemReleased}>
                 <ListItemIcon><PersonAddIcon/></ListItemIcon>
-                <ListItemText primary={'Sign-in'}/>
+                <ListItemText primary={'Sign-in'}
+                secondary={'Coming soon'}
+                />
             </ListItem>
             <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><DateRangeIcon/></ListItemIcon>
-                <ListItemText id="switch-list-label-remember-selected-date" primary="Remember date"/>
+                <ListItemText id={`switch-list-label-${SettingsType.REMEMBER_SELECTED_DATE}`}
+                              primary="Remember date"
+                              secondary={"Remember default date for task creation."}/>
                 <ListItemSecondaryAction>
                     <Switch
                         edge="end"
@@ -56,7 +68,7 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText
                     id={SettingsType.SHOW_SECONDS}
                     primary={SettingsType.SHOW_SECONDS}
-                    secondary={`${props.settings.get(SettingsType.SHOW_SECONDS)?'Hides': 'Shows'} seconds in clock`}/>
+                    secondary={`${props.settings.get(SettingsType.SHOW_SECONDS) ? 'Hides' : 'Shows'} seconds in clock`}/>
                 <ListItemSecondaryAction>
                     <Switch
                         color={'primary'}
@@ -72,7 +84,7 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText
                     id={SettingsType.SHOW_AM_PM}
                     primary={SettingsType.SHOW_AM_PM}
-                    secondary={`${props.settings.get(SettingsType.SHOW_AM_PM)?'Hides': 'Shows'} AM/PM`}/>
+                    secondary={`${props.settings.get(SettingsType.SHOW_AM_PM) ? 'Hides' : 'Shows'} AM/PM`}/>
                 <ListItemSecondaryAction>
                     <Switch
                         color={'primary'}
@@ -89,7 +101,7 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText
                     id={SettingsType.SHOW_ALL_TASKS}
                     primary={SettingsType.SHOW_ALL_TASKS}
-                    secondary={`${props.settings.get(SettingsType.SHOW_ALL_TASKS)?'Hides': 'Shows'} all task list`}/>
+                    secondary={`${props.settings.get(SettingsType.SHOW_ALL_TASKS) ? 'Hides' : 'Shows'} all task list`}/>
                 <ListItemSecondaryAction>
                     <Switch
                         disabled
@@ -102,7 +114,9 @@ export default function SettingsList(props: SettingsListProps) {
                 </ListItemSecondaryAction>
             </ListItem>
 
-            <ListItem  disabled className={classes.listItemReleased}>
+            <ListItem className={classes.listItemReleased}
+            onClick={showAboutUs}
+            >
                 <ListItemIcon><InfoIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.ABOUT_US}
