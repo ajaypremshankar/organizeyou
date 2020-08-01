@@ -33,6 +33,7 @@ export default function Clock(props: ClockProps) {
 
 
     useEffect(() => {
+
         const updateTime = () => {
             const time = getLocaleTime(props.options)
             setCtime(time)

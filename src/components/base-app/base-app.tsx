@@ -46,7 +46,7 @@ export default function BaseApp() {
     useEffect(() => {
         const pendingTasksCount = baseState.pendingTasksCount()
         document.title = `(${pendingTasksCount}) ${pendingTasksCount === 1 ? 'task' : 'tasks'} pending`
-    }, [baseState, baseState.tasks])
+    }, [baseState.tasks])
 
     const updateBaseState = (newState: BaseTasksState, persist: boolean = true) => {
         if (persist) {
