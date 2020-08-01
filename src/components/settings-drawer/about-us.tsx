@@ -63,6 +63,13 @@ export default function AboutUs() {
                         Request a feature
                     </Link>
                 </Typography>
+                <Divider/>
+                <Typography className={classes.posUp} color="textSecondary">
+                    Version:
+                </Typography>
+                <Typography className={classes.posUp} variant="subtitle1">
+                    2.2.0
+                </Typography>
             </CardContent>
         </Card>
     );

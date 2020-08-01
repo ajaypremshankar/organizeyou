@@ -1,7 +1,6 @@
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Switch from "@material-ui/core/Switch";
@@ -30,11 +29,6 @@ interface SettingsListProps {
 
 export default function SettingsList(props: SettingsListProps) {
     const classes = useStyles();
-
-    function showAboutUs() {
-        alert('Developed by Ajay & Surya')
-    }
-
     return (
         <List className={classes.listItemReleased}>
             <ListItem color={'primary'} className={classes.listItemReleased}>
@@ -42,18 +36,12 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText primary={'Settings'}/>
             </ListItem>
             <Divider/>
-            <ListItem button key={'Sign-in'} disabled className={classes.listItemReleased}>
-                <ListItemIcon><PersonAddIcon/></ListItemIcon>
-                <ListItemText primary={'Sign-in'}
-                secondary={'Coming soon'}
-                />
-            </ListItem>
-            <ListItem className={classes.listItemReleased}>
+            <ListItem className={classes.listItemReleased} style={{display: 'none'}}>
                 <ListItemIcon><DateRangeIcon/></ListItemIcon>
                 <ListItemText id={`switch-list-label-${SettingsType.REMEMBER_SELECTED_DATE}`}
                               primary="Remember date"
                               secondary={"Remember default date for task creation."}/>
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction style={{display: 'none'}}>
                     <Switch
                         edge="end"
                         color={'primary'}

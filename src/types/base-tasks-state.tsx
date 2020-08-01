@@ -12,7 +12,6 @@ export class BaseTasksState {
     constructor(selectedDate: number, tasks: Map<number, Task[] | CompletedTask[]>,
                 settings: Map<SettingsType, boolean>,
                 refreshOverdue: boolean = false) {
-
         this._selectedDate = selectedDate;
         this._keyTitle = new KeyTitlePair(selectedDate)
         this._tasks = refreshOverdue ? BaseTasksState.computeOverdueTasks(tasks) : tasks;

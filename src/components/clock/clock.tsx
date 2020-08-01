@@ -31,12 +31,14 @@ export default function Clock(props: ClockProps) {
     const classes = useStyles();
     const [ctime, setCtime] = useState(getLocaleTime(props.options))
 
-    const updateTime = () => {
-        const time = getLocaleTime(props.options)
-        setCtime(time)
-    }
 
     useEffect(() => {
+
+        const updateTime = () => {
+            const time = getLocaleTime(props.options)
+            setCtime(time)
+        }
+
         const interval = setInterval(updateTime, 1000);
         return () => {
             clearInterval(interval);
