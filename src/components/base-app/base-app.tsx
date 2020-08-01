@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {CompletedTask, SettingsType, Task} from "../../types/types";
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import AddTaskContainer from "../add-task/add-task-container";
-import {loadAppState, updateAppState} from "../../utils/app-state-utils";
 import OverdueTaskList from "../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../task-lists-container/completed-task-list";
@@ -10,6 +9,8 @@ import {BaseTasksState} from "../../types/base-tasks-state";
 import SettingsDrawer from "../settings-drawer/settings-drawer";
 import Clock from '../clock/clock';
 import {getClockOptions} from "../../utils/settings-utils";
+import {getTodayKey} from "../../utils/date-utils";
+import { loadAppState, updateAppState} from "../../utils/app-state-facade";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,8 +35,14 @@ export default function BaseApp() {
     const classes = useStyles();
 
     const [baseState, setBaseState] = useState(
-        loadAppState()
-    );
+        new BaseTasksState(
+            getTodayKey(),
+            new Map<number, Task[] | CompletedTask[]>(),
+            new Map()
+        )
+    )
+
+    useEffect(() => loadAppState(setBaseState),[])
 
     const updateBaseState = (newState: BaseTasksState) => {
         updateAppState(newState)
