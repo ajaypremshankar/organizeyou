@@ -3,7 +3,7 @@
   "short_name": "Organize You",
   "name": "OrganizeYou",
   "description": "Keep your todos always in-front of you",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -11,7 +11,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "e1a10003-0d34-47a2-8494-531ccf9a2314",
+      "id": "{e1a10003-0d34-47a2-8494-531ccf9a2314}",
       "strict_min_version": "42.0"
     }
   },
