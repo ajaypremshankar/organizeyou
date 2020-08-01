@@ -1,5 +1,5 @@
-import {SettingsType} from "../types/types";
-import {getTodayKey} from "./date-utils";
+import { SettingsType } from "../types/types";
+import { getTodayKey } from "./date-utils";
 
 export const getClockOptions = (settings: Map<SettingsType, boolean>) => {
     return {

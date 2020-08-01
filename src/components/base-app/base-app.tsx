@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import {CompletedTask, SettingsType, Task} from "../../types/types";
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import { CompletedTask, SettingsType, Task } from "../../types/types";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddTaskContainer from "../add-task/add-task-container";
 import OverdueTaskList from "../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../task-lists-container/completed-task-list";
-import {BaseTasksState} from "../../types/base-tasks-state";
+import { BaseTasksState } from "../../types/base-tasks-state";
 import SettingsDrawer from "../settings-drawer/settings-drawer";
 import Clock from '../clock/clock';
-import {getClockOptions} from "../../utils/settings-utils";
-import {getTodayKey} from "../../utils/date-utils";
-import { loadAppState, updateAppState} from "../../utils/app-state-facade";
+import { getClockOptions } from "../../utils/settings-utils";
+import { emptyState, loadAppState, updateAppState } from "../../utils/app-state-facade-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,22 +34,30 @@ export default function BaseApp() {
     const classes = useStyles();
 
     const [baseState, setBaseState] = useState(
-        new BaseTasksState(
-            getTodayKey(),
-            new Map<number, Task[] | CompletedTask[]>(),
-            new Map()
-        )
+        emptyState()
     )
 
-    useEffect(() => loadAppState(setBaseState),[])
+    useEffect(() => {
+        loadAppState().then(value => {
+            setBaseState(value)
+        })
+    }, [])
 
-    const updateBaseState = (newState: BaseTasksState) => {
-        updateAppState(newState)
+    useEffect(() => {
+        const pendingTasksCount = baseState.pendingTasksCount()
+        document.title = `(${pendingTasksCount}) ${pendingTasksCount === 1 ? 'task' : 'tasks'} pending`
+    }, [baseState, baseState.tasks])
+
+    const updateBaseState = (newState: BaseTasksState, persist: boolean = true) => {
+        if (persist) {
+            updateAppState(newState)
+        }
         setBaseState(newState)
     }
 
     const updateCurrentlySelectedDate = (date: number) => {
-        updateBaseState(new BaseTasksState(date, baseState.tasks, baseState.settings))
+        const rememberSelectedDate = baseState.settings.get(SettingsType.REMEMBER_SELECTED_DATE)
+        updateBaseState(new BaseTasksState(date, baseState.tasks, baseState.settings), rememberSelectedDate)
     }
 
     const handleTaskCompletion = (key: number, task: Task) => {

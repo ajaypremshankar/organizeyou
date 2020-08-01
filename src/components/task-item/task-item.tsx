@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import {Task} from "../../types/types";
+import { Task } from "../../types/types";
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditTaskItem from "./edit-task-item";
 import Tooltip from '@material-ui/core/Tooltip';
-import {formatToListTitle, getCurrentMillis} from "../../utils/date-utils";
+import { formatToListTitle, getCurrentMillis } from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

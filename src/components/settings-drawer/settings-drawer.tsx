@@ -1,14 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import IconButton from '@material-ui/core/IconButton';
 import SettingsList from "./settings-list";
-import {SettingsType} from "../../types/types";
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import SettingsIcon from '@material-ui/icons/Settings';
+import { SettingsType } from "../../types/types";
 import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles({

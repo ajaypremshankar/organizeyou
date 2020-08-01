@@ -1,18 +1,18 @@
 import React from 'react';
-import {createStyles, makeStyles, Theme, withStyles} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
-import {Task} from "../../types/types";
+import { Task } from "../../types/types";
 import TaskItem from "../task-item/task-item";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DoneAllIcon from '@material-ui/icons/DoneAll';
-import {DisplayableTaskList} from "../../types/displayable-task-list";
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import { DisplayableTaskList } from "../../types/displayable-task-list";
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         list: {

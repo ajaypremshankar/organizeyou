@@ -1,6 +1,6 @@
 import {CompletedTask, SettingsType, Task} from "../types/types";
 import {BaseTasksState} from "../types/base-tasks-state";
-import {getTodayKey} from "./date-utils";
+import { emptyState } from "./app-state-facade-utils";
 
 export const updateBrowserAppState = (updatedState: BaseTasksState) => {
 
@@ -15,21 +15,14 @@ export const updateBrowserAppState = (updatedState: BaseTasksState) => {
     })
 }
 
-export function loadBrowserAppState(setBaseState: any) {
-    getLocalStorageValue().then((val) =>{
-        console.log('val')
-        console.log(val)
-        setBaseState(val)
-    })
+export function loadBrowserAppState(): Promise<BaseTasksState> {
+    return getLocalStorageValue()
 }
 
-function getLocalStorageValue() {
+function getLocalStorageValue(): Promise<BaseTasksState> {
     return new Promise((resolve, reject) => {
         try {
             chrome.storage.sync.get('organizeyou', function (value) {
-                console.log('fetched data')
-                console.log(value)
-                console.log(value.organizeyou)
                 if (value.organizeyou) {
                     const appData = JSON.parse(value.organizeyou)
                     resolve(new BaseTasksState(
@@ -40,11 +33,7 @@ function getLocalStorageValue() {
                         )
                     )
                 } else {
-                    resolve(new BaseTasksState(
-                        getTodayKey(),
-                        new Map<number, Task[] | CompletedTask[]>(),
-                        new Map()
-                    ))
+                    resolve(emptyState())
                 }
             })
         }

@@ -1,20 +1,17 @@
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Switch from "@material-ui/core/Switch";
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {SettingsType} from "../../types/types";
+import { makeStyles } from "@material-ui/core/styles";
+import { SettingsType } from "../../types/types";
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
-import InfoIcon from '@material-ui/icons/Info';
 import SettingsIcon from "@material-ui/icons/Settings";
-import {Divider} from "@material-ui/core";
-import Paper from '@material-ui/core/Paper';
+import { Divider } from "@material-ui/core";
 import AboutUs from "./about-us";
 
 const useStyles = makeStyles({
