@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TopButtonGroup from "./top-button-group";
 import AddNewTask from "./add-new-task";
-import {Task} from "../../types/types";
+import { Task } from "../../types/types";
 import Grid from "@material-ui/core/Grid";
-import {KeyTitlePair} from "../../types/key-title-pair";
-import {getCurrentMillis} from "../../utils/date-utils";
+import { KeyTitlePair } from "../../types/key-title-pair";
+import { getCurrentMillis } from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

@@ -1,6 +1,7 @@
-import {CompletedTask, SettingsType, Task} from "../types/types";
-import {BaseTasksState} from "../types/base-tasks-state";
-import {getCurrentMillis, getTodayKey} from "./date-utils";
+import { CompletedTask, SettingsType, Task } from "../types/types";
+import { BaseTasksState } from "../types/base-tasks-state";
+import { getCurrentMillis, getTodayKey } from "./date-utils";
+import { getEffectiveSelectedDate } from "./settings-utils";
 
 export const updateAppState = (updatedState: BaseTasksState): BaseTasksState => {
 
@@ -24,31 +25,33 @@ export const loadAppState = (): BaseTasksState => {
 
     const persistedState = localStorage.getItem("organizeyou-base-app-2");
 
-    if (persistedState && !persistedState.includes('createdDate')) {
-        const updatedState = migrateFromV200ToV210(persistedState)
-        updateAppState(updatedState)
-
-        return new BaseTasksState(
-            updatedState.selectedDate,
-            new Map<number, Task[] | CompletedTask[]>(updatedState.tasks),
-            updatedState.settings ? new Map<SettingsType, boolean>(updatedState.settings) : new Map(),
-            true
-        )
-    } else if (persistedState) {
-        const state = JSON.parse(persistedState)
-        return new BaseTasksState(
-            state.selectedDate,
-            new Map<number, Task[] | CompletedTask[]>(state.tasks),
-            state.settings ? new Map<SettingsType, boolean>(state.settings) : new Map(),
-            true
-        )
-    } else {
+    if (!persistedState) {
         return new BaseTasksState(
             getTodayKey(),
             new Map<number, Task[] | CompletedTask[]>(),
             new Map<SettingsType, boolean>(),
         )
     }
+
+    let updatedState: any
+
+    if (!persistedState.includes('createdDate')) {
+        updatedState = migrateFromV200ToV210(persistedState)
+        updateAppState(updatedState)
+    } else {
+        updatedState = JSON.parse(persistedState)
+    }
+
+    const settings = updatedState.settings ? new Map<SettingsType, boolean>(updatedState.settings) : new Map()
+    const selectedDate = getEffectiveSelectedDate(settings, updatedState.selectedDate)
+
+    return new BaseTasksState(
+        selectedDate,
+        new Map<number, Task[] | CompletedTask[]>(updatedState.tasks),
+        settings,
+        true
+    )
+
 }
 
 

@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import {formatToKey, getTodayKey, getTomorrowKey, neitherTodayNorTomorrow} from "../../utils/date-utils";
-import {KeyTitlePair} from "../../types/key-title-pair";
+import { formatToKey, getTodayKey, getTomorrowKey, neitherTodayNorTomorrow } from "../../utils/date-utils";
+import { KeyTitlePair } from "../../types/key-title-pair";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

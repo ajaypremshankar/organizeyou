@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {createStyles, makeStyles, Theme, withStyles} from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
@@ -8,12 +8,12 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import {CompletedTask} from "../../types/types";
+import { CompletedTask } from "../../types/types";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RestoreIcon from '@material-ui/icons/Restore';
-import {DisplayableTaskList} from "../../types/displayable-task-list";
-import {formatToListTitle} from "../../utils/date-utils";
+import { DisplayableTaskList } from "../../types/displayable-task-list";
+import { formatToListTitle } from "../../utils/date-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

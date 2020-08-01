@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
-import {CompletedTask, SettingsType, Task} from "../../types/types";
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
+import { CompletedTask, SettingsType, Task } from "../../types/types";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddTaskContainer from "../add-task/add-task-container";
-import {loadAppState, updateAppState} from "../../utils/app-state-utils";
+import { loadAppState, updateAppState } from "../../utils/app-state-utils";
 import OverdueTaskList from "../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../task-lists-container/completed-task-list";
-import {BaseTasksState} from "../../types/base-tasks-state";
+import { BaseTasksState } from "../../types/base-tasks-state";
 import SettingsDrawer from "../settings-drawer/settings-drawer";
 import Clock from '../clock/clock';
-import {getClockOptions} from "../../utils/settings-utils";
+import { getClockOptions } from "../../utils/settings-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,13 +37,25 @@ export default function BaseApp() {
         loadAppState()
     );
 
-    const updateBaseState = (newState: BaseTasksState) => {
-        updateAppState(newState)
+    useEffect(() => {
+        changePageTitle()
+    }, [baseState.tasks])
+
+    const changePageTitle = () => {
+        const pendingTasksCount = baseState.pendingTasksCount()
+        document.title = `(${pendingTasksCount}) ${pendingTasksCount === 1 ? 'task' : 'tasks'} pending`
+    }
+
+    const updateBaseState = (newState: BaseTasksState, persist: boolean = true) => {
+        if(persist) {
+            updateAppState(newState)
+        }
         setBaseState(newState)
     }
 
     const updateCurrentlySelectedDate = (date: number) => {
-        updateBaseState(new BaseTasksState(date, baseState.tasks, baseState.settings))
+        const rememberSelectedDate = baseState.settings.get(SettingsType.REMEMBER_SELECTED_DATE)
+        updateBaseState(new BaseTasksState(date, baseState.tasks, baseState.settings), rememberSelectedDate)
     }
 
     const handleTaskCompletion = (key: number, task: Task) => {

@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import {KeyTitlePair} from "../../types/key-title-pair";
+import { KeyTitlePair } from "../../types/key-title-pair";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

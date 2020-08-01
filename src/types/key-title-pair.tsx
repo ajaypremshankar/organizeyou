@@ -1,5 +1,5 @@
-import {ListTitleType, ListType} from "./types";
-import {formatToListTitle, getTodayKey, getTomorrowKey} from "../utils/date-utils";
+import { ListTitleType, ListType } from "./types";
+import { formatToListTitle, getTodayKey, getTomorrowKey } from "../utils/date-utils";
 
 export class KeyTitlePair {
     private readonly _key: number;

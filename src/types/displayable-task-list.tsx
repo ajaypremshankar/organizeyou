@@ -1,5 +1,5 @@
-import {CompletedTask, Task} from "./types";
-import {KeyTitlePair} from "./key-title-pair";
+import { CompletedTask, Task } from "./types";
+import { KeyTitlePair } from "./key-title-pair";
 
 export class DisplayableTaskList {
 

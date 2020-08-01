@@ -1,10 +1,10 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import {Divider} from "@material-ui/core";
+import { Divider } from "@material-ui/core";
 
 const useStyles = makeStyles({
     root: {

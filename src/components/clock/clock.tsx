@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react'
-import {getLocaleTime, getDate} from '../../utils/date-utils'
-import {createStyles, Theme, makeStyles, useTheme} from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react'
+import { getDate, getLocaleTime } from '../../utils/date-utils'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) =>

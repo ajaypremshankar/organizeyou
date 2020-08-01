@@ -1,4 +1,4 @@
-import {addDays, format, parse} from "date-fns";
+import { addDays, format, parse } from "date-fns";
 
 export const formatToKey = (date: Date): number => {
     return parseInt(format(date, 'yyyyMMdd'))

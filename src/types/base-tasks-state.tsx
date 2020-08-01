@@ -1,8 +1,7 @@
-import {CompletedTask, ListType, SettingsType, Task} from "./types";
-import {DisplayableTaskList} from "./displayable-task-list";
-import {getCurrentMillis, getTodayKey} from "../utils/date-utils";
-import {KeyTitlePair} from "./key-title-pair";
-import {getEffectiveSelectedDate} from "../utils/settings-utils";
+import { CompletedTask, ListType, SettingsType, Task } from "./types";
+import { DisplayableTaskList } from "./displayable-task-list";
+import { getCurrentMillis, getTodayKey } from "../utils/date-utils";
+import { KeyTitlePair } from "./key-title-pair";
 
 export class BaseTasksState {
     private readonly _selectedDate: number;
@@ -14,7 +13,6 @@ export class BaseTasksState {
                 settings: Map<SettingsType, boolean>,
                 refreshOverdue: boolean = false) {
 
-        selectedDate = getEffectiveSelectedDate(settings, selectedDate)
         this._selectedDate = selectedDate;
         this._keyTitle = new KeyTitlePair(selectedDate)
         this._tasks = refreshOverdue ? BaseTasksState.computeOverdueTasks(tasks) : tasks;
@@ -125,9 +123,12 @@ export class BaseTasksState {
     public toggleSetting = (type: SettingsType) => {
         const settings = new Map<SettingsType, boolean>(this.settings)
         settings.set(type, !this.settings.get(type))
+        return new BaseTasksState(this.selectedDate, this.tasks, settings);
+    }
 
-        const selectedDate = getEffectiveSelectedDate(settings, this.selectedDate)
-        return new BaseTasksState(selectedDate, this.tasks, settings);
+    public pendingTasksCount = () => {
+        return (this.tasks.get(ListType.OVERDUE) || []).length
+            + (this.tasks.get(getTodayKey()) || []).length
     }
 
     public getKeyTitle(): KeyTitlePair {
