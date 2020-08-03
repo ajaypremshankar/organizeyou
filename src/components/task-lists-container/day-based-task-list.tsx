@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import MuiAccordion from '@material-ui/core/Accordion';
@@ -12,6 +12,9 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import { DisplayableTaskList } from "../../types/displayable-task-list";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -78,16 +81,19 @@ const AccordionDetails = withStyles((theme) => ({
 
 interface DateTasks {
     content: DisplayableTaskList
+    move: (from: number, to: number, task: Task) => void
     update: (key: number, task: Task) => void
     complete: (key: number, task: Task) => void
     expanded?: boolean
     delete: (key: number, task: Task) => void
+    showAll: boolean
 }
 
 
 export default function DayBasedTaskList(props: DateTasks) {
 
     const classes = useStyles();
+    const [expanded, setExpanded] = useState(true)
     const getTasks = () => {
 
         if (props.content.isEmpty()) {
@@ -108,19 +114,24 @@ export default function DayBasedTaskList(props: DateTasks) {
         return (props.content.tasks as Task[]).map((value, index) => {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
-                <TaskItem listKey={props.content.key} update={props.update} key={labelId} task={value}
-                          complete={props.complete} delete={props.delete}/>
+                <TaskItem
+                    move={props.move}
+                    showPlannedOn={props.showAll}
+                    update={props.update}
+                    key={labelId} task={value}
+                    complete={props.complete} delete={props.delete}/>
             );
         })
     }
 
     return (
         <div>
-            <Accordion square expanded={true}>
+            <Accordion square expanded={expanded} onChange={() => setExpanded(!expanded)}>
+
                 <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls={`${props.content.title}-task-content`}
-                    id={`${props.content.title}-task-header`}
-                >
+                    id={`${props.content.title}-task-header`}>
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
                         {props.content.title.toUpperCase()}
                     </Typography>

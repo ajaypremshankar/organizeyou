@@ -25,6 +25,7 @@ export const emptyState = (): BaseTasksState => {
     return new BaseTasksState(
         getTodayKey(),
         new Map<number, Task[] | CompletedTask[]>(),
+        [],
         new Map()
     )
 }

@@ -1,6 +1,8 @@
 import { CompletedTask, ListType, SettingsType, Task } from "../types/types";
 import { BaseTasksState } from "../types/base-tasks-state";
 import { emptyState } from "./app-state-facade-utils";
+import { getTodayKey } from "./date-utils";
+import { migrateCompletedListFromMap, migrateOverdueListToDateList } from "./migration-utils";
 
 /***
  * Separated keys because of storage restrictions on a key
@@ -16,12 +18,12 @@ export const updateBrowserAppState = (updatedState: BaseTasksState) => {
     chrome.storage.sync.set({
         'organizeyou_current_tasks': JSON.stringify({
             selectedDate: updatedState.selectedDate,
-            tasks: [...Array.from(currentTasks)],
+            tasks: [...Array.from(currentTasks)]
         })
     })
 
     // Storing completed in different key
-    const completedTasks = [...updatedState.tasks.get(ListType.COMPLETED) || []]
+    const completedTasks = [...updatedState.completedTasks || []]
     chrome.storage.sync.set({
         'organizeyou_completed_tasks': JSON.stringify(completedTasks)
     })
@@ -49,15 +51,19 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
                     const completedTasks = JSON.parse(value.organizeyou_completed_tasks) || []
                     const settings = JSON.parse(value.organizeyou_settings) || []
                     const allTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(currentTasks.tasks)
-                    allTasks.set(ListType.COMPLETED, completedTasks)
 
-                    resolve(new BaseTasksState(
-                        currentTasks.selectedDate,
-                        allTasks,
-                        new Map<SettingsType, boolean>(settings),
-                        true
+                    const newAllTasks = migrateOverdueListToDateList(allTasks)
+
+                    const migratedState = migrateCompletedListFromMap(new BaseTasksState(
+                        // Load today by default.
+                        getTodayKey(),
+                        newAllTasks,
+                        completedTasks,
+                        new Map<SettingsType, boolean>(settings)
                         )
                     )
+
+                    resolve(migratedState)
                 } else {
                     resolve(emptyState())
                 }

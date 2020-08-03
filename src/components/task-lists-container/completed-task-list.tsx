@@ -74,12 +74,12 @@ const AccordionDetails = withStyles((theme) => ({
     },
 }))(MuiAccordionDetails);
 
-interface DateTasks {
+interface CompletedTaskProps {
     content: DisplayableTaskList
     undoComplete: (task: CompletedTask) => void,
 }
 
-export default function CompletedTaskList(props: DateTasks) {
+export default function CompletedTaskList(props: CompletedTaskProps) {
 
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false)

@@ -10,7 +10,9 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditTaskItem from "./edit-task-item";
 import Tooltip from '@material-ui/core/Tooltip';
-import { formatToListTitle, getCurrentMillis } from "../../utils/date-utils";
+import { formatToListTitle, getCurrentMillis, getTodayKey } from "../../utils/date-utils";
+import EventIcon from '@material-ui/icons/Event';
+import AppDatePicker from "../common/date-picker";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,12 +28,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface TaskItemProps {
-    listKey: number
     task: Task
-    overdue?: boolean
+    showPlannedOn?: boolean
+    move: (from: number, to: number, task: Task) => void
     update: (key: number, task: Task) => void
-    complete: (key: number, task: Task) => void
-    delete: (key: number, task: Task) => void
+    complete: (fromKey: number, task: Task) => void
+    delete: (fromKey: number, task: Task) => void
 }
 
 export default function TaskItem(props: TaskItemProps) {
@@ -42,8 +44,27 @@ export default function TaskItem(props: TaskItemProps) {
         editMode: false
     });
 
+    const [datePickerState, setDatePickerState] = useState(false);
+
+    const handleDateChange = (key: number) => {
+
+        props.move(props.task.plannedOn,
+            key,
+            {
+                ...props.task,
+                plannedOn: key,
+                updatedOn: getCurrentMillis()
+            })
+        setTaskItemState({
+            ...taskItemState,
+            element: <span>{props.task.value}</span>,
+        })
+
+        setDatePickerState(!datePickerState)
+    };
+
     const updateTask = (value: string) => {
-        props.update(props.listKey,
+        props.update(props.task.plannedOn,
             {
                 ...props.task,
                 value: value,
@@ -83,7 +104,7 @@ export default function TaskItem(props: TaskItemProps) {
         return (<span>
             {taskItemState.element}
             <span style={{color: 'lightgray', font: 'caption'}}>
-                {props.overdue ? ` (since ${formatToListTitle(props.task.plannedOn)})` : ''}
+                {props.showPlannedOn ? ` (planned on ${formatToListTitle(props.task.plannedOn)})` : ''}
             </span>
         </span>)
     }
@@ -93,13 +114,22 @@ export default function TaskItem(props: TaskItemProps) {
         <ListItem
             key={labelId}
             role={undefined} dense>
+
+            <AppDatePicker
+                label={''}
+                open={datePickerState}
+                value={props.task.plannedOn}
+                dateChange={handleDateChange}
+                close={() => setDatePickerState(false)}
+            />
+
             <ListItemIcon>
                 <Checkbox
                     edge="start"
                     tabIndex={-1}
                     disableRipple
                     inputProps={{'aria-labelledby': labelId}}
-                    onClick={() => props.complete(props.listKey, props.task)}
+                    onClick={() => props.complete(props.task.plannedOn, props.task)}
                 />
             </ListItemIcon>
             <Tooltip title="Click to edit task"
@@ -114,8 +144,15 @@ export default function TaskItem(props: TaskItemProps) {
             </Tooltip>
             {!taskItemState.editMode &&
             <ListItemSecondaryAction>
+                <IconButton
+                    onClick={() => {
+                        setDatePickerState(true)
+                    }}
+                    edge="start" aria-label={`move-${labelId}`}>
+                    <EventIcon/>
+                </IconButton>
                 <IconButton edge="end" aria-label={`delete-${labelId}`}
-                            onClick={() => props.delete(props.listKey, props.task)}>
+                            onClick={() => props.delete(props.task.plannedOn, props.task)}>
                     <DeleteIcon/>
                 </IconButton>
             </ListItemSecondaryAction>}
