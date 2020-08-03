@@ -1,4 +1,4 @@
-import { CompletedTask, ListType, SettingsType, Task } from "../types/types";
+import { CompletedTask, SettingsType, Task } from "../types/types";
 import { BaseTasksState } from "../types/base-tasks-state";
 import { emptyState } from "./app-state-facade-utils";
 import { getTodayKey } from "./date-utils";
@@ -11,14 +11,10 @@ import { migrateCompletedListFromMap, migrateOverdueListToDateList } from "./mig
  */
 export const updateBrowserAppState = (updatedState: BaseTasksState) => {
 
-    // I'll store completed separately in different key
-    const currentTasks = new Map(updatedState.tasks)
-    currentTasks.delete(ListType.COMPLETED)
-
     chrome.storage.sync.set({
         'organizeyou_current_tasks': JSON.stringify({
             selectedDate: updatedState.selectedDate,
-            tasks: [...Array.from(currentTasks)]
+            tasks: [...Array.from(updatedState.tasks)]
         })
     })
 
