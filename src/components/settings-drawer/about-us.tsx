@@ -68,7 +68,7 @@ export default function AboutUs() {
                     Version:
                 </Typography>
                 <Typography className={classes.posUp} variant="subtitle1">
-                    2.2.0
+                    2.2.1
                 </Typography>
             </CardContent>
         </Card>
