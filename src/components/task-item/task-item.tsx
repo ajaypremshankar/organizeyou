@@ -149,11 +149,15 @@ export default function TaskItem(props: TaskItemProps) {
                         setDatePickerState(true)
                     }}
                     edge="start" aria-label={`move-${labelId}`}>
+                    <Tooltip title="Click to change date" aria-label={`change-date-tooltip-${labelId}`}>
                     <EventIcon/>
+                    </Tooltip>
                 </IconButton>
                 <IconButton edge="end" aria-label={`delete-${labelId}`}
                             onClick={() => props.delete(props.task.plannedOn, props.task)}>
+                    <Tooltip title="Click to delete task" aria-label={`delete-task-tooltip-${labelId}`}>
                     <DeleteIcon/>
+                    </Tooltip>
                 </IconButton>
             </ListItemSecondaryAction>}
         </ListItem>

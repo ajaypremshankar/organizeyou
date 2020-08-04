@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CompletedTask, ListType, SettingsType, Task } from "../../types/types";
+import { CompletedTask, SettingsType, Task } from "../../types/types";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddTaskContainer from "../add-task/add-task-container";
 import OverdueTaskList from "../task-lists-container/overdue-task-list";
