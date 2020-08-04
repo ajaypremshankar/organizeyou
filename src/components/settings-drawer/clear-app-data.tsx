@@ -31,7 +31,8 @@ export default function ClearAppData(props: ClearAppDataProps) {
 
     return (
         <div>
-            <Button startIcon={<ClearAllIcon/>} size={"small"} variant="outlined" color="primary" onClick={handleClickOpen}>
+            <Button
+                startIcon={<ClearAllIcon/>} size={"small"} variant="outlined" color="secondary" onClick={handleClickOpen}>
                 Clear app data
             </Button>
             <Dialog

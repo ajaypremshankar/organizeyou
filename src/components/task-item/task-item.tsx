@@ -46,13 +46,13 @@ export default function TaskItem(props: TaskItemProps) {
 
     const [datePickerState, setDatePickerState] = useState(false);
 
-    const handleDateChange = (key: number) => {
+    const handleTaskDateChange = (newPlannedOn: number) => {
 
         props.move(props.task.plannedOn,
-            key,
+            newPlannedOn,
             {
                 ...props.task,
-                plannedOn: key,
+                plannedOn: newPlannedOn,
                 updatedOn: getCurrentMillis()
             })
         setTaskItemState({
@@ -119,7 +119,7 @@ export default function TaskItem(props: TaskItemProps) {
                 label={''}
                 open={datePickerState}
                 value={props.task.plannedOn}
-                dateChange={handleDateChange}
+                dateChange={handleTaskDateChange}
                 close={() => setDatePickerState(false)}
             />
 

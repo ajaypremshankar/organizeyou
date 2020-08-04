@@ -50,7 +50,7 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
 
                     const newAllTasks = migrateOverdueListToDateList(allTasks)
 
-                    const migratedState = migrateCompletedListFromMap(new BaseTasksState(
+                    resolve(new BaseTasksState(
                         // Load today by default.
                         getTodayKey(),
                         newAllTasks,
@@ -58,8 +58,6 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
                         new Map<SettingsType, boolean>(settings)
                         )
                     )
-
-                    resolve(migratedState)
                 } else {
                     resolve(emptyState())
                 }
