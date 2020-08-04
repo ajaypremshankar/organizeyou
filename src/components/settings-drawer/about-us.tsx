@@ -5,6 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { Divider } from "@material-ui/core";
+import ClearAllIcon from '@material-ui/icons/ClearAll';
+import ClearAppData from "./clear-app-data";
 
 const useStyles = makeStyles({
     root: {
@@ -68,7 +70,12 @@ export default function AboutUs() {
                     Version:
                 </Typography>
                 <Typography className={classes.posUp} variant="subtitle1">
-                    2.2.1
+                    2.3.0
+                </Typography>
+                <Divider/>
+                <Typography className={classes.posUp} variant="subtitle2">
+                    Having trouble using app? <br/>
+                    <ClearAppData />
                 </Typography>
             </CardContent>
         </Card>

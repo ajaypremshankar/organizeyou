@@ -84,15 +84,14 @@ export default function SettingsList(props: SettingsListProps) {
                 </ListItemSecondaryAction>
             </ListItem>
 
-            <ListItem className={classes.listItemReleased} disabled style={{display: 'none'}}>
+            <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><FormatListBulletedIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.SHOW_ALL_TASKS}
                     primary={SettingsType.SHOW_ALL_TASKS}
-                    secondary={`${props.settings.get(SettingsType.SHOW_ALL_TASKS) ? 'Hides' : 'Shows'} all task list`}/>
-                <ListItemSecondaryAction style={{display: 'none'}}>
+                    secondary={`${props.settings.get(SettingsType.SHOW_ALL_TASKS) ? 'Hides' : 'Shows'} all tasks`}/>
+                <ListItemSecondaryAction>
                     <Switch
-                        disabled
                         color={'primary'}
                         edge="end"
                         onChange={() => props.handleToggle(SettingsType.SHOW_ALL_TASKS)}

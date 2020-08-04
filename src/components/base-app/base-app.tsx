@@ -10,6 +10,8 @@ import SettingsDrawer from "../settings-drawer/settings-drawer";
 import Clock from '../clock/clock';
 import { getClockOptions } from "../../utils/settings-utils";
 import { emptyState, loadAppState, updateAppState } from "../../utils/app-state-facade-utils";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -56,8 +58,7 @@ export default function BaseApp() {
     }
 
     const updateCurrentlySelectedDate = (date: number) => {
-        const rememberSelectedDate = baseState.settings.get(SettingsType.REMEMBER_SELECTED_DATE)
-        updateBaseState(new BaseTasksState(date, baseState.tasks, baseState.settings), rememberSelectedDate)
+        updateBaseState(new BaseTasksState(date, baseState.tasks, baseState.completedTasks, baseState.settings), false)
     }
 
     const handleTaskCompletion = (key: number, task: Task) => {
@@ -72,6 +73,10 @@ export default function BaseApp() {
         updateBaseState(baseState.removeTask(key, task))
     }
 
+    const handleTaskMovement = (from: number, to: number, task: Task) => {
+        updateBaseState(baseState.moveTask(from, to, task))
+    }
+
     const handleUndoComplete = (task: CompletedTask) => {
         updateBaseState(baseState.undoCompleteTask(task))
     }
@@ -80,11 +85,16 @@ export default function BaseApp() {
         updateBaseState(baseState.toggleSetting(type))
     }
 
+    const handleShowAllToggle = () => {
+        updateBaseState(baseState.toggleSetting(SettingsType.SHOW_ALL_TASKS), false)
+    }
+
     const getOverdueList = () => {
         const overdueTaskList = baseState.getOverdueTasks()
         return overdueTaskList.isNotEmpty() ?
             <OverdueTaskList
                 content={overdueTaskList}
+                move={handleTaskMovement}
                 update={handleTaskAddition}
                 complete={handleTaskCompletion} delete={handleTaskDeletion}/>
             : null
@@ -92,10 +102,12 @@ export default function BaseApp() {
 
     const getSelectedDateList = () => {
 
-        return <DayBasedTaskList content={baseState.getSelectedDateTasks()}
+        return <DayBasedTaskList content={baseState.getTargetTasks()}
                                  update={handleTaskAddition}
+                                 move={handleTaskMovement}
                                  complete={handleTaskCompletion}
                                  delete={handleTaskDeletion}
+                                 showAll={baseState.isShowAllTasks()}
                                  expanded={true}/>
     }
 
@@ -119,7 +131,25 @@ export default function BaseApp() {
                 handleSettingsToggle={handleSettingsToggle}
                 settings={baseState.settings}/>
             <div className={classes.fullWidth}>
-                {getOverdueList()}
+                <div style={{
+                    textAlign: 'right',
+                    marginBottom: '5px',
+                }}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={baseState.isShowAllTasks()}
+                                onChange={handleShowAllToggle}
+                                name="checkedB"
+                                color="primary"
+                                edge={'start'}
+                                size="small"
+                            />
+                        }
+                        label="Show all tasks"
+                    />
+                </div>
+                {!baseState.isShowAllTasks() && getOverdueList()}
                 {getSelectedDateList()}
                 {getCompletedList()}
             </div>

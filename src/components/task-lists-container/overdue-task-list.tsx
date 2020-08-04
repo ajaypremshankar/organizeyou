@@ -70,6 +70,7 @@ const AccordionDetails = withStyles((theme) => ({
 
 interface DateTasks {
     content: DisplayableTaskList
+    move: (from: number, to: number, task: Task) => void
     update: (key: number, task: Task) => void
     complete: (key: number, task: Task) => void
     delete: (key: number, task: Task) => void
@@ -84,8 +85,8 @@ export default function OverdueTaskList(props: DateTasks) {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem
-                    listKey={props.content.key}
-                    overdue={true}
+                    move={props.move}
+                    showPlannedOn={true}
                     update={props.update} key={labelId} task={value}
                     complete={props.complete} delete={props.delete}/>
             );

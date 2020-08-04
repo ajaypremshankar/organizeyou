@@ -7,6 +7,7 @@ import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { formatToKey, getTodayKey, getTomorrowKey, neitherTodayNorTomorrow } from "../../utils/date-utils";
 import { KeyTitlePair } from "../../types/key-title-pair";
+import AppDatePicker from "../common/date-picker";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -30,11 +31,8 @@ export default function TopButtonGroup(props: TopButtonGroupProps) {
     const classes = useStyles()
 
     const [datePickerState, setDatePickerState] = useState(false);
-    const handleDateChange = (date: Date | null) => {
-        if (date) {
-            props.chooseDate(formatToKey(date))
-        }
-        setDatePickerState(!datePickerState)
+    const handleDateChange = (key: number) => {
+        props.chooseDate(key)
     };
 
     return (
@@ -45,23 +43,13 @@ export default function TopButtonGroup(props: TopButtonGroupProps) {
                 aria-label="large primary button group"
                 fullWidth={true}>
 
-                <div style={{display: 'none'}}>
-                    <MuiPickersUtilsProvider
-                        utils={DateFnsUtils}>
-                        <DatePicker
-                            disableToolbar
-                            disablePast
-                            variant="dialog"
-                            label="I'll perform task on"
-                            value={props.keyTitle.key.toString()}
-                            onChange={handleDateChange}
-                            autoOk={true}
-                            format='yyyyMMdd'
-                            open={datePickerState}
-                            onClose={() => setDatePickerState(false)}
-                        />
-                    </MuiPickersUtilsProvider>
-                </div>
+                <AppDatePicker
+                    label={''}
+                    open={datePickerState}
+                    value={props.keyTitle.key + 2}
+                    dateChange={handleDateChange}
+                    close={() => setDatePickerState(false)}
+                />
 
                 <Button
                     variant={props.keyTitle.key === getTodayKey() ? 'contained' : 'outlined'}

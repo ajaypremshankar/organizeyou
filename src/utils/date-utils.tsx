@@ -34,11 +34,13 @@ export const getDate = () =>{
     return format(new Date(),'EEE, do MMM, yyyy')
 }
 
-
 export const getCurrentMillis = (): number =>{
     return new Date().getTime()
 }
 
+export const isPastKey = (key: number): boolean => {
+    return getTodayKey() > key
+}
 
 
 
