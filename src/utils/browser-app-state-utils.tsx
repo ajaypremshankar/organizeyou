@@ -70,3 +70,7 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
         }
     });
 }
+
+export const clearBrowserState = () => {
+    chrome.storage.sync.clear()
+}

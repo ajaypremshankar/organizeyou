@@ -45,3 +45,7 @@ export const loadLocalAppState = (): Promise<BaseTasksState> => {
         resolve(migratedState)
     })
 }
+
+export const clearLocalStorageState = () => {
+    localStorage.removeItem("organizeyou-base-app-2")
+}
