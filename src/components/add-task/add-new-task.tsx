@@ -30,6 +30,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
 
     return (
         <TextField
+
             className={classes.textField}
             id="outlined-basic"
             label={`Add task for ${props.keyTitle.title}`}

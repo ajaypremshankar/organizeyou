@@ -11,7 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 const useStyles = makeStyles({
     list: {
         width: '25vw',
-        minWidth: '300',
+        minWidth: '300px',
     },
     settingsBox: {
         position: 'fixed',
@@ -23,14 +23,13 @@ const useStyles = makeStyles({
         background: 'transparent'
     },
     arrow: {
-        position: 'absolute',
+        position: 'fixed',
         right: '30px',
         top: '40px',
         opacity: '0.4',
         '&:hover': {
             cursor: 'pointer',
             opacity: '1.0',
-            color: 'blue'
         }
     }
 });

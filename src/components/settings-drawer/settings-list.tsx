@@ -8,11 +8,13 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { SettingsType } from "../../types/types";
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
-import DateRangeIcon from '@material-ui/icons/DateRange';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import SettingsIcon from "@material-ui/icons/Settings";
 import { Divider } from "@material-ui/core";
 import AboutUs from "./about-us";
+import PaletteIcon from '@material-ui/icons/Palette';
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
     listItemReleased: {
@@ -36,27 +38,11 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText primary={'Settings'}/>
             </ListItem>
             <Divider/>
-            <ListItem className={classes.listItemReleased} style={{display: 'none'}}>
-                <ListItemIcon><DateRangeIcon/></ListItemIcon>
-                <ListItemText id={`switch-list-label-${SettingsType.REMEMBER_SELECTED_DATE}`}
-                              primary="Remember date"
-                              secondary={"Remember default date for task creation."}/>
-                <ListItemSecondaryAction style={{display: 'none'}}>
-                    <Switch
-                        edge="end"
-                        color={'primary'}
-                        onChange={() => props.handleToggle(SettingsType.REMEMBER_SELECTED_DATE)}
-                        checked={props.settings.get(SettingsType.REMEMBER_SELECTED_DATE)}
-                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.REMEMBER_SELECTED_DATE}`}}
-                    />
-                </ListItemSecondaryAction>
-            </ListItem>
             <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.SHOW_SECONDS}
-                    primary={SettingsType.SHOW_SECONDS}
-                    secondary={`${props.settings.get(SettingsType.SHOW_SECONDS) ? 'Hides' : 'Shows'} seconds in clock`}/>
+                    primary={SettingsType.SHOW_SECONDS}/>
                 <ListItemSecondaryAction>
                     <Switch
                         color={'primary'}
@@ -71,8 +57,7 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.SHOW_AM_PM}
-                    primary={SettingsType.SHOW_AM_PM}
-                    secondary={`${props.settings.get(SettingsType.SHOW_AM_PM) ? 'Hides' : 'Shows'} AM/PM`}/>
+                    primary={SettingsType.SHOW_AM_PM}/>
                 <ListItemSecondaryAction>
                     <Switch
                         color={'primary'}
@@ -84,19 +69,34 @@ export default function SettingsList(props: SettingsListProps) {
                 </ListItemSecondaryAction>
             </ListItem>
 
-            <ListItem className={classes.listItemReleased}>
+            <ListItem className={classes.listItemReleased} style={{display: 'none'}}>
                 <ListItemIcon><FormatListBulletedIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.SHOW_ALL_TASKS}
-                    primary={SettingsType.SHOW_ALL_TASKS}
-                    secondary={`${props.settings.get(SettingsType.SHOW_ALL_TASKS) ? 'Hides' : 'Shows'} all tasks`}/>
-                <ListItemSecondaryAction>
+                    primary={SettingsType.SHOW_ALL_TASKS}/>
+                <ListItemSecondaryAction style={{display: 'none'}}>
                     <Switch
                         color={'primary'}
                         edge="end"
                         onChange={() => props.handleToggle(SettingsType.SHOW_ALL_TASKS)}
                         checked={props.settings.get(SettingsType.SHOW_ALL_TASKS)}
                         inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_ALL_TASKS}`}}
+                    />
+                </ListItemSecondaryAction>
+            </ListItem>
+
+            <ListItem className={classes.listItemReleased}>
+                <ListItemIcon><PaletteIcon/></ListItemIcon>
+                <ListItemText
+                    id={SettingsType.DARK_THEME}
+                    primary={SettingsType.DARK_THEME}/>
+                <ListItemSecondaryAction>
+                    <Switch
+                        color={'primary'}
+                        edge="end"
+                        onChange={() => props.handleToggle(SettingsType.DARK_THEME)}
+                        checked={props.settings.get(SettingsType.DARK_THEME)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.DARK_THEME}`}}
                     />
                 </ListItemSecondaryAction>
             </ListItem>

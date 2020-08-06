@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CompletedTask, SettingsType, Task } from "../../types/types";
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
 import AddTaskContainer from "../add-task/add-task-container";
 import OverdueTaskList from "../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../task-lists-container/day-based-task-list";
@@ -12,6 +12,8 @@ import { getClockOptions } from "../../utils/settings-utils";
 import { emptyState, loadAppState, updateAppState } from "../../utils/app-state-facade-utils";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -86,7 +88,7 @@ export default function BaseApp() {
     }
 
     const handleShowAllToggle = () => {
-        updateBaseState(baseState.toggleSetting(SettingsType.SHOW_ALL_TASKS), false)
+        updateBaseState(baseState.toggleSetting(SettingsType.SHOW_ALL_TASKS), true)
     }
 
     const getOverdueList = () => {
@@ -120,40 +122,60 @@ export default function BaseApp() {
             : null
     }
 
+    const theme = createMuiTheme({
+        palette: {
+            type: baseState.settings.get(SettingsType.DARK_THEME) ? 'dark' : 'light',
+            primary: {
+                main: baseState.settings.get(SettingsType.DARK_THEME) ?  '#FFFF' : '#1976d2',
+            },
+            /*background: {
+                paper:
+            }*/
+        }
+    });
+
     return (
-        <div className={classes.root}>
-            <Clock options={getClockOptions(baseState.settings)}></Clock>
-            <AddTaskContainer
-                keyTitle={baseState.getKeyTitle()}
-                changeSelectedDate={updateCurrentlySelectedDate}
-                addTask={handleTaskAddition}/>
-            <SettingsDrawer
-                handleSettingsToggle={handleSettingsToggle}
-                settings={baseState.settings}/>
-            <div className={classes.fullWidth}>
-                <div style={{
-                    textAlign: 'right',
-                    marginBottom: '5px',
-                }}>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={baseState.isShowAllTasks()}
-                                onChange={handleShowAllToggle}
-                                name="checkedB"
-                                color="primary"
-                                edge={'start'}
-                                size="small"
+        <ThemeProvider theme={theme}>
+            <Paper style={{
+                width: '100%',
+                minHeight: '100%',
+                position: 'absolute',
+            }}>
+                <div className={classes.root}>
+                    <Clock options={getClockOptions(baseState.settings)}></Clock>
+                    <AddTaskContainer
+                        keyTitle={baseState.getKeyTitle()}
+                        changeSelectedDate={updateCurrentlySelectedDate}
+                        addTask={handleTaskAddition}/>
+                    <SettingsDrawer
+                        handleSettingsToggle={handleSettingsToggle}
+                        settings={baseState.settings}/>
+                    <div className={classes.fullWidth}>
+                        <div style={{
+                            textAlign: 'right',
+                            marginBottom: '5px',
+                        }}>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={baseState.isShowAllTasks()}
+                                        onChange={handleShowAllToggle}
+                                        name="checkedB"
+                                        color="primary"
+                                        edge={'start'}
+                                        size="small"
+                                    />
+                                }
+                                label="Show all tasks"
                             />
-                        }
-                        label="Show all tasks"
-                    />
+                        </div>
+                        {!baseState.isShowAllTasks() && getOverdueList()}
+                        {getSelectedDateList()}
+                        {getCompletedList()}
+                    </div>
                 </div>
-                {!baseState.isShowAllTasks() && getOverdueList()}
-                {getSelectedDateList()}
-                {getCompletedList()}
-            </div>
-        </div>
+            </Paper>
+        </ThemeProvider>
     )
 }
 
