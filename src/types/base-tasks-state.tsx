@@ -72,6 +72,8 @@ export class BaseTasksState {
 
     public moveTask(from: number, to: number, task: Task | CompletedTask): BaseTasksState {
 
+        if(from === to) return this
+
         const now = getCurrentMillis()
         const newTasks = this.internalAddTask(to, {
             ...task,

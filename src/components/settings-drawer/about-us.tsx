@@ -70,7 +70,7 @@ export default function AboutUs() {
                     Version:
                 </Typography>
                 <Typography className={classes.posUp} variant="subtitle1">
-                    2.3.0
+                    2.3.1
                 </Typography>
                 <Divider/>
                 <Typography className={classes.posUp} variant="subtitle2">
