@@ -27,5 +27,6 @@ export enum SettingsType {
     SHOW_SECONDS = 'Seconds on clock',
     SHOW_AM_PM = "Show AM/PM",
     SHOW_ALL_TASKS = 'Show all tasks list',
-    ABOUT_US = 'Who are we?'
+    ABOUT_US = 'Who are we?',
+    DARK_THEME = 'Dark Theme'
 }

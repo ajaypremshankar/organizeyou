@@ -40,16 +40,15 @@ export default function TopButtonGroup(props: TopButtonGroupProps) {
             <ButtonGroup
                 size="large"
                 color="primary"
-                aria-label="large primary button group"
+                aria-label="large button group"
                 fullWidth={true}>
 
                 <AppDatePicker
                     label={''}
                     open={datePickerState}
-                    value={props.keyTitle.key + 2}
+                    value={getTodayKey() + 2}
                     dateChange={handleDateChange}
-                    close={() => setDatePickerState(false)}
-                />
+                    close={() => setDatePickerState(false)}/>
 
                 <Button
                     variant={props.keyTitle.key === getTodayKey() ? 'contained' : 'outlined'}
