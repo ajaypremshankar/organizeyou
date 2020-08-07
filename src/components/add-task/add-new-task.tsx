@@ -22,7 +22,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
     const [taskContentState, setTaskContentState] = useState('');
 
     const handleKeyPressChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
+        if (taskContentState.trim() !== '' && event.key === 'Enter') {
             props.addTask(taskContentState)
             setTaskContentState('')
         }
@@ -38,6 +38,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
             size={'medium'}
             value={taskContentState}
             autoFocus
+            inputProps={{minLength: 1, maxLength: process.env.REACT_APP_TASK_MAX_LIMIT}}
             onChange={(event) => setTaskContentState(event.target.value)}
             onKeyDown={handleKeyPressChange}
         />

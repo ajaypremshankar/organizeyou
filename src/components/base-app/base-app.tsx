@@ -14,6 +14,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import Paper from '@material-ui/core/Paper';
+import { StateStore } from "../../types/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,9 +42,12 @@ export default function BaseApp() {
         emptyState()
     )
 
+    StateStore.setCurrentState(baseState)
+
     useEffect(() => {
         loadAppState().then(value => {
             setBaseState(value)
+            StateStore.setCurrentState(value)
         })
     }, [])
 
@@ -57,6 +61,7 @@ export default function BaseApp() {
             updateAppState(newState)
         }
         setBaseState(newState)
+        StateStore.setCurrentState(newState)
     }
 
     const updateCurrentlySelectedDate = (date: number) => {

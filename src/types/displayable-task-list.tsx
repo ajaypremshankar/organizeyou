@@ -37,6 +37,6 @@ export class DisplayableTaskList {
     }
 
     private static defaultDescSorting = (a: Task|CompletedTask, b: Task|CompletedTask) => {
-        return b.updatedOn - a.updatedOn
+        return b.createdOn - a.createdOn
     }
 }
