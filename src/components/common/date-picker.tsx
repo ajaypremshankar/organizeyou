@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { DatePicker, Day, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { formatToKey, parseFromKey } from "../../utils/date-utils";
+import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
 import { Task } from "../../types/types";
 import { StateStore } from "../../types/state-store";
@@ -17,6 +17,11 @@ const useStyles = makeStyles((theme: Theme) =>
                 margin: theme.spacing(1),
             },
         },
+        customBadge: {
+            backgroundColor: "#4791db",
+            color: "white",
+            fontSize: 'smaller'
+        }
     }),
 );
 
@@ -29,7 +34,7 @@ interface AppDatePickerProps {
 }
 
 export default function AppDatePicker(props: AppDatePickerProps) {
-
+    const classes = useStyles();
     const handleDateChange = (date: Date | null) => {
         if (date) {
             props.dateChange(formatToKey(date))
@@ -56,18 +61,19 @@ export default function AppDatePicker(props: AppDatePickerProps) {
                     open={props.open}
                     onClose={() => props.close()}
                     renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-                        if(day == null) return dayComponent
+                        if (day == null) return dayComponent
 
                         const currentKey = formatToKey(day)
                         const tasksOnDay = tasksMap.get(currentKey)
-                        const isSelected = isInCurrentMonth && tasksOnDay && tasksOnDay.length > 0;
+                        const isSelected = !isPastKey(currentKey) && isInCurrentMonth
+                            && tasksOnDay && tasksOnDay.length > 0;
 
                         // You can also use our internal <Day /> component
                         return isSelected ? <Badge
                             overlap="circle"
-                            style={{fontSize: 'smaller'}}
                             badgeContent={isSelected && tasksOnDay ? tasksOnDay.length : undefined}
                             variant={"dot"}
+                            classes={{badge: classes.customBadge}}
                             color={"secondary"}>{dayComponent}</Badge> : dayComponent;
                     }}
                 />

@@ -98,16 +98,18 @@ export default function TaskItem(props: TaskItemProps) {
 
     const handleEditClick = () => {
 
-        setTaskItemState(
-            {
-                ...taskItemState,
-                element: <EditTaskItem
-                    editBlur={handleEditBlur}
-                    defaultValue={props.task.value}
-                    updateTask={updateTask}/>,
-                editMode: !taskItemState.editMode
-            }
-        )
+        if(!taskItemState.editMode) {
+            setTaskItemState(
+                {
+                    ...taskItemState,
+                    element: <EditTaskItem
+                        editBlur={handleEditBlur}
+                        defaultValue={props.task.value}
+                        updateTask={updateTask}/>,
+                    editMode: !taskItemState.editMode
+                }
+            )
+        }
     }
 
     const labelId = `task-item-label-${props.task.id}`;
@@ -121,8 +123,7 @@ export default function TaskItem(props: TaskItemProps) {
                 open={datePickerState}
                 value={props.task.plannedOn}
                 dateChange={handleTaskDateChange}
-                close={() => setDatePickerState(false)}
-            />
+                close={() => setDatePickerState(false)}/>
 
             <ListItemIcon>
                 <Checkbox
