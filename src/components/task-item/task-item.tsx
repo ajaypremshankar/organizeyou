@@ -36,18 +36,30 @@ interface TaskItemProps {
     delete: (fromKey: number, task: Task) => void
 }
 
+const getTaskContentWithTooltip = (value: string, props: TaskItemProps) => {
+    const labelId = `task-item-label-${props.task.id}`;
+    return (
+        <Tooltip title="Click to edit" aria-label={`tooltip-${labelId}`}>
+                <span>
+            {value}
+                    <span style={{color: 'lightgray', font: 'caption'}}>
+                {props.showPlannedOn ? ` (planned on ${formatToListTitle(props.task.plannedOn)})` : ''}
+            </span>
+                </span>
+        </Tooltip>)
+}
+
 export default function TaskItem(props: TaskItemProps) {
 
     const classes = useStyles();
     const [taskItemState, setTaskItemState] = useState({
-        element: <span>{props.task.value}</span>,
+        element: getTaskContentWithTooltip(props.task.value, props),
         editMode: false
     });
 
     const [datePickerState, setDatePickerState] = useState(false);
 
     const handleTaskDateChange = (newPlannedOn: number) => {
-
         props.move(props.task.plannedOn,
             newPlannedOn,
             {
@@ -72,16 +84,14 @@ export default function TaskItem(props: TaskItemProps) {
             })
         setTaskItemState({
             ...taskItemState,
-            element: <span>{value}</span>,
+            element: getTaskContentWithTooltip(value, props)
         })
     }
 
     const handleEditBlur = () => {
         setTaskItemState({
             ...taskItemState,
-            element: <Tooltip title="Click to edit" aria-label={`tooltip-${labelId}`}>
-                <span>{props.task.value}</span>
-            </Tooltip>,
+            element: getTaskContentWithTooltip(props.task.value, props),
             editMode: false
         })
     }
@@ -98,15 +108,6 @@ export default function TaskItem(props: TaskItemProps) {
                 editMode: !taskItemState.editMode
             }
         )
-    }
-
-    const getTaskText = () => {
-        return (<span>
-            {taskItemState.element}
-            <span style={{color: 'lightgray', font: 'caption'}}>
-                {props.showPlannedOn ? ` (planned on ${formatToListTitle(props.task.plannedOn)})` : ''}
-            </span>
-        </span>)
     }
 
     const labelId = `task-item-label-${props.task.id}`;
@@ -132,16 +133,13 @@ export default function TaskItem(props: TaskItemProps) {
                     onClick={() => props.complete(props.task.plannedOn, props.task)}
                 />
             </ListItemIcon>
-            <Tooltip title="Click to edit task"
-                     aria-label="task-item-edit-tool-tip">
-                <ListItemText
-                    className={classes.itemText}
-                    id={labelId}
-                    classes={{primary: classes.itemText}}
-                    primary={getTaskText()}
-                    onClick={handleEditClick}
-                />
-            </Tooltip>
+            <ListItemText
+                className={classes.itemText}
+                id={labelId}
+                classes={{primary: classes.itemText}}
+                primary={taskItemState.element}
+                onClick={handleEditClick}
+            />
             {!taskItemState.editMode &&
             <ListItemSecondaryAction>
                 <IconButton
@@ -150,13 +148,13 @@ export default function TaskItem(props: TaskItemProps) {
                     }}
                     edge="start" aria-label={`move-${labelId}`}>
                     <Tooltip title="Click to change date" aria-label={`change-date-tooltip-${labelId}`}>
-                    <EventIcon/>
+                        <EventIcon/>
                     </Tooltip>
                 </IconButton>
                 <IconButton edge="end" aria-label={`delete-${labelId}`}
                             onClick={() => props.delete(props.task.plannedOn, props.task)}>
                     <Tooltip title="Click to delete task" aria-label={`delete-task-tooltip-${labelId}`}>
-                    <DeleteIcon/>
+                        <DeleteIcon/>
                     </Tooltip>
                 </IconButton>
             </ListItemSecondaryAction>}

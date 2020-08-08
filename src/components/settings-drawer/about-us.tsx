@@ -70,7 +70,7 @@ export default function AboutUs() {
                     Version:
                 </Typography>
                 <Typography className={classes.posUp} variant="subtitle1">
-                    2.3.1
+                    {process.env.REACT_APP_VERSION}
                 </Typography>
                 <Divider/>
                 <Typography className={classes.posUp} variant="subtitle2">

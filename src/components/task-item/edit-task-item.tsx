@@ -23,7 +23,9 @@ export default function EditTaskItem(props: AddNewTaskProps) {
     const [taskContentState, setTaskContentState] = useState(props.defaultValue || '');
 
     const handleKeyPressChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Escape') {
+            props.editBlur()
+        } else if (taskContentState.trim() !== '' && event.key === 'Enter') {
             props.updateTask(taskContentState)
             setTaskContentState('')
         }
@@ -35,7 +37,11 @@ export default function EditTaskItem(props: AddNewTaskProps) {
             id="input-base-edit-task"
             defaultValue={taskContentState}
             autoFocus
-            inputProps={{ 'aria-label': 'naked' }}
+            inputProps={{
+                'aria-label': 'naked',
+                minLength: 1,
+                maxLength: process.env.REACT_APP_TASK_MAX_LIMIT
+            }}
             onBlur={props.editBlur}
             onChange={(event) => setTaskContentState(event.target.value)}
             onKeyDown={handleKeyPressChange}

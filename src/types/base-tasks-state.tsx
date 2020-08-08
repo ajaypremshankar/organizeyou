@@ -6,12 +6,12 @@ import { KeyTitlePair } from "./key-title-pair";
 export class BaseTasksState {
     private readonly _selectedDate: number;
     private readonly _keyTitle: KeyTitlePair;
-    private readonly _tasks: Map<number, Task[] | CompletedTask[]>;
+    private readonly _tasks: Map<number, Task[]>;
     private readonly _completedTasks: CompletedTask[];
     private readonly _settings: Map<SettingsType, boolean>;
 
     constructor(selectedDate: number,
-                tasks: Map<number, Task[] | CompletedTask[]>,
+                tasks: Map<number, Task[]>,
                 completedTasks: CompletedTask[],
                 settings: Map<SettingsType, boolean>) {
         this._selectedDate = selectedDate;
@@ -38,7 +38,7 @@ export class BaseTasksState {
     }
 
     public getOverdueTasks(sorter?: (a: Task | CompletedTask, b: Task | CompletedTask) => number): DisplayableTaskList {
-        const reducedList: Task[] | CompletedTask[] = BaseTasksState.computeOverdueTasks(this._tasks)
+        const reducedList: Task[] = BaseTasksState.computeOverdueTasks(this._tasks)
         return new DisplayableTaskList(ListType.OVERDUE, reducedList, sorter)
     }
 
