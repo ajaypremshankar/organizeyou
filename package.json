@@ -14,7 +14,8 @@
     "date-fns": "^2.15.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "@material-ui/lab": "^4.0.0-alpha.56"
   },
   "scripts": {
     "start": "react-scripts start",

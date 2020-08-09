@@ -100,6 +100,21 @@ export default function SettingsList(props: SettingsListProps) {
                     />
                 </ListItemSecondaryAction>
             </ListItem>
+            <ListItem className={classes.listItemReleased}>
+                <ListItemIcon><PaletteIcon/></ListItemIcon>
+                <ListItemText
+                    id={SettingsType.SHOW_BOOKMARKS}
+                    primary={SettingsType.SHOW_BOOKMARKS}/>
+                <ListItemSecondaryAction>
+                    <Switch
+                        color={'primary'}
+                        edge="end"
+                        onChange={() => props.handleToggle(SettingsType.SHOW_BOOKMARKS)}
+                        checked={props.settings.get(SettingsType.SHOW_BOOKMARKS)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_BOOKMARKS}`}}
+                    />
+                </ListItemSecondaryAction>
+            </ListItem>
             <Divider />
             <ListItem className={classes.listItemReleased}>
                 <ListItemText
