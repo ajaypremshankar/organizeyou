@@ -15,6 +15,7 @@ import AboutUs from "./about-us";
 import PaletteIcon from '@material-ui/icons/Palette';
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from '@material-ui/core/Button';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 
 const useStyles = makeStyles({
     listItemReleased: {
@@ -101,7 +102,7 @@ export default function SettingsList(props: SettingsListProps) {
                 </ListItemSecondaryAction>
             </ListItem>
             <ListItem className={classes.listItemReleased}>
-                <ListItemIcon><PaletteIcon/></ListItemIcon>
+                <ListItemIcon><BookmarkIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.SHOW_BOOKMARKS}
                     primary={SettingsType.SHOW_BOOKMARKS}/>
