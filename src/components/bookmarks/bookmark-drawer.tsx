@@ -9,40 +9,23 @@ import { BookmarkTreeNode } from "../../types/bookmark-node";
 
 const useStyles = makeStyles({
     list: {
-        width: '20vw',
+        width: '22vw',
         minWidth: '200px',
         textAlign:'left',
-        marginLeft: '10px'
-    },
-    settingsBox: {
+        marginLeft: '10px',
         position: 'fixed',
-        top: '0px',
-        opacity: '0.6',
     },
-    BackdropProps: {
-        background: 'transparent'
-    },
-    arrow: {
-        position: 'fixed',
-        right: '30px',
-        top: '40px',
-        opacity: '0.4',
-        '&:hover': {
-            cursor: 'pointer',
-            opacity: '1.0',
-        }
-    }
 });
 
 interface BookmarkDrawerProps {
 }
 
 // TODO: https://stackblitz.com/edit/react-2h1g6x?file=index.js
-
 export default function BookmarkDrawer(props: BookmarkDrawerProps) {
     const classes = useStyles();
     const [bookmarkTreeState, setBookmarkTreeState] = React.useState(<span></span>);
     const [bookmarkSearchState, setBookmarkSearchState] = React.useState('');
+    
     useEffect(() => {
         getBookmarkTree().then(value => {
             if (value && value.length > 0) {
@@ -71,7 +54,7 @@ export default function BookmarkDrawer(props: BookmarkDrawerProps) {
                         className={clsx(classes.list)}
                         role="presentation">
                         <TextField
-                            style={{width: '100%', float: 'left',}}
+                            style={{width: '100%', float: 'left'}}
                             id="standard-basic"
                             label="Search bookmarks"
                             variant={"standard"}
@@ -81,6 +64,5 @@ export default function BookmarkDrawer(props: BookmarkDrawerProps) {
                         {bookmarkTreeState}
                     </div>
                 </Drawer>
-            </React.Fragment>
-    );
+            </React.Fragment>);
 }

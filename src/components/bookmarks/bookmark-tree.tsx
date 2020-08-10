@@ -21,8 +21,26 @@ interface BookmarkTreeProps {
     tree: BookmarkTreeNode[]
 }
 
+const getExpandedIds = (nodes: BookmarkTreeNode[], arr: string[]): string[] => {
+    if (!nodes) {
+        return [];
+    }
+    if (!arr) {
+        arr = [];
+    }
+
+    nodes.forEach(value => {
+        arr.push(value.id);
+        if (value.children)
+            getExpandedIds(value.children, arr);
+    })
+    return arr;
+}
+
 export default function BookmarkTree(props: BookmarkTreeProps) {
+    const expandedIds: string[] = []
     const classes = useStyles();
+    const [expandedIdsState, setExpandedIdsState] = React.useState(getExpandedIds(props.tree, []));
 
     const getTreeItem = (node: BookmarkTreeNode): JSX.Element => {
         const nodeTitle = node.title.length === 0 ? 'Bookmarks' :
@@ -32,35 +50,22 @@ export default function BookmarkTree(props: BookmarkTreeProps) {
             key={node.id}
             nodeId={node.id}
             label={node.url ?
-                <Tooltip title={nodeTitle || ''}>
+                <Tooltip title={node.title || ''}>
                     <Link href={node.url}>{nodeTitle}</Link>
                 </Tooltip> : nodeTitle}>
             {!node.url && node.children && node.children.map(value => getTreeItem(value))}
         </TreeItem>)
     }
 
-    const getExpandedIds = (nodes: BookmarkTreeNode[], arr: string[]): string[] => {
-        if (!nodes) {
-            return [];
-        }
-        if (!arr) {
-            arr = [];
-        }
-
-        nodes.forEach(value => {
-            arr.push(value.id);
-            if (value.children)
-                getExpandedIds(value.children, arr);
-        })
-        return arr;
-    }
+    const toggleNode = (event: React.ChangeEvent<{}>, nodeIds: string[]) => setExpandedIdsState(nodeIds);
 
     return (
         <TreeView
             className={classes.root}
             defaultCollapseIcon={<ExpandMoreIcon/>}
             defaultExpandIcon={<ChevronRightIcon/>}
-            expanded={getExpandedIds(props.tree, [])}>
+            expanded={expandedIdsState}
+            onNodeToggle={toggleNode}>
             {props.tree.map(value1 => getTreeItem(value1))}
         </TreeView>)
 }
