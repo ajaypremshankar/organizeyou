@@ -15,6 +15,7 @@ import Switch from "@material-ui/core/Switch";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import Paper from '@material-ui/core/Paper';
 import { StateStore } from "../../types/state-store";
+import BookmarkDrawer from "../bookmarks/bookmark-drawer";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,7 +44,6 @@ export default function BaseApp() {
     )
 
     StateStore.setCurrentState(baseState)
-
     useEffect(() => {
         loadAppState().then(value => {
             setBaseState(value)
@@ -147,6 +147,7 @@ export default function BaseApp() {
                 position: 'absolute',
             }}>
                 <div className={classes.root}>
+                    {baseState.settings.get(SettingsType.SHOW_BOOKMARKS) && <BookmarkDrawer/>}
                     <Clock options={getClockOptions(baseState.settings)}></Clock>
                     <AddTaskContainer
                         keyTitle={baseState.getKeyTitle()}

@@ -15,6 +15,7 @@ import AboutUs from "./about-us";
 import PaletteIcon from '@material-ui/icons/Palette';
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from '@material-ui/core/Button';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 
 const useStyles = makeStyles({
     listItemReleased: {
@@ -97,6 +98,21 @@ export default function SettingsList(props: SettingsListProps) {
                         onChange={() => props.handleToggle(SettingsType.DARK_THEME)}
                         checked={props.settings.get(SettingsType.DARK_THEME)}
                         inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.DARK_THEME}`}}
+                    />
+                </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem className={classes.listItemReleased}>
+                <ListItemIcon><BookmarkIcon/></ListItemIcon>
+                <ListItemText
+                    id={SettingsType.SHOW_BOOKMARKS}
+                    primary={SettingsType.SHOW_BOOKMARKS}/>
+                <ListItemSecondaryAction>
+                    <Switch
+                        color={'primary'}
+                        edge="end"
+                        onChange={() => props.handleToggle(SettingsType.SHOW_BOOKMARKS)}
+                        checked={props.settings.get(SettingsType.SHOW_BOOKMARKS)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_BOOKMARKS}`}}
                     />
                 </ListItemSecondaryAction>
             </ListItem>

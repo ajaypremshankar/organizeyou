@@ -15,7 +15,6 @@ const useStyles = makeStyles({
     },
     settingsBox: {
         position: 'fixed',
-
         top: '0px',
         opacity: '0.6',
     },

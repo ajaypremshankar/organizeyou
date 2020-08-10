@@ -11,7 +11,7 @@ import { migrateCompletedListFromMap, migrateOverdueListToDateList } from "./mig
  */
 export const updateBrowserAppState = (updatedState: BaseTasksState) => {
 
-    chrome.storage.sync.set({
+    window.chrome.storage.sync.set({
         'organizeyou_current_tasks': JSON.stringify({
             selectedDate: updatedState.selectedDate,
             tasks: [...Array.from(updatedState.tasks)]
@@ -20,12 +20,12 @@ export const updateBrowserAppState = (updatedState: BaseTasksState) => {
 
     // Storing completed in different key
     const completedTasks = [...updatedState.completedTasks || []]
-    chrome.storage.sync.set({
+    window.chrome.storage.sync.set({
         'organizeyou_completed_tasks': JSON.stringify(completedTasks)
     })
 
     // Store settings separately too.
-    chrome.storage.sync.set({
+    window.chrome.storage.sync.set({
         'organizeyou_settings': JSON.stringify([...Array.from(updatedState.settings || new Map())])
     })
 }
@@ -37,7 +37,7 @@ export function loadBrowserAppState(): Promise<BaseTasksState> {
 function getLocalStorageValue(): Promise<BaseTasksState> {
     return new Promise((resolve, reject) => {
         try {
-            chrome.storage.sync.get([
+            window.chrome.storage.sync.get([
                 'organizeyou_current_tasks',
                 "organizeyou_completed_tasks",
                 "organizeyou_settings"
@@ -70,5 +70,5 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
 }
 
 export const clearBrowserState = () => {
-    chrome.storage.sync.clear()
+    window.chrome.storage.sync.clear()
 }
