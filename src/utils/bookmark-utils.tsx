@@ -5,7 +5,6 @@ export const getBookmarkTree = (): Promise<BookmarkTreeNode[]> => {
         if (window.chrome && window.chrome.bookmarks) {
             window.chrome.bookmarks.getTree(function (results: any) {
                 const bookmarks: BookmarkTreeNode[] = [...results]
-                console.log(bookmarks)
                 resolve(bookmarks)
             })
         } else {
