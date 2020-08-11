@@ -15,6 +15,8 @@ import Switch from "@material-ui/core/Switch";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import Paper from '@material-ui/core/Paper';
 import { StateStore } from "../../types/state-store";
+import NavigationLinks from "../links/browser-navigate-links";
+import { isFirefox } from "react-device-detect";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
             flexDirection: 'column',
             width: '100%',
             margin: 'auto',
-            maxWidth: 700,
+            maxWidth: '700px',
             alignItems: 'center',
             '& > *': {
                 margin: theme.spacing(2),
@@ -131,7 +133,7 @@ export default function BaseApp() {
         palette: {
             type: baseState.settings.get(SettingsType.DARK_THEME) ? 'dark' : 'light',
             primary: {
-                main: baseState.settings.get(SettingsType.DARK_THEME) ?  '#FFFF' : '#1976d2',
+                main: baseState.settings.get(SettingsType.DARK_THEME) ? '#FFFF' : '#1976d2',
             },
             /*background: {
                 paper:
@@ -147,6 +149,7 @@ export default function BaseApp() {
                 position: 'absolute',
             }}>
                 <div className={classes.root}>
+                    {!isFirefox && <NavigationLinks/>}
                     <Clock options={getClockOptions(baseState.settings)}></Clock>
                     <AddTaskContainer
                         keyTitle={baseState.getKeyTitle()}
