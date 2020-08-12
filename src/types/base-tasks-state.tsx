@@ -4,6 +4,7 @@ import { getCurrentMillis, getTodayKey } from "../utils/date-utils";
 import { KeyTitlePair } from "./key-title-pair";
 
 export class BaseTasksState {
+    private readonly _fullMode: boolean
     private readonly _selectedDate: number;
     private readonly _keyTitle: KeyTitlePair;
     private readonly _tasks: Map<number, Task[]>;
@@ -13,12 +14,14 @@ export class BaseTasksState {
     constructor(selectedDate: number,
                 tasks: Map<number, Task[]>,
                 completedTasks: CompletedTask[],
-                settings: Map<SettingsType, boolean>) {
+                settings: Map<SettingsType, boolean>,
+                fullMode = true) {
         this._selectedDate = selectedDate;
         this._keyTitle = new KeyTitlePair(selectedDate)
         this._tasks = tasks;
         this._completedTasks = completedTasks || []
         this._settings = settings;
+        this._fullMode = fullMode
     }
 
     get tasks(): Map<number, Task[] | CompletedTask[]> {
@@ -37,6 +40,10 @@ export class BaseTasksState {
         return this._selectedDate;
     }
 
+    get fullMode(): boolean {
+        return this._fullMode;
+    }
+
     public getOverdueTasks(sorter?: (a: Task | CompletedTask, b: Task | CompletedTask) => number): DisplayableTaskList {
         const reducedList: Task[] = BaseTasksState.computeOverdueTasks(this._tasks)
         return new DisplayableTaskList(ListType.OVERDUE, reducedList, sorter)
@@ -52,7 +59,7 @@ export class BaseTasksState {
             const reducedList: Task[] = []
 
             this.tasks.forEach((value, key) => {
-                if(key !== ListType.COMPLETED) {
+                if (key !== ListType.COMPLETED) {
                     reducedList.push(...value)
                 }
             })
@@ -72,7 +79,7 @@ export class BaseTasksState {
 
     public moveTask(from: number, to: number, task: Task | CompletedTask): BaseTasksState {
 
-        if(from === to) return this
+        if (from === to) return this
 
         const now = getCurrentMillis()
         const newTasks = this.internalAddTask(to, {
@@ -175,5 +182,17 @@ export class BaseTasksState {
 
     public getKeyTitle(): KeyTitlePair {
         return this._keyTitle
+    }
+
+    public isSetting(type: SettingsType): boolean {
+        return !!this._settings.get(type)
+    }
+
+    public toggleFullMode = () => {
+        return new BaseTasksState(this.selectedDate,
+            this.tasks,
+            this.completedTasks,
+            this.settings,
+            !this._fullMode);
     }
 }

@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import { formatToKey, getTodayKey, getTomorrowKey, neitherTodayNorTomorrow } from "../../utils/date-utils";
-import { KeyTitlePair } from "../../types/key-title-pair";
-import AppDatePicker from "../common/date-picker";
-import { Link } from "@material-ui/core";
-import { getPlatform, PLATFORM } from "../../utils/platform-utils";
-import TabIcon from '@material-ui/icons/Tab';
+import { getPlatform, PLATFORM } from "../../../utils/platform-utils";
+import BookmarkIcon from '@material-ui/icons/Bookmark';
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import HomeIcon from '@material-ui/icons/Home';
+import AppsIcon from '@material-ui/icons/Apps';
+import Tooltip from '@material-ui/core/Tooltip';
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         fullWidth: {
@@ -60,7 +57,6 @@ export default function NavigationLinks(props: TopButtonGroupProps) {
 
     const setCurrentTab = (link: string) => {
         window.chrome.tabs.getCurrent(tab => {
-            console.log(tab, link)
             if(tab && tab.id) {
                 window.chrome.tabs.update(tab.id, {url: link})
                 console.log('updated')
@@ -70,11 +66,21 @@ export default function NavigationLinks(props: TopButtonGroupProps) {
 
     return (
         <div className={classes.fullWidth}>
-            <ButtonGroup variant="text" size={"small"} color="primary" aria-label="text primary button group">
-                <Button onClick={() => handleOnClick(NAVIGATION_TYPE.NEW_TAB)}>New Tab</Button>
-                <Button onClick={() => handleOnClick(NAVIGATION_TYPE.BOOKMARKS)}>Bookmarks</Button>
-                <Button onClick={() => handleOnClick(NAVIGATION_TYPE.APPS)}>Apps</Button>
-            </ButtonGroup>
+            <ToggleButtonGroup
+                exclusive
+                size={"small"}
+                orientation="vertical"
+                aria-label="text alignment">
+                <ToggleButton onClick={() => handleOnClick(NAVIGATION_TYPE.NEW_TAB)} value="new tab" aria-label="centered">
+                    <Tooltip title={'Default new tab'}><HomeIcon /></Tooltip>
+                </ToggleButton>
+                <ToggleButton onClick={() => handleOnClick(NAVIGATION_TYPE.BOOKMARKS)} value="bookmarks" aria-label="centered">
+                    <Tooltip title={'Bookmarks'}><BookmarkIcon /></Tooltip>
+                </ToggleButton>
+                <ToggleButton onClick={() => handleOnClick(NAVIGATION_TYPE.APPS)} value="apps" aria-label="centered">
+                    <Tooltip title={'Apps'}><AppsIcon /></Tooltip>
+                </ToggleButton>
+            </ToggleButtonGroup>
         </div>
     );
 }

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { CompletedTask, SettingsType, Task } from "../../types/types";
 import { createStyles, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
-import AddTaskContainer from "../add-task/add-task-container";
+import AddTaskWidget from "../widgets/add-task/add-task-widget";
 import OverdueTaskList from "../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../task-lists-container/completed-task-list";
 import { BaseTasksState } from "../../types/base-tasks-state";
 import SettingsDrawer from "../settings-drawer/settings-drawer";
-import Clock from '../clock/clock';
+import Clock from '../widgets/top-menu/clock';
 import { getClockOptions } from "../../utils/settings-utils";
 import { emptyState, loadAppState, updateAppState } from "../../utils/app-state-facade-utils";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -15,7 +15,7 @@ import Switch from "@material-ui/core/Switch";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import Paper from '@material-ui/core/Paper';
 import { StateStore } from "../../types/state-store";
-import NavigationLinks from "../links/browser-navigate-links";
+import NavigationLinks from "../widgets/top-menu/browser-navigate-links";
 import { isFirefox } from "react-device-detect";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -151,7 +151,7 @@ export default function BaseApp() {
                 <div className={classes.root}>
                     {!isFirefox && <NavigationLinks/>}
                     <Clock options={getClockOptions(baseState.settings)}></Clock>
-                    <AddTaskContainer
+                    <AddTaskWidget
                         keyTitle={baseState.getKeyTitle()}
                         changeSelectedDate={updateCurrentlySelectedDate}
                         addTask={handleTaskAddition}/>
