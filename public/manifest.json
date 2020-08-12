@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "short_name": "Organize You",
-  "name": "OrganizeYou",
+  "short_name": "OrganizeYou - A simple task board",
+  "name": "OrganizeYou - A simple task board",
   "description": "Keep your todos always in-front of you",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",

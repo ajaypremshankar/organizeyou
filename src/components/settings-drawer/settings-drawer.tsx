@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SettingsList from "./settings-list";
 import { SettingsType } from "../../types/types";
 import Tooltip from '@material-ui/core/Tooltip';
+import { Backdrop } from "@material-ui/core";
 
 const useStyles = makeStyles({
     list: {
@@ -70,7 +71,14 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
                 </IconButton>
                 </Tooltip>
                 <SwipeableDrawer
-                    className={classes.list}
+                    ModalProps={{
+                        BackdropProps:{
+                            classes:{
+                                root:classes.BackdropProps
+                            }
+                        }
+                    }}
+                    //className={classes.list}
                     anchor={'right'}
                     open={drawerState}
                     onClose={toggleDrawer(false)}

@@ -1,4 +1,4 @@
-import { isChrome, isEdge, isEdgeChromium, isFirefox } from 'react-device-detect'
+import { isChrome, isEdge, isFirefox } from 'react-device-detect'
 
 export enum PLATFORM {
     EXTENSION_CHROME,
