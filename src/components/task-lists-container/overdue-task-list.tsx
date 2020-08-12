@@ -1,13 +1,11 @@
-import React from 'react';
-import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import MuiAccordion from '@material-ui/core/Accordion';
-import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
-import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import { Task } from "../../types/types";
 import TaskItem from "../task-item/task-item";
 import { DisplayableTaskList } from "../../types/displayable-task-list";
+import AppAccordion from "../common/app-accordian";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -28,46 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-
-const Accordion = withStyles({
-    root: {
-        border: '0px solid rgba(0, 0, 0, .125)',
-        marginBottom: '20px',
-        boxShadow: 'none',
-        '&:not(:last-child)': {
-            borderBottom: 0,
-        },
-        '&:before': {
-            display: 'none',
-        },
-        '&$expanded': {
-            margin: 'auto',
-        },
-    },
-    expanded: {},
-})(MuiAccordion);
-
-const AccordionSummary = withStyles({
-    root: {
-        backgroundColor: 'rgba(0, 0, 0, .03)',
-        marginBottom: -1,
-        minHeight: 56,
-        '&$expanded': {
-            minHeight: 56,
-        },
-    },
-    content: {
-        '&$expanded': {
-            margin: '5px 0',
-        },
-    },
-    expanded: {},
-})(MuiAccordionSummary);
-
-const AccordionDetails = withStyles((theme) => ({
-    root: {},
-}))(MuiAccordionDetails);
-
 interface DateTasks {
     content: DisplayableTaskList
     move: (from: number, to: number, task: Task) => void
@@ -80,7 +38,8 @@ interface DateTasks {
 export default function OverdueTaskList(props: DateTasks) {
 
     const classes = useStyles();
-    const getTasks = (tasks : Task[]) => {
+
+    const getTasks = (tasks: Task[]) => {
         return tasks.map((value, index) => {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
@@ -94,21 +53,20 @@ export default function OverdueTaskList(props: DateTasks) {
     }
 
     return (
+        //This div saves overdue world from shaking. Don't ask me how!
         <div>
-            <Accordion square expanded={true} id={'overdue-task-accordian'}>
-                <AccordionSummary
-                    aria-controls="overdue-task-content"
-                    id="overdue-task-header">
+            <AppAccordion
+                id={'overdue-task'}
+                initialExpanded={true}
+                summary={
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
                         {props.content.title.toUpperCase()}
                     </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
+                }
+                details={
                     <List className={classes.list}>
                         {getTasks(props.content.tasks)}
-                    </List>
-                </AccordionDetails>
-            </Accordion>
+                    </List>}/>
         </div>
     );
 }
