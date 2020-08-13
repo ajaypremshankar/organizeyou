@@ -105,15 +105,8 @@ export default function SettingsList(props: SettingsListProps) {
             <ListItem className={classes.listItemReleased}>
                 <ListItemText
                     id={SettingsType.ABOUT_US}
-                    primary={<CompactModeSetup/>}
-                />
-            </ListItem>
-            <ListItem className={classes.listItemReleased}>
-                <ListItemText
-                    id={SettingsType.ABOUT_US}
                     primary={<AboutUs/>}
                 />
             </ListItem>
-
         </List>);
 }

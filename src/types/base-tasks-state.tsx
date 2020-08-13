@@ -89,7 +89,7 @@ export class BaseTasksState {
 
         const removedTasks: Map<number, Task[] | CompletedTask[]> = this.internalRemoveTask(from, task, newTasks)
 
-        return new BaseTasksState(this.selectedDate, removedTasks, this.completedTasks, this._settings)
+        return new BaseTasksState(this.selectedDate, removedTasks, this.completedTasks, this._settings, this.fullMode)
     }
 
     public completeTask(from: number, task: Task): BaseTasksState {
@@ -103,7 +103,8 @@ export class BaseTasksState {
         return new BaseTasksState(this.selectedDate,
             this.internalRemoveTask(task.plannedOn, task, this.tasks),
             completedTasks,
-            this._settings)
+            this._settings,
+            this.fullMode)
     }
 
     public undoCompleteTask(task: Task): BaseTasksState {
@@ -112,21 +113,23 @@ export class BaseTasksState {
         return new BaseTasksState(this.selectedDate,
             this.internalAddTask(task.plannedOn, task, this.tasks),
             completedTasks,
-            this._settings)
+            this._settings,
+            this.fullMode)
     }
 
     public addTask(key: number, task: Task | CompletedTask): BaseTasksState {
         return new BaseTasksState(this.selectedDate,
             this.internalAddTask(key, task, this.tasks),
             this.completedTasks,
-            this._settings)
+            this._settings, this.fullMode)
     }
 
     public removeTask(key: number, task: Task | CompletedTask): BaseTasksState {
         return new BaseTasksState(this.selectedDate,
             this.internalRemoveTask(key, task, this.tasks),
             this.completedTasks,
-            this._settings)
+            this._settings,
+            this.fullMode)
     }
 
 
@@ -168,7 +171,8 @@ export class BaseTasksState {
         return new BaseTasksState(this.selectedDate,
             this.tasks,
             this.completedTasks,
-            settings);
+            settings,
+            this.fullMode);
     }
 
     public pendingTasksCount = () => {

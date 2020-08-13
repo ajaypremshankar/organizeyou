@@ -36,7 +36,12 @@ export class StateStore {
     }
 
     public static updateCurrentlySelectedDate = (date: number) => {
-        StateStore.updateBaseState(new BaseTasksState(date, StateStore.baseState.tasks, StateStore.baseState.completedTasks, StateStore.baseState.settings), false)
+        StateStore.updateBaseState(new BaseTasksState(
+            date,
+            StateStore.baseState.tasks,
+            StateStore.baseState.completedTasks,
+            StateStore.baseState.settings,
+            StateStore.baseState.fullMode), false)
     }
 
     public static handleTaskCompletion = (key: number, task: Task) => {

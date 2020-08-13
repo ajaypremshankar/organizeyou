@@ -31,6 +31,7 @@ export const migrateCompletedListFromMap = (baseState: BaseTasksState)
         baseState.selectedDate,
         newTasks,
         completedTasks,
-        baseState.settings
+        baseState.settings,
+        baseState.fullMode
     )
 }

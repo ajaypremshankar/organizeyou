@@ -2,20 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { getDate, getLocaleTime } from '../../../utils/date-utils'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { StateStore } from "../../../types/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         clock: {
-            fontFamily: "'Orbitron', sans-serif",
             fontWeight: 'bold',
             letterSpacing: '2pt',
-            fontSize: '1.5em'
+            fontSize: StateStore.getState().fullMode ? '2em' : '2.5em'
         },
         date: {
-            fontFamily: "'Orbitron', sans-serif",
             fontWeight: 'bold',
             letterSpacing: '2pt',
-            fontSize: '0.5em'
+            fontSize: StateStore.getState().fullMode ? '0.7em' : '0.9em'
         }
     }),
 );

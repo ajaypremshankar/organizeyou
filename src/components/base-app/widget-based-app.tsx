@@ -11,6 +11,8 @@ import SettingsDrawer from "../settings-drawer/settings-drawer";
 import CenterMenuWidget from "../widgets/top-menu/center-menu-widget";
 import TaskListWidget from "../widgets/task-list/task-list-widget";
 import LeftMenuWidget from "../widgets/top-menu/left-menu-widget";
+import SearchBarWidget from "../widgets/search-bar/search-bar-widget";
+import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -66,7 +68,7 @@ export default function WidgetBasedApp() {
         StateStore.getState().fullMode ? <AddTaskWidget
             keyTitle={baseState.getKeyTitle()}
             changeSelectedDate={StateStore.updateCurrentlySelectedDate}
-            addTask={StateStore.handleTaskAddition}/> : <span></span>,
+            addTask={StateStore.handleTaskAddition}/> : <SearchBarWidget/>,
         StateStore.getState().fullMode ? <TaskListWidget showCompleted={true}/> : <span></span>,
     ]
 
@@ -75,9 +77,6 @@ export default function WidgetBasedApp() {
             type: baseState.settings.get(SettingsType.DARK_THEME) ? 'dark' : 'light',
             primary: {
                 main: baseState.settings.get(SettingsType.DARK_THEME) ? '#FFFF' : '#1976d2',
-            },
-            background: {
-
             }
         }
     });
@@ -106,7 +105,8 @@ export default function WidgetBasedApp() {
                     <Grid item xs={6}>
                         {[0, 1, 2, 3].map((value) => (<Grid container justify="center">
                             <Grid key={2} item>
-                                <Paper className={classes.paperCenter} elevation={0}>
+                                <Paper className={classes.paperCenter}
+                                       elevation={0}>
                                     {centerWidgets[value]}
                                 </Paper>
                             </Grid>
