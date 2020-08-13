@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import TopButtonGroup from "./top-button-group";
+import DaySelectButtonGroup from "./day-select-button-group";
 import AddNewTask from "./add-new-task";
 import { Task } from "../../../types/types";
 import Grid from "@material-ui/core/Grid";
@@ -53,7 +53,7 @@ export default function AddTaskWidget(props: AddTaskWidgetProps) {
 
     return (
         <Grid className={classes.container} container justify="space-around">
-            <TopButtonGroup
+            <DaySelectButtonGroup
                 keyTitle={addTaskState}
                 chooseDate={handleDateChange}/>
             <AddNewTask

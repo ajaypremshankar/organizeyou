@@ -2,7 +2,7 @@ import { CompletedTask, SettingsType, Task } from "../types/types";
 import { BaseTasksState } from "../types/base-tasks-state";
 import { emptyState } from "./app-state-facade-utils";
 import { getTodayKey } from "./date-utils";
-import { migrateCompletedListFromMap, migrateOverdueListToDateList } from "./migration-utils";
+import { migrateOverdueListToDateList } from "./migration-utils";
 import { loadLocalSettingsState, updateLocalSettingsState } from "./settings-local-storage";
 
 /***

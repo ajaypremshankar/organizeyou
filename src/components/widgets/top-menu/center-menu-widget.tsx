@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface TopAlwaysOnMenuProps {
+interface CenterMenuWidgetProps {
     settings: Map<SettingsType, boolean>
 }
 
-export default function CenterMenuWidget(props: TopAlwaysOnMenuProps) {
+export default function CenterMenuWidget(props: CenterMenuWidgetProps) {
 
     const classes = useStyles();
 

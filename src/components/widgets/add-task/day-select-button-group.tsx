@@ -3,9 +3,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import { formatToKey, getTodayKey, getTomorrowKey, neitherTodayNorTomorrow } from "../../../utils/date-utils";
+import { getTodayKey, getTomorrowKey, neitherTodayNorTomorrow } from "../../../utils/date-utils";
 import { KeyTitlePair } from "../../../types/key-title-pair";
 import AppDatePicker from "../../common/date-picker";
 
@@ -22,12 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface TopButtonGroupProps {
+interface DaySelectButtonGroupProps {
     keyTitle: KeyTitlePair,
     chooseDate: (date: number) => void,
 }
 
-export default function TopButtonGroup(props: TopButtonGroupProps) {
+export default function DaySelectButtonGroup(props: DaySelectButtonGroupProps) {
     const classes = useStyles()
 
     const [datePickerState, setDatePickerState] = useState(false);

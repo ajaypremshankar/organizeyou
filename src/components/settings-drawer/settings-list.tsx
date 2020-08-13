@@ -13,9 +13,6 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import { Divider } from "@material-ui/core";
 import AboutUs from "./about-us";
 import PaletteIcon from '@material-ui/icons/Palette';
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Button from '@material-ui/core/Button';
-import CompactModeSetup from "./compact-mode-setup";
 
 const useStyles = makeStyles({
     listItemReleased: {

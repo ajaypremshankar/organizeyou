@@ -1,4 +1,4 @@
-import {BaseTasksState} from "../types/base-tasks-state";
+import { BaseTasksState } from "../types/base-tasks-state";
 import { clearBrowserState, loadBrowserAppState, updateBrowserAppState } from "./browser-app-state-utils";
 import { clearLocalStorageState, loadLocalAppState, updateLocalAppState } from "./local-store-app-state-utils";
 import { getTodayKey } from "./date-utils";
