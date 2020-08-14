@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface TopAlwaysOnMenuProps {
+interface LeftMenuWidgetProps {
 
 }
 
-export default function LeftMenuWidget(props: TopAlwaysOnMenuProps) {
+export default function LeftMenuWidget(props: LeftMenuWidgetProps) {
 
     const classes = useStyles();
 

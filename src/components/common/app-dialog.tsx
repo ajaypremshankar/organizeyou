@@ -15,7 +15,6 @@ interface AppDialogProps {
 export default function AppDialog(props: AppDialogProps) {
     const [open, setOpen] = React.useState(props.open);
 
-    console.log(props)
     const handleClickOpen = () => {
         setOpen(true);
     };

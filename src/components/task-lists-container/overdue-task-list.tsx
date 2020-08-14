@@ -26,13 +26,14 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface DateTasks {
+interface OverdueTaskListProps {
 }
 
 
-export default function OverdueTaskList(props: DateTasks) {
+export default function OverdueTaskList(props: OverdueTaskListProps) {
 
     const classes = useStyles();
+    const overdueTaskList = StateStore.getOverdueTasks()
 
     const getTasks = (tasks: Task[]) => {
         return tasks.map((value, index) => {
@@ -54,12 +55,12 @@ export default function OverdueTaskList(props: DateTasks) {
                 initialExpanded={true}
                 summary={
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {StateStore.getOverdueTasks().title.toUpperCase()}
+                        {overdueTaskList.title.toUpperCase()}
                     </Typography>
                 }
                 details={
                     <List className={classes.list}>
-                        {getTasks(StateStore.getOverdueTasks().tasks)}
+                        {getTasks(overdueTaskList.tasks)}
                     </List>}/>
         </div>
     );

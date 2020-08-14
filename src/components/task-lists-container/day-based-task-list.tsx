@@ -34,18 +34,19 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface DateTasks {
+interface DayBasedTaskListProps {
     expanded?: boolean
 }
 
 
-export default function DayBasedTaskList(props: DateTasks) {
+export default function DayBasedTaskList(props: DayBasedTaskListProps) {
 
     const classes = useStyles();
+    const  targetTaskList = StateStore.getTargetTasks()
 
     const getTasks = () => {
 
-        if (StateStore.getTargetTasks().isEmpty()) {
+        if (targetTaskList.isEmpty()) {
             return Array.of(<ListItem
                 key={'no-items-in-list'}
                 role={undefined} dense>
@@ -60,7 +61,7 @@ export default function DayBasedTaskList(props: DateTasks) {
             </ListItem>)
         }
 
-        return (StateStore.getTargetTasks().tasks as Task[]).map((value, index) => {
+        return (targetTaskList.tasks as Task[]).map((value, index) => {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem
@@ -74,11 +75,11 @@ export default function DayBasedTaskList(props: DateTasks) {
     return (
         <div>
             <AppAccordion
-                id={`${StateStore.getTargetTasks().title}-task`}
+                id={`${targetTaskList.title}-task`}
                 initialExpanded={true}
                 summary={
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {StateStore.getTargetTasks().title.toUpperCase()}
+                        {targetTaskList.title.toUpperCase()}
                     </Typography>}
                 details={
                     <List className={classes.list}>
