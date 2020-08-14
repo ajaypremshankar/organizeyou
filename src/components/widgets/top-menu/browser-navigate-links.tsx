@@ -37,7 +37,6 @@ export default function NavigationLinks(props: TopButtonGroupProps) {
                 break
             case PLATFORM.EXTENSION_FIREFOX:
                 throw new Error("Feature not supported")
-                break
             case PLATFORM.EXTENSION_CHROME:
             case PLATFORM.EXTENSION_EDGE:
                 switch (type) {

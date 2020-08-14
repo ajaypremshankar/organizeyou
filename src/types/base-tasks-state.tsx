@@ -1,8 +1,12 @@
-import { CompletedTask, ListType, SettingsType, Task } from "./types";
-import { DisplayableTaskList } from "./displayable-task-list";
+import { CompletedTask, SettingsType, Task } from "./types";
 import { getCurrentMillis, getTodayKey } from "../utils/date-utils";
 import { KeyTitlePair } from "./key-title-pair";
 
+/***
+ * This class functionalities should be accessed through `StateStore`.
+ * 1) Logic for modifying state stays with this class.
+ * 2) Logic for transforming and returned curated state related info stays with `StateStore`
+ */
 export class BaseTasksState {
     private readonly _fullMode: boolean
     private readonly _selectedDate: number;
@@ -11,11 +15,11 @@ export class BaseTasksState {
     private readonly _completedTasks: CompletedTask[];
     private readonly _settings: Map<SettingsType, boolean>;
 
-    constructor(selectedDate: number,
-                tasks: Map<number, Task[]>,
-                completedTasks: CompletedTask[],
-                settings: Map<SettingsType, boolean>,
-                fullMode = true) {
+    private constructor(selectedDate: number,
+                        tasks: Map<number, Task[]>,
+                        completedTasks: CompletedTask[],
+                        settings: Map<SettingsType, boolean>,
+                        fullMode = true) {
         this._selectedDate = selectedDate;
         this._keyTitle = new KeyTitlePair(selectedDate)
         this._tasks = tasks;
@@ -44,39 +48,6 @@ export class BaseTasksState {
         return this._fullMode;
     }
 
-    public getOverdueTasks(sorter?: (a: Task | CompletedTask, b: Task | CompletedTask) => number): DisplayableTaskList {
-        const reducedList: Task[] = BaseTasksState.computeOverdueTasks(this._tasks)
-        return new DisplayableTaskList(ListType.OVERDUE, reducedList, sorter)
-    }
-
-    public getCompletedTasks(sorter?: (a: Task | CompletedTask, b: Task | CompletedTask) => number): DisplayableTaskList {
-        return new DisplayableTaskList(ListType.COMPLETED, this.completedTasks, sorter)
-    }
-
-    public getTargetTasks(sorter?: (a: Task | CompletedTask, b: Task | CompletedTask) => number): DisplayableTaskList {
-
-        if (this.isShowAllTasks()) {
-            const reducedList: Task[] = []
-
-            this.tasks.forEach((value, key) => {
-                if (key !== ListType.COMPLETED) {
-                    reducedList.push(...value)
-                }
-            })
-
-            return new DisplayableTaskList(ListType.ALL, reducedList, sorter)
-        } else {
-            return this.getSelectedDateTasks(sorter)
-        }
-
-    }
-
-    public getSelectedDateTasks(sorter?: (a: Task | CompletedTask, b: Task | CompletedTask) => number): DisplayableTaskList {
-        const reducedList: Task[] = []
-        reducedList.push(...this._tasks.get(this._selectedDate) || [])
-        return new DisplayableTaskList(this._selectedDate, reducedList, sorter)
-    }
-
     public moveTask(from: number, to: number, task: Task | CompletedTask): BaseTasksState {
 
         if (from === to) return this
@@ -89,7 +60,7 @@ export class BaseTasksState {
 
         const removedTasks: Map<number, Task[] | CompletedTask[]> = this.internalRemoveTask(from, task, newTasks)
 
-        return new BaseTasksState(this.selectedDate, removedTasks, this.completedTasks, this._settings, this.fullMode)
+        return this.mergeAndCreateNewState({tasks: removedTasks})
     }
 
     public completeTask(from: number, task: Task): BaseTasksState {
@@ -100,38 +71,36 @@ export class BaseTasksState {
 
         const completedTasks = [...this.completedTasks, completeTask]
 
-        return new BaseTasksState(this.selectedDate,
-            this.internalRemoveTask(task.plannedOn, task, this.tasks),
-            completedTasks,
-            this._settings,
-            this.fullMode)
+        const tasksAfterRemove = this.internalRemoveTask(task.plannedOn, task, this.tasks)
+
+        return this.mergeAndCreateNewState({
+            tasks: tasksAfterRemove,
+            completedTasks: completedTasks
+        })
     }
 
     public undoCompleteTask(task: Task): BaseTasksState {
 
         const completedTasks = this.completedTasks.filter(value => value.id !== task.id)
-        return new BaseTasksState(this.selectedDate,
-            this.internalAddTask(task.plannedOn, task, this.tasks),
-            completedTasks,
-            this._settings,
-            this.fullMode)
+        const tasksAfterAdd = this.internalAddTask(task.plannedOn, task, this.tasks)
+
+        return this.mergeAndCreateNewState({
+            tasks: tasksAfterAdd,
+            completedTasks: completedTasks
+        })
     }
 
     public addTask(key: number, task: Task | CompletedTask): BaseTasksState {
-        return new BaseTasksState(this.selectedDate,
-            this.internalAddTask(key, task, this.tasks),
-            this.completedTasks,
-            this._settings, this.fullMode)
+        return this.mergeAndCreateNewState({tasks: this.internalAddTask(key, task, this.tasks),})
     }
 
     public removeTask(key: number, task: Task | CompletedTask): BaseTasksState {
-        return new BaseTasksState(this.selectedDate,
-            this.internalRemoveTask(key, task, this.tasks),
-            this.completedTasks,
-            this._settings,
-            this.fullMode)
+        return this.mergeAndCreateNewState({tasks: this.internalRemoveTask(key, task, this.tasks)})
     }
 
+    public updateCurrentlySelectedDate = (date: number) => {
+        return this.mergeAndCreateNewState({selectedDate: date})
+    }
 
     private internalAddTask(key: number, task: Task | CompletedTask,
                             tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
@@ -150,53 +119,45 @@ export class BaseTasksState {
         return newTasks
     }
 
-    private static computeOverdueTasks(tasks: Map<number, Task[] | CompletedTask[]>): Task[] | CompletedTask[] {
-        const reducedList: Task[] = []
-
-        const today = getTodayKey()
-
-        tasks.forEach((value, key) => {
-            const tasks: Task[] = value as Task[]
-            if (today > key) {
-                reducedList.push(...tasks)
-            }
-        })
-
-        return reducedList
-    }
-
     public toggleSetting = (type: SettingsType) => {
         const settings = new Map<SettingsType, boolean>(this.settings)
         settings.set(type, !this.settings.get(type))
-        return new BaseTasksState(this.selectedDate,
-            this.tasks,
-            this.completedTasks,
-            settings,
-            this.fullMode);
-    }
-
-    public pendingTasksCount = () => {
-        return BaseTasksState.computeOverdueTasks(this.tasks).length
-            + (this.tasks.get(getTodayKey()) || []).length
-    }
-
-    public isShowAllTasks = () => {
-        return this.settings.get(SettingsType.SHOW_ALL_TASKS) || false
+        return this.mergeAndCreateNewState({settings: settings})
     }
 
     public getKeyTitle(): KeyTitlePair {
         return this._keyTitle
     }
 
-    public isSetting(type: SettingsType): boolean {
-        return !!this._settings.get(type)
+    public toggleFullMode = () => {
+        return this.mergeAndCreateNewState({fullMode: !this.fullMode})
     }
 
-    public toggleFullMode = () => {
-        return new BaseTasksState(this.selectedDate,
-            this.tasks,
-            this.completedTasks,
-            this.settings,
-            !this._fullMode);
+    public static newStateFrom = (selectedDate: number,
+                                  tasks: Map<number, Task[]>,
+                                  completedTasks: CompletedTask[],
+                                  settings: Map<SettingsType, boolean>,
+                                  fullMode = true) => {
+        return new BaseTasksState(selectedDate, tasks, completedTasks, settings, fullMode)
+    }
+
+    public static emptyState = (): BaseTasksState => {
+        return BaseTasksState.newStateFrom(
+            getTodayKey(),
+            new Map<number, Task[] | CompletedTask[]>(),
+            [],
+            new Map(),
+            true
+        )
+    }
+
+    private mergeAndCreateNewState = (toBeMerged: any) => {
+        return BaseTasksState.newStateFrom(
+            toBeMerged.selectedDate || this.selectedDate,
+            new Map<number, Task[] | CompletedTask[]>(toBeMerged.tasks || this.tasks),
+            [...(toBeMerged.completedTasks || this.completedTasks)],
+            new Map(toBeMerged.settings || this.settings),
+            toBeMerged.fullMode !== undefined ? toBeMerged.fullMode : this.fullMode
+        )
     }
 }

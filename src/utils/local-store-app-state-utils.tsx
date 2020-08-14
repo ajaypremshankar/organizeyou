@@ -1,7 +1,6 @@
 import { CompletedTask, SettingsType, Task } from "../types/types";
 import { BaseTasksState } from "../types/base-tasks-state";
 import { getTodayKey } from "./date-utils";
-import { emptyState } from "./app-state-facade-utils";
 import { migrateCompletedListFromMap, migrateOverdueListToDateList } from "./migration-utils";
 import { loadLocalSettingsState, updateLocalSettingsState } from "./settings-local-storage";
 
@@ -26,7 +25,7 @@ export const loadLocalAppState = (): Promise<BaseTasksState> => {
 
     if (!persistedState) {
         return new Promise((resolve, reject) => {
-            resolve(emptyState())
+            resolve(BaseTasksState.emptyState())
         })
     }
 
@@ -36,7 +35,7 @@ export const loadLocalAppState = (): Promise<BaseTasksState> => {
 
     const newTasks = migrateOverdueListToDateList(new Map<number, Task[] | CompletedTask[]>(updatedState.tasks))
     const localSettings = loadLocalSettingsState()
-    const migratedState = migrateCompletedListFromMap(new BaseTasksState(
+    const migratedState = migrateCompletedListFromMap(BaseTasksState.newStateFrom(
         // Load today by default
         getTodayKey(),
         newTasks,

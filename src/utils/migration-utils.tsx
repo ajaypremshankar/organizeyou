@@ -27,7 +27,7 @@ export const migrateCompletedListFromMap = (baseState: BaseTasksState)
     const completedTasks = [...baseState.tasks.get(ListType.COMPLETED) || []] as CompletedTask[]
     newTasks.delete(ListType.COMPLETED)
 
-    return new BaseTasksState(
+    return BaseTasksState.newStateFrom(
         baseState.selectedDate,
         newTasks,
         completedTasks,

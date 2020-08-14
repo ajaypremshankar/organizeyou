@@ -10,7 +10,7 @@ export default function AppMode() {
 
     return (
         <ToggleButtonGroup
-            value={StateStore.getState().fullMode ? 'full' : 'compact'}
+            value={StateStore.isFullMode() ? 'full' : 'compact'}
             exclusive
             size={"small"}
             orientation="vertical"

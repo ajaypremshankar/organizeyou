@@ -1,6 +1,5 @@
 import { CompletedTask, SettingsType, Task } from "../types/types";
 import { BaseTasksState } from "../types/base-tasks-state";
-import { emptyState } from "./app-state-facade-utils";
 import { getTodayKey } from "./date-utils";
 import { migrateOverdueListToDateList } from "./migration-utils";
 import { loadLocalSettingsState, updateLocalSettingsState } from "./settings-local-storage";
@@ -54,7 +53,7 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
 
                     const localSettings = loadLocalSettingsState()
 
-                    resolve(new BaseTasksState(
+                    resolve(BaseTasksState.newStateFrom(
                         // Load today by default.
                         getTodayKey(),
                         newAllTasks,
@@ -64,7 +63,7 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
                         )
                     )
                 } else {
-                    resolve(emptyState())
+                    resolve(BaseTasksState.emptyState())
                 }
             })
         } catch (ex) {

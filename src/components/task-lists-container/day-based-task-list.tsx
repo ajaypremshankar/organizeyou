@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
@@ -8,8 +8,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DoneAllIcon from '@material-ui/icons/DoneAll';
-import { DisplayableTaskList } from "../../types/displayable-task-list";
 import AppAccordion from "../common/app-accordian";
+import { StateStore } from "../../types/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,13 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface DateTasks {
-    content: DisplayableTaskList
-    move: (from: number, to: number, task: Task) => void
-    update: (key: number, task: Task) => void
-    complete: (key: number, task: Task) => void
     expanded?: boolean
-    delete: (key: number, task: Task) => void
-    showAll: boolean
 }
 
 
@@ -51,7 +45,7 @@ export default function DayBasedTaskList(props: DateTasks) {
 
     const getTasks = () => {
 
-        if (props.content.isEmpty()) {
+        if (StateStore.getTargetTasks().isEmpty()) {
             return Array.of(<ListItem
                 key={'no-items-in-list'}
                 role={undefined} dense>
@@ -66,15 +60,13 @@ export default function DayBasedTaskList(props: DateTasks) {
             </ListItem>)
         }
 
-        return (props.content.tasks as Task[]).map((value, index) => {
+        return (StateStore.getTargetTasks().tasks as Task[]).map((value, index) => {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem
-                    move={props.move}
-                    showPlannedOn={props.showAll}
-                    update={props.update}
-                    key={labelId} task={value}
-                    complete={props.complete} delete={props.delete}/>
+                    showPlannedOn={StateStore.isShowAllTasks()}
+                    key={labelId}
+                    task={value}/>
             );
         })
     }
@@ -82,11 +74,11 @@ export default function DayBasedTaskList(props: DateTasks) {
     return (
         <div>
             <AppAccordion
-                id={`${props.content.title}-task`}
+                id={`${StateStore.getTargetTasks().title}-task`}
                 initialExpanded={true}
                 summary={
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {props.content.title.toUpperCase()}
+                        {StateStore.getTargetTasks().title.toUpperCase()}
                     </Typography>}
                 details={
                     <List className={classes.list}>

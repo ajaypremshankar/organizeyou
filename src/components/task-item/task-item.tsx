@@ -10,9 +10,10 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditTaskItem from "./edit-task-item";
 import Tooltip from '@material-ui/core/Tooltip';
-import { formatToListTitle, getCurrentMillis, getTodayKey } from "../../utils/date-utils";
+import { formatToListTitle, getCurrentMillis } from "../../utils/date-utils";
 import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
+import { StateStore } from "../../types/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -30,10 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
 interface TaskItemProps {
     task: Task
     showPlannedOn?: boolean
-    move: (from: number, to: number, task: Task) => void
-    update: (key: number, task: Task) => void
-    complete: (fromKey: number, task: Task) => void
-    delete: (fromKey: number, task: Task) => void
 }
 
 const getTaskContentWithTooltip = (value: string, props: TaskItemProps) => {
@@ -60,7 +57,7 @@ export default function TaskItem(props: TaskItemProps) {
     const [datePickerState, setDatePickerState] = useState(false);
 
     const handleTaskDateChange = (newPlannedOn: number) => {
-        props.move(props.task.plannedOn,
+        StateStore.handleTaskMovement(props.task.plannedOn,
             newPlannedOn,
             {
                 ...props.task,
@@ -76,7 +73,7 @@ export default function TaskItem(props: TaskItemProps) {
     };
 
     const updateTask = (value: string) => {
-        props.update(props.task.plannedOn,
+        StateStore.handleTaskAddition(props.task.plannedOn,
             {
                 ...props.task,
                 value: value,
@@ -131,7 +128,7 @@ export default function TaskItem(props: TaskItemProps) {
                     tabIndex={-1}
                     disableRipple
                     inputProps={{'aria-labelledby': labelId}}
-                    onClick={() => props.complete(props.task.plannedOn, props.task)}
+                    onClick={() => StateStore.handleTaskCompletion(props.task.plannedOn, props.task)}
                 />
             </ListItemIcon>
             <ListItemText
@@ -153,7 +150,7 @@ export default function TaskItem(props: TaskItemProps) {
                     </Tooltip>
                 </IconButton>
                 <IconButton edge="end" aria-label={`delete-${labelId}`}
-                            onClick={() => props.delete(props.task.plannedOn, props.task)}>
+                            onClick={() => StateStore.handleTaskDeletion(props.task.plannedOn, props.task)}>
                     <Tooltip title="Click to delete task" aria-label={`delete-task-tooltip-${labelId}`}>
                         <DeleteIcon/>
                     </Tooltip>

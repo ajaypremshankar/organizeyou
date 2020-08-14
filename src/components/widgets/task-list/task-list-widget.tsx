@@ -3,6 +3,9 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { StateStore } from "../../../types/state-store";
+import OverdueTaskList from "../../task-lists-container/overdue-task-list";
+import DayBasedTaskList from "../../task-lists-container/day-based-task-list";
+import CompletedTaskList from "../../task-lists-container/completed-task-list";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -25,6 +28,18 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
 
     const classes = useStyles();
 
+    const getOverdueList = () => {
+        return StateStore.getOverdueTasks().isNotEmpty() ? <OverdueTaskList/> : null
+    }
+
+    const getSelectedDateList = () => {
+        return <DayBasedTaskList expanded={true}/>
+    }
+
+    const getCompletedList = () => {
+        return StateStore.getCompletedTasks().isNotEmpty() ? <CompletedTaskList/> : null
+    }
+
     return (
         <div className={classes.fullWidth}>
             <div style={{
@@ -34,7 +49,7 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
                 <FormControlLabel
                     control={
                         <Switch
-                            checked={StateStore.getState().isShowAllTasks()}
+                            checked={StateStore.isShowAllTasks()}
                             onChange={StateStore.handleShowAllToggle}
                             name="checkedB"
                             color="primary"
@@ -45,9 +60,9 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
                     label="Show all tasks"
                 />
             </div>
-            {!StateStore.getState().isShowAllTasks() && StateStore.getOverdueList()}
-            {StateStore.getSelectedDateList()}
-            {props.showCompleted && StateStore.getCompletedList()}
+            {!StateStore.isShowAllTasks() && getOverdueList()}
+            {getSelectedDateList()}
+            {props.showCompleted && getCompletedList()}
         </div>
     );
 }

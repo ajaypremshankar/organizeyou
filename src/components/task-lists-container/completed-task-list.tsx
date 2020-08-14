@@ -8,9 +8,9 @@ import { CompletedTask } from "../../types/types";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RestoreIcon from '@material-ui/icons/Restore';
-import { DisplayableTaskList } from "../../types/displayable-task-list";
 import { formatToListTitle } from "../../utils/date-utils";
 import AppAccordion from "../common/app-accordian";
+import { StateStore } from "../../types/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,8 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface CompletedTaskProps {
-    content: DisplayableTaskList
-    undoComplete: (task: CompletedTask) => void,
 }
 
 export default function CompletedTaskList(props: CompletedTaskProps) {
@@ -46,13 +44,13 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
                 initialExpanded={false}
                 summary={
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {props.content.title.toUpperCase()}
+                        {StateStore.getCompletedTasks().title.toUpperCase()}
                     </Typography>
                 }
                 details={
                     <List className={classes.list}>
                         {
-                            (props.content.tasks as CompletedTask[])
+                            (StateStore.getCompletedTasks().tasks as CompletedTask[])
                                 .map((value, index) => {
                                     const labelId = `completed-task-list-label-${value.id}`;
 
@@ -73,7 +71,7 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
                                             />
                                             <ListItemSecondaryAction>
                                                 <IconButton edge="start" aria-label="restore"
-                                                            onClick={() => props.undoComplete(value)}>
+                                                            onClick={() => StateStore.handleUndoComplete(value)}>
                                                     <RestoreIcon/>
                                                 </IconButton>
                                             </ListItemSecondaryAction>

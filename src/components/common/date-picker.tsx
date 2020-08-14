@@ -42,7 +42,7 @@ export default function AppDatePicker(props: AppDatePickerProps) {
         props.close()
     };
 
-    const tasksMap: Map<number, Task[]> = StateStore.getTasksMap()
+    const tasksMap: Map<number, Task[]> = StateStore.getTasks()
 
     return (
 

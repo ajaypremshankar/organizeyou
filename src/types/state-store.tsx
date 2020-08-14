@@ -1,29 +1,29 @@
 import { BaseTasksState } from "./base-tasks-state";
-import { CompletedTask, SettingsType, Task } from "./types";
+import { CompletedTask, ListType, SettingsType, Task, TaskSorter } from "./types";
 import { updateAppState } from "../utils/app-state-facade-utils";
-import OverdueTaskList from "../components/task-lists-container/overdue-task-list";
-import DayBasedTaskList from "../components/task-lists-container/day-based-task-list";
-import CompletedTaskList from "../components/task-lists-container/completed-task-list";
-import React from "react";
+import { DisplayableTaskList } from "./displayable-task-list";
+import { getTodayKey } from "../utils/date-utils";
 
+/**
+ * Exposing app state to rest of the app.
+ * This pattern will make decision to use Redux in future easier.
+ * <b>This class will NOT change state data </b>
+ * NOTE: Logic for transforming and returned curated state related info stays with `StateStore`
+ */
 export class StateStore {
     private static baseState: BaseTasksState
     private static setBaseState: any
 
-    public static initState = (state: BaseTasksState, setState: any) => {
+    public static initStore = (state: BaseTasksState, setState: any) => {
         StateStore.baseState = state
         StateStore.setBaseState = setState;
     }
 
-    public static getState = () => {
-        return StateStore.baseState
-    }
-
-    public static setCurrentState = (state: BaseTasksState) => {
+    public static setToStore = (state: BaseTasksState) => {
         StateStore.baseState = state
     }
 
-    public static getTasksMap = (): Map<number, Task[]> => {
+    public static getTasks = (): Map<number, Task[]> => {
         return new Map<number, Task[]>(StateStore.baseState.tasks)
     }
 
@@ -32,16 +32,11 @@ export class StateStore {
             updateAppState(newState)
         }
         StateStore.setBaseState(newState)
-        StateStore.setCurrentState(newState)
+        StateStore.setToStore(newState)
     }
 
     public static updateCurrentlySelectedDate = (date: number) => {
-        StateStore.updateBaseState(new BaseTasksState(
-            date,
-            StateStore.baseState.tasks,
-            StateStore.baseState.completedTasks,
-            StateStore.baseState.settings,
-            StateStore.baseState.fullMode), false)
+        StateStore.updateBaseState(StateStore.baseState.updateCurrentlySelectedDate(date), false)
     }
 
     public static handleTaskCompletion = (key: number, task: Task) => {
@@ -76,34 +71,62 @@ export class StateStore {
         StateStore.updateBaseState(StateStore.baseState.toggleSetting(SettingsType.SHOW_ALL_TASKS), true)
     }
 
-    public static getOverdueList = () => {
-        const overdueTaskList = StateStore.baseState.getOverdueTasks()
-        return overdueTaskList.isNotEmpty() ?
-            <OverdueTaskList
-                content={overdueTaskList}
-                move={StateStore.handleTaskMovement}
-                update={StateStore.handleTaskAddition}
-                complete={StateStore.handleTaskCompletion} delete={StateStore.handleTaskDeletion}/>
-            : null
+    public static isShowAllTasks = () => {
+        return StateStore.baseState.settings.get(SettingsType.SHOW_ALL_TASKS) || false
     }
 
-    public static getSelectedDateList = () => {
-
-        return <DayBasedTaskList content={StateStore.baseState.getTargetTasks()}
-                                 update={StateStore.handleTaskAddition}
-                                 move={StateStore.handleTaskMovement}
-                                 complete={StateStore.handleTaskCompletion}
-                                 delete={StateStore.handleTaskDeletion}
-                                 showAll={StateStore.baseState.isShowAllTasks()}
-                                 expanded={true}/>
+    public static isFullMode = () => {
+        return StateStore.baseState.fullMode || false
     }
 
-    public static getCompletedList = () => {
-        const completedTaskList = StateStore.baseState.getCompletedTasks()
-        return completedTaskList.isNotEmpty() ?
-            <CompletedTaskList
-                content={completedTaskList}
-                undoComplete={StateStore.handleUndoComplete}/>
-            : null
+    public static getTargetTasks = (sorter?: TaskSorter) => {
+        if (StateStore.isShowAllTasks()) {
+            const reducedList: Task[] = []
+
+            StateStore.getTasks().forEach((value, key) => {
+                if (key !== ListType.COMPLETED) {
+                    reducedList.push(...value)
+                }
+            })
+
+            return new DisplayableTaskList(ListType.ALL, reducedList, sorter)
+        } else {
+            return StateStore.getSelectedDateTasks(sorter)
+        }
+    }
+
+    public static getSelectedDateTasks(sorter?: TaskSorter): DisplayableTaskList {
+        const reducedList: Task[] = []
+        reducedList.push(...StateStore.getTasks().get(StateStore.baseState.selectedDate) || [])
+        return new DisplayableTaskList(StateStore.baseState.selectedDate, reducedList, sorter)
+    }
+
+    public static getCompletedTasks = (sorter?: TaskSorter) => {
+        return new DisplayableTaskList(ListType.COMPLETED, StateStore.baseState.completedTasks, sorter)
+    }
+
+    public static getOverdueTasks = (sorter?: TaskSorter) => {
+        const reducedList: Task[] = StateStore.computeOverdueTasks(StateStore.getTasks())
+        return new DisplayableTaskList(ListType.OVERDUE, reducedList, sorter)
+    }
+
+    private static computeOverdueTasks(tasks: Map<number, Task[] | CompletedTask[]>): Task[] | CompletedTask[] {
+        const reducedList: Task[] = []
+
+        const today = getTodayKey()
+
+        tasks.forEach((value, key) => {
+            const tasks: Task[] = value as Task[]
+            if (today > key) {
+                reducedList.push(...tasks)
+            }
+        })
+
+        return reducedList
+    }
+
+    public static pendingTasksCount = () => {
+        return StateStore.computeOverdueTasks(StateStore.getTasks()).length
+            + (StateStore.getTasks().get(getTodayKey()) || []).length
     }
 }

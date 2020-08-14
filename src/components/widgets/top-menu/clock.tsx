@@ -9,12 +9,12 @@ const useStyles = makeStyles((theme: Theme) =>
         clock: {
             fontWeight: 'bold',
             letterSpacing: '2pt',
-            fontSize: StateStore.getState().fullMode ? '2em' : '2.5em'
+            fontSize: StateStore.isFullMode() ? '2em' : '2.5em'
         },
         date: {
             fontWeight: 'bold',
             letterSpacing: '2pt',
-            fontSize: StateStore.getState().fullMode ? '0.7em' : '0.9em'
+            fontSize: StateStore.isFullMode() ? '0.7em' : '0.9em'
         }
     }),
 );

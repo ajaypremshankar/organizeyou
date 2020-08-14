@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { SettingsType } from "../../types/types";
-import { emptyState, loadAppState } from "../../utils/app-state-facade-utils";
+import { loadAppState } from "../../utils/app-state-facade-utils";
 import { StateStore } from "../../types/state-store";
 import AddTaskWidget from "../widgets/add-task/add-task-widget";
 import SettingsDrawer from "../settings-drawer/settings-drawer";
@@ -12,7 +12,7 @@ import CenterMenuWidget from "../widgets/top-menu/center-menu-widget";
 import TaskListWidget from "../widgets/task-list/task-list-widget";
 import LeftMenuWidget from "../widgets/top-menu/left-menu-widget";
 import SearchBarWidget from "../widgets/search-bar/search-bar-widget";
-import Fade from '@material-ui/core/Fade';
+import { BaseTasksState } from "../../types/base-tasks-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,22 +42,22 @@ export default function WidgetBasedApp() {
     const classes = useStyles();
 
     const [baseState, setBaseState] = useState(
-        emptyState()
+        BaseTasksState.emptyState()
     )
 
-    StateStore.initState(baseState, setBaseState)
+    StateStore.initStore(baseState, setBaseState)
 
     useEffect(() => {
         loadAppState().then(value => {
             setBaseState(value)
-            StateStore.setCurrentState(value)
+            StateStore.setToStore(value)
         })
     }, [])
 
     useEffect(() => {
-        const pendingTasksCount = baseState.pendingTasksCount()
+        const pendingTasksCount = StateStore.pendingTasksCount()
         document.title = `(${pendingTasksCount}) ${pendingTasksCount === 1 ? 'task' : 'tasks'} pending`
-    }, [baseState.tasks])
+    }, [baseState, baseState.tasks])
 
     const leftWidgets: JSX.Element[] = [
         <LeftMenuWidget/>
@@ -65,11 +65,11 @@ export default function WidgetBasedApp() {
 
     const centerWidgets: JSX.Element[] = [
         <CenterMenuWidget settings={baseState.settings}/>,
-        StateStore.getState().fullMode ? <AddTaskWidget
+        StateStore.isFullMode() ? <AddTaskWidget
             keyTitle={baseState.getKeyTitle()}
             changeSelectedDate={StateStore.updateCurrentlySelectedDate}
             addTask={StateStore.handleTaskAddition}/> : <SearchBarWidget/>,
-        StateStore.getState().fullMode ? <TaskListWidget showCompleted={true}/> : <span></span>,
+        StateStore.isFullMode() ? <TaskListWidget showCompleted={true}/> : <span></span>,
     ]
 
     const theme = createMuiTheme({
