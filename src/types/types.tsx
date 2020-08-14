@@ -30,3 +30,5 @@ export enum SettingsType {
     ABOUT_US = 'Who are we?',
     DARK_THEME = 'Dark Theme'
 }
+
+export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => number

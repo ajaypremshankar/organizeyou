@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import SettingsList from "./settings-list";
 import { SettingsType } from "../../types/types";
 import Tooltip from '@material-ui/core/Tooltip';
-import { Backdrop } from "@material-ui/core";
 
 const useStyles = makeStyles({
     list: {

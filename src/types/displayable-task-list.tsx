@@ -1,4 +1,4 @@
-import { CompletedTask, Task } from "./types";
+import { CompletedTask, Task, TaskSorter } from "./types";
 import { KeyTitlePair } from "./key-title-pair";
 
 export class DisplayableTaskList {
@@ -6,7 +6,7 @@ export class DisplayableTaskList {
     private readonly _keyTitle: KeyTitlePair;
     private readonly _tasks: Task[] | CompletedTask[];
 
-    constructor(key: number, tasks: Task[] | CompletedTask[], sorter = DisplayableTaskList.defaultDescSorting) {
+    constructor(key: number, tasks: Task[] | CompletedTask[], sorter: TaskSorter = DisplayableTaskList.defaultDescSorting) {
         this._keyTitle = new KeyTitlePair(key);
         this._tasks = tasks.sort(sorter)
     }

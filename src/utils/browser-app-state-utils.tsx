@@ -1,8 +1,8 @@
 import { CompletedTask, SettingsType, Task } from "../types/types";
 import { BaseTasksState } from "../types/base-tasks-state";
-import { emptyState } from "./app-state-facade-utils";
 import { getTodayKey } from "./date-utils";
-import { migrateCompletedListFromMap, migrateOverdueListToDateList } from "./migration-utils";
+import { migrateOverdueListToDateList } from "./migration-utils";
+import { loadLocalSettingsState, updateLocalSettingsState } from "./settings-local-storage";
 
 /***
  * Separated keys because of storage restrictions on a key
@@ -28,6 +28,8 @@ export const updateBrowserAppState = (updatedState: BaseTasksState) => {
     chrome.storage.sync.set({
         'organizeyou_settings': JSON.stringify([...Array.from(updatedState.settings || new Map())])
     })
+
+    updateLocalSettingsState({fullMode: updatedState.fullMode})
 }
 
 export function loadBrowserAppState(): Promise<BaseTasksState> {
@@ -47,19 +49,21 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
                     const completedTasks = JSON.parse(value.organizeyou_completed_tasks) || []
                     const settings = JSON.parse(value.organizeyou_settings) || []
                     const allTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(currentTasks.tasks)
-
                     const newAllTasks = migrateOverdueListToDateList(allTasks)
 
-                    resolve(new BaseTasksState(
+                    const localSettings = loadLocalSettingsState()
+
+                    resolve(BaseTasksState.newStateFrom(
                         // Load today by default.
                         getTodayKey(),
                         newAllTasks,
                         completedTasks,
-                        new Map<SettingsType, boolean>(settings)
+                        new Map<SettingsType, boolean>(settings),
+                        localSettings.fullMode
                         )
                     )
                 } else {
-                    resolve(emptyState())
+                    resolve(BaseTasksState.emptyState())
                 }
             })
         } catch (ex) {

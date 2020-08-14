@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { getDate, getLocaleTime } from '../../utils/date-utils'
+import { getDate, getLocaleTime } from '../../../utils/date-utils'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { StateStore } from "../../../types/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         clock: {
-
-            fontFamily: "'Orbitron', sans-serif",
             fontWeight: 'bold',
             letterSpacing: '2pt',
-            fontSize: '1.5em'
+            fontSize: StateStore.isFullMode() ? '2em' : '2.5em'
         },
         date: {
-
-            fontFamily: "'Orbitron', sans-serif",
             fontWeight: 'bold',
             letterSpacing: '2pt',
-            fontSize: '0.5em'
+            fontSize: StateStore.isFullMode() ? '0.7em' : '0.9em'
         }
     }),
 );
@@ -47,7 +44,6 @@ export default function Clock(props: ClockProps) {
 
     return (
         <div className={classes.clock}>
-
             <Typography variant="subtitle1" gutterBottom className={classes.clock} color="primary">
                 {ctime.toUpperCase()}
             </Typography>

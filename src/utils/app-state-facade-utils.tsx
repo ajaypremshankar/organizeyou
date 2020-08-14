@@ -1,11 +1,9 @@
-import {BaseTasksState} from "../types/base-tasks-state";
+import { BaseTasksState } from "../types/base-tasks-state";
 import { clearBrowserState, loadBrowserAppState, updateBrowserAppState } from "./browser-app-state-utils";
 import { clearLocalStorageState, loadLocalAppState, updateLocalAppState } from "./local-store-app-state-utils";
-import { getTodayKey } from "./date-utils";
-import { CompletedTask, Task } from "../types/types";
 
 export const updateAppState = (updatedState: BaseTasksState) => {
-    if(chrome && chrome.storage) {
+    if (chrome && chrome.storage) {
         updateBrowserAppState(updatedState)
     } else {
         updateLocalAppState(updatedState)
@@ -13,25 +11,15 @@ export const updateAppState = (updatedState: BaseTasksState) => {
 }
 
 export const loadAppState = (): Promise<BaseTasksState> => {
-
-    if(chrome && chrome.storage) {
+    if (chrome && chrome.storage) {
         return loadBrowserAppState()
     } else {
         return loadLocalAppState()
     }
 }
 
-export const emptyState = (): BaseTasksState => {
-    return new BaseTasksState(
-        getTodayKey(),
-        new Map<number, Task[] | CompletedTask[]>(),
-        [],
-        new Map()
-    )
-}
-
 export const clearLocalState = () => {
-    if(chrome && chrome.storage) {
+    if (chrome && chrome.storage) {
         clearBrowserState()
     }
     clearLocalStorageState()

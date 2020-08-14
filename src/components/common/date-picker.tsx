@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { DatePicker, Day, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
@@ -42,7 +42,7 @@ export default function AppDatePicker(props: AppDatePickerProps) {
         props.close()
     };
 
-    const tasksMap: Map<number, Task[]> = StateStore.getTasksMap()
+    const tasksMap: Map<number, Task[]> = StateStore.getTasks()
 
     return (
 
