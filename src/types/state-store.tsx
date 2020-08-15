@@ -3,6 +3,7 @@ import { CompletedTask, ListType, SettingsType, Task, TaskSorter } from "./types
 import { updateAppState } from "../utils/app-state-facade-utils";
 import { DisplayableTaskList } from "./displayable-task-list";
 import { getTodayKey } from "../utils/date-utils";
+import { KeyTitlePair } from "./key-title-pair";
 
 /**
  * Exposing app state to rest of the app.
@@ -20,6 +21,7 @@ export class StateStore {
     }
 
     public static setToStore = (state: BaseTasksState) => {
+        StateStore.setBaseState(state)
         StateStore.baseState = state
     }
 
@@ -27,11 +29,18 @@ export class StateStore {
         return new Map<number, Task[]>(StateStore.baseState.tasks)
     }
 
+    public static getSettings = () => {
+        return new Map<SettingsType, boolean>(StateStore.baseState.settings)
+    }
+
+    public static getKeyTitle(): KeyTitlePair {
+        return StateStore.baseState.getKeyTitle()
+    }
+
     public static updateBaseState = (newState: BaseTasksState, persist: boolean = true) => {
         if (persist) {
             updateAppState(newState)
         }
-        StateStore.setBaseState(newState)
         StateStore.setToStore(newState)
     }
 
@@ -44,7 +53,7 @@ export class StateStore {
     }
 
     public static handleTaskAddition = (key: number, task: Task) => {
-        StateStore.updateBaseState(StateStore.baseState.addTask(key, task))
+        StateStore.updateBaseState(StateStore.baseState.addOrUpdateTask(key, task))
     }
 
     public static handleTaskDeletion = (key: number, task: Task) => {

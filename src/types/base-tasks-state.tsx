@@ -53,7 +53,7 @@ export class BaseTasksState {
         if (from === to) return this
 
         const now = getCurrentMillis()
-        const newTasks = this.internalAddTask(to, {
+        const newTasks = this.internalAddOrUpdateTask(to, {
             ...task,
             updatedOn: now
         }, this.tasks)
@@ -82,7 +82,7 @@ export class BaseTasksState {
     public undoCompleteTask(task: Task): BaseTasksState {
 
         const completedTasks = this.completedTasks.filter(value => value.id !== task.id)
-        const tasksAfterAdd = this.internalAddTask(task.plannedOn, task, this.tasks)
+        const tasksAfterAdd = this.internalAddOrUpdateTask(task.plannedOn, task, this.tasks)
 
         return this.mergeAndCreateNewState({
             tasks: tasksAfterAdd,
@@ -90,19 +90,21 @@ export class BaseTasksState {
         })
     }
 
-    public addTask(key: number, task: Task | CompletedTask): BaseTasksState {
-        return this.mergeAndCreateNewState({tasks: this.internalAddTask(key, task, this.tasks),})
+    public addOrUpdateTask(key: number, task: Task | CompletedTask): BaseTasksState {
+        const afterAddTasks = this.internalAddOrUpdateTask(key, task, this.tasks)
+        return this.mergeAndCreateNewState({tasks: afterAddTasks,})
     }
 
     public removeTask(key: number, task: Task | CompletedTask): BaseTasksState {
-        return this.mergeAndCreateNewState({tasks: this.internalRemoveTask(key, task, this.tasks)})
+        const afterRemoveTasks = this.internalRemoveTask(key, task, this.tasks)
+        return this.mergeAndCreateNewState({tasks: afterRemoveTasks})
     }
 
     public updateCurrentlySelectedDate = (date: number) => {
         return this.mergeAndCreateNewState({selectedDate: date})
     }
 
-    private internalAddTask(key: number, task: Task | CompletedTask,
+    private internalAddOrUpdateTask(key: number, task: Task | CompletedTask,
                             tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
         const reducedList = [...tasks.get(key) || []].filter(t => t.id !== task.id)
         reducedList.push(task)

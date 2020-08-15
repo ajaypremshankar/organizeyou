@@ -3,6 +3,9 @@ import { BaseTasksState } from "../types/base-tasks-state";
 import { getTodayKey } from "./date-utils";
 import { migrateOverdueListToDateList } from "./migration-utils";
 import { loadLocalSettingsState, updateLocalSettingsState } from "./settings-local-storage";
+import { loadAppState } from "./app-state-facade-utils";
+import { StateStore } from "../types/state-store";
+import { wrapThrottle } from "./wrapper-utils";
 
 /***
  * Separated keys because of storage restrictions on a key
@@ -75,4 +78,19 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
 
 export const clearBrowserState = () => {
     chrome.storage.sync.clear()
+}
+
+export const initSyncStorageListener = () => {
+
+    if(chrome && chrome.storage) {
+        chrome.storage.onChanged.addListener(wrapThrottle(function (changes: any, area:any) {
+            if (area == "sync") {
+                console.log('sync')
+                loadAppState().then(value => {
+                    console.log(value)
+                    StateStore.setToStore(value)
+                })
+            }
+        }, 1000));
+    }
 }
