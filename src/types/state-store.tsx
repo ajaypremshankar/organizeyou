@@ -34,7 +34,7 @@ export class StateStore {
     }
 
     public static getKeyTitle(): KeyTitlePair {
-        return StateStore.baseState.getKeyTitle()
+        return new KeyTitlePair(StateStore.baseState.selectedDate)
     }
 
     public static updateBaseState = (newState: BaseTasksState, persist: boolean = true) => {
@@ -52,7 +52,7 @@ export class StateStore {
         StateStore.updateBaseState(StateStore.baseState.completeTask(key, task))
     }
 
-    public static handleTaskAddition = (key: number, task: Task) => {
+    public static handleTaskAdditionOrUpdation = (key: number, task: Task) => {
         StateStore.updateBaseState(StateStore.baseState.addOrUpdateTask(key, task))
     }
 

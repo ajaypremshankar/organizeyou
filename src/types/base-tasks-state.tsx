@@ -1,6 +1,5 @@
 import { CompletedTask, SettingsType, Task } from "./types";
 import { getCurrentMillis, getTodayKey } from "../utils/date-utils";
-import { KeyTitlePair } from "./key-title-pair";
 
 /***
  * This class functionalities should be accessed through `StateStore`.
@@ -10,7 +9,6 @@ import { KeyTitlePair } from "./key-title-pair";
 export class BaseTasksState {
     private readonly _fullMode: boolean
     private readonly _selectedDate: number;
-    private readonly _keyTitle: KeyTitlePair;
     private readonly _tasks: Map<number, Task[]>;
     private readonly _completedTasks: CompletedTask[];
     private readonly _settings: Map<SettingsType, boolean>;
@@ -21,7 +19,6 @@ export class BaseTasksState {
                         settings: Map<SettingsType, boolean>,
                         fullMode = true) {
         this._selectedDate = selectedDate;
-        this._keyTitle = new KeyTitlePair(selectedDate)
         this._tasks = tasks;
         this._completedTasks = completedTasks || []
         this._settings = settings;
@@ -91,13 +88,13 @@ export class BaseTasksState {
     }
 
     public addOrUpdateTask(key: number, task: Task | CompletedTask): BaseTasksState {
-        const afterAddTasks = this.internalAddOrUpdateTask(key, task, this.tasks)
-        return this.mergeAndCreateNewState({tasks: afterAddTasks,})
+        const tasksAfterAdd = this.internalAddOrUpdateTask(key, task, this.tasks)
+        return this.mergeAndCreateNewState({tasks: tasksAfterAdd,})
     }
 
     public removeTask(key: number, task: Task | CompletedTask): BaseTasksState {
-        const afterRemoveTasks = this.internalRemoveTask(key, task, this.tasks)
-        return this.mergeAndCreateNewState({tasks: afterRemoveTasks})
+        const tasksAfterRemove = this.internalRemoveTask(key, task, this.tasks)
+        return this.mergeAndCreateNewState({tasks: tasksAfterRemove})
     }
 
     public updateCurrentlySelectedDate = (date: number) => {
@@ -125,10 +122,6 @@ export class BaseTasksState {
         const settings = new Map<SettingsType, boolean>(this.settings)
         settings.set(type, !this.settings.get(type))
         return this.mergeAndCreateNewState({settings: settings})
-    }
-
-    public getKeyTitle(): KeyTitlePair {
-        return this._keyTitle
     }
 
     public toggleFullMode = () => {

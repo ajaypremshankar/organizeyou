@@ -25,7 +25,7 @@ export default function CenterGrid() {
         StateStore.isFullMode() ? <AddTaskWidget
             keyTitle={StateStore.getKeyTitle()}
             changeSelectedDate={StateStore.updateCurrentlySelectedDate}
-            addTask={StateStore.handleTaskAddition}/> : <SearchBarWidget/>,
+            addTask={StateStore.handleTaskAdditionOrUpdation}/> : <SearchBarWidget/>,
         StateStore.isFullMode() ? <TaskListWidget showCompleted={true}/> : <span></span>,
     ]
 
