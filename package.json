@@ -16,16 +16,24 @@
     "react": "^16.13.1",
     "react-device-detect": "^1.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-app-rewired": "^2.0"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "node": true,
+      "webextensions": true
+    }
   },
   "browserslist": {
     "production": [

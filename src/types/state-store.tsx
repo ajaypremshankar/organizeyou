@@ -14,8 +14,11 @@ import { KeyTitlePair } from "./key-title-pair";
 export class StateStore {
     private static baseState: BaseTasksState
     private static setBaseState: any
+    private static i: number = 0
 
     public static initStore = (state: BaseTasksState, setState: any) => {
+        ++StateStore.i
+        console.log(StateStore.i)
         StateStore.baseState = state
         StateStore.setBaseState = setState;
     }

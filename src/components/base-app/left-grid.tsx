@@ -34,10 +34,10 @@ export default function LeftGrid() {
     ]
 
     return (
-        <Grid item xs={3}>
-            {[0, 1].map((value) => (<Grid container justify="center">
-                <Grid key={1} item>
-                    <Paper className={classes.paperLeft} elevation={0}>
+        <Grid item xs={3} key={`left-grid-item`} >
+            {[0, 1].map((value) => (<Grid key={`left-grid-container-${value}`} container justify="center">
+                <Grid key={`left-grid-item-${value}`}  item>
+                    <Paper key={`left-grid-paper-${value}`} className={classes.paperLeft} elevation={0}>
                         {leftWidgets[value]}
                     </Paper>
                 </Grid>
