@@ -73,7 +73,7 @@ export default function TaskItem(props: TaskItemProps) {
     };
 
     const updateTask = (value: string) => {
-        StateStore.handleTaskAddition(props.task.plannedOn,
+        StateStore.handleTaskAdditionOrUpdation(props.task.plannedOn,
             {
                 ...props.task,
                 value: value,

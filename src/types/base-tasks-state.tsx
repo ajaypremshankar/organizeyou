@@ -1,6 +1,5 @@
 import { CompletedTask, SettingsType, Task } from "./types";
 import { getCurrentMillis, getTodayKey } from "../utils/date-utils";
-import { KeyTitlePair } from "./key-title-pair";
 
 /***
  * This class functionalities should be accessed through `StateStore`.
@@ -10,7 +9,6 @@ import { KeyTitlePair } from "./key-title-pair";
 export class BaseTasksState {
     private readonly _fullMode: boolean
     private readonly _selectedDate: number;
-    private readonly _keyTitle: KeyTitlePair;
     private readonly _tasks: Map<number, Task[]>;
     private readonly _completedTasks: CompletedTask[];
     private readonly _settings: Map<SettingsType, boolean>;
@@ -21,7 +19,6 @@ export class BaseTasksState {
                         settings: Map<SettingsType, boolean>,
                         fullMode = true) {
         this._selectedDate = selectedDate;
-        this._keyTitle = new KeyTitlePair(selectedDate)
         this._tasks = tasks;
         this._completedTasks = completedTasks || []
         this._settings = settings;
@@ -53,7 +50,7 @@ export class BaseTasksState {
         if (from === to) return this
 
         const now = getCurrentMillis()
-        const newTasks = this.internalAddTask(to, {
+        const newTasks = this.internalAddOrUpdateTask(to, {
             ...task,
             updatedOn: now
         }, this.tasks)
@@ -82,7 +79,7 @@ export class BaseTasksState {
     public undoCompleteTask(task: Task): BaseTasksState {
 
         const completedTasks = this.completedTasks.filter(value => value.id !== task.id)
-        const tasksAfterAdd = this.internalAddTask(task.plannedOn, task, this.tasks)
+        const tasksAfterAdd = this.internalAddOrUpdateTask(task.plannedOn, task, this.tasks)
 
         return this.mergeAndCreateNewState({
             tasks: tasksAfterAdd,
@@ -90,19 +87,21 @@ export class BaseTasksState {
         })
     }
 
-    public addTask(key: number, task: Task | CompletedTask): BaseTasksState {
-        return this.mergeAndCreateNewState({tasks: this.internalAddTask(key, task, this.tasks),})
+    public addOrUpdateTask(key: number, task: Task | CompletedTask): BaseTasksState {
+        const tasksAfterAdd = this.internalAddOrUpdateTask(key, task, this.tasks)
+        return this.mergeAndCreateNewState({tasks: tasksAfterAdd,})
     }
 
     public removeTask(key: number, task: Task | CompletedTask): BaseTasksState {
-        return this.mergeAndCreateNewState({tasks: this.internalRemoveTask(key, task, this.tasks)})
+        const tasksAfterRemove = this.internalRemoveTask(key, task, this.tasks)
+        return this.mergeAndCreateNewState({tasks: tasksAfterRemove})
     }
 
     public updateCurrentlySelectedDate = (date: number) => {
         return this.mergeAndCreateNewState({selectedDate: date})
     }
 
-    private internalAddTask(key: number, task: Task | CompletedTask,
+    private internalAddOrUpdateTask(key: number, task: Task | CompletedTask,
                             tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
         const reducedList = [...tasks.get(key) || []].filter(t => t.id !== task.id)
         reducedList.push(task)
@@ -123,10 +122,6 @@ export class BaseTasksState {
         const settings = new Map<SettingsType, boolean>(this.settings)
         settings.set(type, !this.settings.get(type))
         return this.mergeAndCreateNewState({settings: settings})
-    }
-
-    public getKeyTitle(): KeyTitlePair {
-        return this._keyTitle
     }
 
     public toggleFullMode = () => {
