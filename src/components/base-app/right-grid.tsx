@@ -17,10 +17,10 @@ export default function RightGrid() {
     const classes = useStyles();
 
     return (
-        <Grid item xs={3}>
-            {[0, 1].map((value) => (<Grid container justify="center">
-                <Grid key={1} item>
-                    <Paper className={classes.paperRight} elevation={0}>
+        <Grid item xs={3} key={`right-grid-item`} >
+            {[0, 1].map((value) => (<Grid key={`right-grid-container-${value}`} container justify="center">
+                <Grid key={`right-grid-item-${value}`} item>
+                    <Paper key={`right-grid-paper-${value}`}  className={classes.paperRight} elevation={0}>
                     </Paper>
                 </Grid>
             </Grid>))}

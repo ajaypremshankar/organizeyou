@@ -30,10 +30,10 @@ export default function CenterGrid() {
     ]
 
     return (
-        <Grid item xs={6}>
-            {[0, 1, 2, 3].map((value) => (<Grid container justify="center">
-                <Grid key={2} item>
-                    <Paper className={classes.paperCenter}
+        <Grid item xs={6} key={`center-grid-item`}>
+            {[0, 1, 2, 3].map((value) => (<Grid key={`center-grid-container-${value}`} container justify="center">
+                <Grid key={`center-grid-item-${value}`} item>
+                    <Paper key={`center-grid-paper-${value}`} className={classes.paperCenter}
                            elevation={0}>
                         {centerWidgets[value]}
                     </Paper>

@@ -66,9 +66,9 @@ export default function WidgetBasedApp() {
                     handleSettingsToggle={StateStore.handleSettingsToggle}
                     settings={baseState.settings}/>
                 <Grid container className={classes.root}>
-                    <LeftGrid/>
-                    <CenterGrid/>
-                    <RightGrid/>
+                    <LeftGrid key={`left-grid`} />
+                    <CenterGrid key={`center-grid`}/>
+                    <RightGrid key={`right-grid`}/>
                 </Grid>
             </Paper>
         </ThemeProvider>
