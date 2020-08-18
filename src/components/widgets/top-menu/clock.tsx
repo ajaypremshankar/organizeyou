@@ -7,14 +7,16 @@ import { StateStore } from "../../../types/state-store";
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         clock: {
-            fontWeight: 'bold',
-            letterSpacing: '2pt',
-            fontSize: StateStore.isFullMode() ? '2em' : '2.5em'
+            letterSpacing: StateStore.isFullMode() ? '0px' : '-4px',
+            fontSize: StateStore.isFullMode() ? '2.5em' : '3em',
+            fontWeight: 500,
+            marginBottom: StateStore.isFullMode() ? '-40px' : '-60px',
         },
         date: {
-            fontWeight: 'bold',
-            letterSpacing: '2pt',
-            fontSize: StateStore.isFullMode() ? '0.7em' : '0.9em'
+            fontWeight: 400,
+            letterSpacing: StateStore.isFullMode() ? '0px' : '-1px',
+            fontSize: StateStore.isFullMode() ? '0.7em' : '0.9em',
+            marginBottom: StateStore.isFullMode() ? '70px' : '110px',
         }
     }),
 );
@@ -27,7 +29,6 @@ export default function Clock(props: ClockProps) {
 
     const classes = useStyles();
     const [ctime, setCtime] = useState(getLocaleTime(props.options))
-
 
     useEffect(() => {
 
@@ -47,9 +48,9 @@ export default function Clock(props: ClockProps) {
             <Typography variant="subtitle1" gutterBottom className={classes.clock} color="primary">
                 {ctime.toUpperCase()}
             </Typography>
-            {<Typography variant="subtitle1" gutterBottom className={classes.date} color="primary">
+            <Typography variant="subtitle1" gutterBottom className={classes.date} color="primary">
                 {getDate()}
-            </Typography>}
+            </Typography>
         </div>
     )
 }

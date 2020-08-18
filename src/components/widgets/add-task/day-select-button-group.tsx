@@ -17,6 +17,11 @@ const useStyles = makeStyles((theme: Theme) =>
                 margin: theme.spacing(1),
             },
         },
+        buttonGroup: {
+            '&:hover': {
+                color: '#FFFF',
+            }
+        }
     }),
 );
 
@@ -38,6 +43,7 @@ export default function DaySelectButtonGroup(props: DaySelectButtonGroupProps) {
             <ButtonGroup
                 size="large"
                 color="primary"
+                className={classes.buttonGroup}
                 aria-label="large button group"
                 fullWidth={true}>
 

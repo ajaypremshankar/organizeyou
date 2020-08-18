@@ -5,8 +5,9 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import IconButton from '@material-ui/core/IconButton';
 import SettingsList from "./settings-list";
-import { SettingsType } from "../../types/types";
 import Tooltip from '@material-ui/core/Tooltip';
+import { StateStore } from "../../types/state-store";
+import { SettingsType } from "../../types/types";
 
 const useStyles = makeStyles({
     list: {
@@ -15,7 +16,6 @@ const useStyles = makeStyles({
     },
     settingsBox: {
         position: 'fixed',
-
         top: '0px',
         opacity: '0.6',
     },
@@ -35,8 +35,7 @@ const useStyles = makeStyles({
 });
 
 interface SettingsDrawerProps {
-    settings: Map<SettingsType, boolean>
-    handleSettingsToggle: (type: SettingsType) => void
+
 }
 
 export default function SettingsDrawer(props: SettingsDrawerProps) {
@@ -83,9 +82,10 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
                     onClose={toggleDrawer(false)}
                     onOpen={toggleDrawer(true)}>
                     <div
+                        style={{background: !StateStore.isSetting(SettingsType.BACKGROUND_MODE) ? `rgba(0, 0, 0, 0)` : `rgba(0, 0, 0, 0.3)`}}
                         className={clsx(classes.list)}
                         role="presentation">
-                        <SettingsList handleToggle={props.handleSettingsToggle} settings={props.settings}/>
+                        <SettingsList />
                     </div>
                 </SwipeableDrawer>
             </React.Fragment>

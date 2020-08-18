@@ -84,7 +84,7 @@ export const initSyncStorageListener = () => {
 
     if(chrome && chrome.storage) {
         chrome.storage.onChanged.addListener(wrapThrottle(function (changes: any, area:any) {
-            if (area == "sync") {
+            if (area === "sync") {
                 loadAppState().then(value => {
                     console.log(value)
                     StateStore.setToStore(value)

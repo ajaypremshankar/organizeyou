@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme: Theme) =>
         list: {
             width: '100%',
             margin: 'auto',
-            backgroundColor: theme.palette.background.paper,
         },
         title: {
             textAlign: 'left',

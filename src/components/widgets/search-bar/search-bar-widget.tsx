@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -16,6 +13,9 @@ const useStyles = makeStyles((theme: Theme) =>
             '& > *': {
                 margin: theme.spacing(4),
             },
+        },
+        textField: {
+            width: '100%',
         },
         input: {
             flex: 1,
@@ -30,7 +30,7 @@ export default function SearchBarWidget() {
     const classes = useStyles();
     const [keywordContentState, setKeywordContentState] = useState('');
     const setCurrentTab = (keyword: string) => {
-        if(window.chrome && window.chrome.tabs) {
+        if (window.chrome && window.chrome.tabs) {
             window.chrome.tabs.getCurrent(tab => {
                 if (tab && tab.id) {
                     window.chrome.tabs.update(tab.id, {url: `http://www.google.com/search?q=${keyword}`})
@@ -48,24 +48,19 @@ export default function SearchBarWidget() {
     }
 
     return (
-        <Paper component="form" className={classes.root}>
-            <InputBase
-                autoFocus
-                value={keywordContentState}
-                className={classes.input}
-                placeholder="Search Google"
-                inputProps={{ 'aria-label': 'search google' }}
-                onKeyDown={handleKeyPressChange}
-                onChange={(event) => setKeywordContentState(event.target.value)}
-            />
-            <IconButton
-                type="submit"
-                className={classes.iconButton}
-                aria-label="search"
-                onClick={() => setCurrentTab(keywordContentState)}
-            >
-                <SearchIcon />
-            </IconButton>
-        </Paper>
+
+        <TextField
+            className={classes.textField}
+            id="outlined-basic"
+            label={`Search Google`}
+            variant="outlined"
+            size={'medium'}
+            autoComplete={'off'}
+            autoFocus
+            inputProps={{minLength: 1, maxLength: process.env.REACT_APP_TASK_MAX_LIMIT}}
+            onChange={(event) => setKeywordContentState(event.target.value)}
+            onKeyDown={handleKeyPressChange}
+        />
+
     );
 }

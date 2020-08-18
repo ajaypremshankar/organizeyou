@@ -33,6 +33,10 @@ export class StateStore {
         return new Map<SettingsType, boolean>(StateStore.baseState.settings)
     }
 
+    public static isSetting = (type: SettingsType) => {
+        return StateStore.baseState.settings.get(type)
+    }
+
     public static getKeyTitle(): KeyTitlePair {
         return new KeyTitlePair(StateStore.baseState.selectedDate)
     }
@@ -137,5 +141,9 @@ export class StateStore {
     public static pendingTasksCount = () => {
         return StateStore.computeOverdueTasks(StateStore.getTasks()).length
             + (StateStore.getTasks().get(getTodayKey()) || []).length
+    }
+
+    public static isDarkModeEnabled = () => {
+        return StateStore.baseState.settings.get(SettingsType.DARK_THEME)
     }
 }

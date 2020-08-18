@@ -30,12 +30,12 @@ export default function AddNewTask(props: AddNewTaskProps) {
 
     return (
         <TextField
-
             className={classes.textField}
             id="outlined-basic"
             label={`Add task for ${props.keyTitle.title}`}
             variant="outlined"
             size={'medium'}
+            autoComplete={'off'}
             value={taskContentState}
             autoFocus
             inputProps={{minLength: 1, maxLength: process.env.REACT_APP_TASK_MAX_LIMIT}}

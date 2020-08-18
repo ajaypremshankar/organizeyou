@@ -28,7 +28,8 @@ export enum SettingsType {
     SHOW_AM_PM = "Show AM/PM",
     SHOW_ALL_TASKS = 'Show all tasks list',
     ABOUT_US = 'Who are we?',
-    DARK_THEME = 'Dark Theme'
+    DARK_THEME = 'Dark Theme',
+    BACKGROUND_MODE = 'Daily background wallpaper'
 }
 
 export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => number

@@ -12,10 +12,9 @@ const useStyles = makeStyles((theme: Theme) =>
         list: {
             width: '100%',
             margin: 'auto',
-            backgroundColor: theme.palette.background.paper,
         },
         fullWidth: {
-            width: '100%'
+            width: '100%',
         }
     }),
 );
