@@ -1,8 +1,6 @@
-import { CompletedTask, SettingsType, Task } from "../types/types";
 import { BaseTasksState } from "../types/base-tasks-state";
 import { getTodayKey } from "./date-utils";
-import { migrateCompletedListFromMap, migrateOverdueListToDateList } from "./migration-utils";
-import { loadLocalSettingsState, updateLocalSettingsState } from "./settings-local-storage";
+import { Task } from "../types/types";
 
 export const updateLocalAppState = (updatedState: BaseTasksState) => {
 
@@ -10,12 +8,9 @@ export const updateLocalAppState = (updatedState: BaseTasksState) => {
         selectedDate: updatedState.selectedDate,
         tasks: [...Array.from(updatedState.tasks)],
         completedTasks: updatedState.completedTasks,
-        settings: [...Array.from(updatedState.settings || new Map())]
     }
 
     localStorage.setItem("organizeyou-base-app-2", JSON.stringify(state))
-
-    updateLocalSettingsState({fullMode: updatedState.fullMode})
 }
 
 
@@ -30,19 +25,12 @@ export const loadLocalAppState = (): Promise<BaseTasksState> => {
     }
 
     const updatedState = JSON.parse(persistedState)
-
-    const settings = updatedState.settings ? new Map<SettingsType, boolean>(updatedState.settings) : new Map()
-
-    const newTasks = migrateOverdueListToDateList(new Map<number, Task[] | CompletedTask[]>(updatedState.tasks))
-    const localSettings = loadLocalSettingsState()
-    const migratedState = migrateCompletedListFromMap(BaseTasksState.newStateFrom(
+    const migratedState = BaseTasksState.newStateFrom(
         // Load today by default
         getTodayKey(),
-        newTasks,
+        new Map<number, Task[]>(updatedState.tasks),
         updatedState.completedTasks,
-        settings,
-        localSettings.fullMode
-    ))
+    )
 
     return new Promise((resolve, reject) => {
         resolve(migratedState)

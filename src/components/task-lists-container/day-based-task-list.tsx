@@ -10,6 +10,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import AppAccordion from "../common/app-accordian";
 import { StateStore } from "../../types/state-store";
+import { SettingsStateStore } from "../../types/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -64,7 +65,7 @@ export default function DayBasedTaskList(props: DayBasedTaskListProps) {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem
-                    showPlannedOn={StateStore.isShowAllTasks()}
+                    showPlannedOn={SettingsStateStore.isShowAllTasks()}
                     key={labelId}
                     task={value}/>
             );

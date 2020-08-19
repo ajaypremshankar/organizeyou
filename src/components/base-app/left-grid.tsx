@@ -2,12 +2,11 @@ import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import LeftMenuWidget from "../widgets/top-menu/left-menu-widget";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paperLeft: {
-            height: '48vh',
+            height: '100%',
             width: '22vw',
             textAlign: 'left'
         }
@@ -18,7 +17,6 @@ export default function LeftGrid() {
     const classes = useStyles();
 
     const leftWidgets: JSX.Element[] = [
-        <LeftMenuWidget/>
     ]
 
     return (

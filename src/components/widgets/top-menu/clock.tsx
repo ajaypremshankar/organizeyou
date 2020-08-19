@@ -2,21 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { getDate, getLocaleTime } from '../../../utils/date-utils'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { StateStore } from "../../../types/state-store";
+import { SettingsStateStore } from "../../../types/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         clock: {
-            letterSpacing: StateStore.isFullMode() ? '0px' : '-4px',
-            fontSize: StateStore.isFullMode() ? '2.5em' : '3em',
+            letterSpacing: SettingsStateStore.isFullMode() ? '0px' : '-4px',
+            fontSize: SettingsStateStore.isFullMode() ? '2.5em' : '3em',
             fontWeight: 500,
-            marginBottom: StateStore.isFullMode() ? '-40px' : '-60px',
+            marginBottom: SettingsStateStore.isFullMode() ? '-40px' : '-60px',
         },
         date: {
             fontWeight: 400,
-            letterSpacing: StateStore.isFullMode() ? '0px' : '-1px',
-            fontSize: StateStore.isFullMode() ? '0.7em' : '0.9em',
-            marginBottom: StateStore.isFullMode() ? '70px' : '110px',
+            letterSpacing: SettingsStateStore.isFullMode() ? '0px' : '-1px',
+            fontSize: SettingsStateStore.isFullMode() ? '0.7em' : '0.9em',
+            marginBottom: SettingsStateStore.isFullMode() ? '70px' : '110px',
         }
     }),
 );

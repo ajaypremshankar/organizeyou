@@ -6,7 +6,7 @@ export class DisplayableTaskList {
     private readonly _keyTitle: KeyTitlePair;
     private readonly _tasks: Task[] | CompletedTask[];
 
-    constructor(key: number, tasks: Task[] | CompletedTask[], sorter: TaskSorter = DisplayableTaskList.defaultDescSorting) {
+    constructor(key: number, tasks: Task[] | CompletedTask[], sorter: TaskSorter = DisplayableTaskList.defaultAscSorting) {
         this._keyTitle = new KeyTitlePair(key);
         this._tasks = tasks.sort(sorter)
     }
@@ -36,7 +36,7 @@ export class DisplayableTaskList {
         return this._tasks.length === 0
     }
 
-    private static defaultDescSorting = (a: Task|CompletedTask, b: Task|CompletedTask) => {
-        return b.createdOn - a.createdOn
+    private static defaultAscSorting = (a: Task|CompletedTask, b: Task|CompletedTask) => {
+        return a.createdOn - b.createdOn
     }
 }

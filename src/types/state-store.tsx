@@ -4,6 +4,7 @@ import { updateAppState } from "../utils/app-state-facade-utils";
 import { DisplayableTaskList } from "./displayable-task-list";
 import { getTodayKey } from "../utils/date-utils";
 import { KeyTitlePair } from "./key-title-pair";
+import { SettingsStateStore } from "./settings-state";
 
 /**
  * Exposing app state to rest of the app.
@@ -27,14 +28,6 @@ export class StateStore {
 
     public static getTasks = (): Map<number, Task[]> => {
         return new Map<number, Task[]>(StateStore.baseState.tasks)
-    }
-
-    public static getSettings = () => {
-        return new Map<SettingsType, boolean>(StateStore.baseState.settings)
-    }
-
-    public static isSetting = (type: SettingsType) => {
-        return StateStore.baseState.settings.get(type)
     }
 
     public static getKeyTitle(): KeyTitlePair {
@@ -72,28 +65,8 @@ export class StateStore {
         StateStore.updateBaseState(StateStore.baseState.undoCompleteTask(task))
     }
 
-    public static handleSettingsToggle = (type: SettingsType) => {
-        StateStore.updateBaseState(StateStore.baseState.toggleSetting(type))
-    }
-
-    public static handleFullModeToggle = () => {
-        StateStore.updateBaseState(StateStore.baseState.toggleFullMode())
-    }
-
-    public static handleShowAllToggle = () => {
-        StateStore.updateBaseState(StateStore.baseState.toggleSetting(SettingsType.SHOW_ALL_TASKS), true)
-    }
-
-    public static isShowAllTasks = () => {
-        return StateStore.baseState.settings.get(SettingsType.SHOW_ALL_TASKS) || false
-    }
-
-    public static isFullMode = () => {
-        return StateStore.baseState.fullMode || false
-    }
-
     public static getTargetTasks = (sorter?: TaskSorter) => {
-        if (StateStore.isShowAllTasks()) {
+        if (SettingsStateStore.isEnabled(SettingsType.SHOW_ALL_TASKS)) {
             const reducedList: Task[] = []
 
             StateStore.getTasks().forEach((value, key) => {
@@ -141,9 +114,5 @@ export class StateStore {
     public static pendingTasksCount = () => {
         return StateStore.computeOverdueTasks(StateStore.getTasks()).length
             + (StateStore.getTasks().get(getTodayKey()) || []).length
-    }
-
-    public static isDarkModeEnabled = () => {
-        return StateStore.baseState.settings.get(SettingsType.DARK_THEME)
     }
 }

@@ -6,15 +6,15 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Switch from "@material-ui/core/Switch";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { SettingsType } from "../../types/types";
+import { SettingsType } from "../../../types/types";
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import SettingsIcon from "@material-ui/icons/Settings";
 import { Divider } from "@material-ui/core";
-import AboutUs from "./about-us";
+import AboutUs from "../../settings-drawer/about-us";
 import PaletteIcon from '@material-ui/icons/Palette';
-import { StateStore } from "../../types/state-store";
 import ImageIcon from '@material-ui/icons/Image';
+import { SettingsStateStore } from "../../../types/settings-state";
 
 const useStyles = makeStyles({
     listItemReleased: {
@@ -46,8 +46,8 @@ export default function SettingsList(props: SettingsListProps) {
                         style={{display: 'none'}}
                         color={'primary'}
                         edge="end"
-                        onChange={() => StateStore.handleSettingsToggle(SettingsType.SHOW_SECONDS)}
-                        checked={StateStore.isSetting(SettingsType.SHOW_SECONDS)}
+                        onChange={() => SettingsStateStore.toggleSetting(SettingsType.SHOW_SECONDS)}
+                        checked={SettingsStateStore.isEnabled(SettingsType.SHOW_SECONDS)}
                         inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_SECONDS}`}}
                     />
                 </ListItemSecondaryAction>
@@ -61,28 +61,29 @@ export default function SettingsList(props: SettingsListProps) {
                     <Switch
                         color={'primary'}
                         edge="end"
-                        onChange={() => StateStore.handleSettingsToggle(SettingsType.SHOW_AM_PM)}
-                        checked={StateStore.isSetting(SettingsType.SHOW_AM_PM)}
+                        onChange={() => SettingsStateStore.toggleSetting(SettingsType.SHOW_AM_PM)}
+                        checked={SettingsStateStore.isEnabled(SettingsType.SHOW_AM_PM)}
                         inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_AM_PM}`}}
                     />
                 </ListItemSecondaryAction>
             </ListItem>
 
-            <ListItem className={classes.listItemReleased} style={{display: 'none'}}>
+            <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><FormatListBulletedIcon/></ListItemIcon>
                 <ListItemText
-                    id={SettingsType.SHOW_ALL_TASKS}
-                    primary={SettingsType.SHOW_ALL_TASKS}/>
-                <ListItemSecondaryAction style={{display: 'none'}}>
+                    id={SettingsType.SHOW_COMPLETED_TASKS}
+                    primary={SettingsType.SHOW_COMPLETED_TASKS}/>
+                <ListItemSecondaryAction>
                     <Switch
                         color={'primary'}
                         edge="end"
-                        onChange={() => StateStore.handleSettingsToggle(SettingsType.SHOW_ALL_TASKS)}
-                        checked={StateStore.isSetting(SettingsType.SHOW_ALL_TASKS)}
-                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_ALL_TASKS}`}}
+                        onChange={() => SettingsStateStore.toggleSetting(SettingsType.SHOW_COMPLETED_TASKS)}
+                        checked={SettingsStateStore.isEnabled(SettingsType.SHOW_COMPLETED_TASKS)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_COMPLETED_TASKS}`}}
                     />
                 </ListItemSecondaryAction>
             </ListItem>
+
             <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><PaletteIcon/></ListItemIcon>
                 <ListItemText
@@ -92,9 +93,9 @@ export default function SettingsList(props: SettingsListProps) {
                     <Switch
                         color={'primary'}
                         edge="end"
-                        disabled={StateStore.isSetting(SettingsType.BACKGROUND_MODE)}
-                        onChange={() => StateStore.handleSettingsToggle(SettingsType.DARK_THEME)}
-                        checked={StateStore.isSetting(SettingsType.DARK_THEME)}
+                        disabled={SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE)}
+                        onChange={() => SettingsStateStore.toggleSetting(SettingsType.DARK_THEME)}
+                        checked={SettingsStateStore.isEnabled(SettingsType.DARK_THEME)}
                         inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.DARK_THEME}`}}
                     />
                 </ListItemSecondaryAction>
@@ -108,8 +109,8 @@ export default function SettingsList(props: SettingsListProps) {
                     <Switch
                         color={'primary'}
                         edge="end"
-                        onChange={() => StateStore.handleSettingsToggle(SettingsType.BACKGROUND_MODE)}
-                        checked={StateStore.isSetting(SettingsType.BACKGROUND_MODE)}
+                        onChange={() => SettingsStateStore.toggleSetting(SettingsType.BACKGROUND_MODE)}
+                        checked={SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE)}
                         inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.BACKGROUND_MODE}`}}
                     />
                 </ListItemSecondaryAction>

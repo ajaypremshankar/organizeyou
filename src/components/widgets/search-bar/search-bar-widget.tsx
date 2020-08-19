@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         textField: {
             width: '100%',
+            marginBottom: '10px',
         },
         input: {
             flex: 1,

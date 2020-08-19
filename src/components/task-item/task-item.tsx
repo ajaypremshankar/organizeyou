@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -54,6 +54,13 @@ export default function TaskItem(props: TaskItemProps) {
         editMode: false
     });
 
+    useEffect(() => {
+        setTaskItemState({
+            ...taskItemState,
+            element: getTaskContentWithTooltip(props.task.value, props)
+        })
+    }, [taskItemState, props, props.showPlannedOn])
+
     const [datePickerState, setDatePickerState] = useState(false);
 
     const handleTaskDateChange = (newPlannedOn: number) => {
@@ -95,7 +102,7 @@ export default function TaskItem(props: TaskItemProps) {
 
     const handleEditClick = () => {
 
-        if(!taskItemState.editMode) {
+        if (!taskItemState.editMode) {
             setTaskItemState(
                 {
                     ...taskItemState,

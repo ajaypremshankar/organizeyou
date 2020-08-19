@@ -1,4 +1,4 @@
-import { CompletedTask, SettingsType, Task } from "./types";
+import { CompletedTask, Task } from "./types";
 import { getCurrentMillis, getTodayKey } from "../utils/date-utils";
 
 /***
@@ -7,22 +7,16 @@ import { getCurrentMillis, getTodayKey } from "../utils/date-utils";
  * 2) Logic for transforming and returned curated state related info stays with `StateStore`
  */
 export class BaseTasksState {
-    private readonly _fullMode: boolean
     private readonly _selectedDate: number;
     private readonly _tasks: Map<number, Task[]>;
     private readonly _completedTasks: CompletedTask[];
-    private readonly _settings: Map<SettingsType, boolean>;
 
     private constructor(selectedDate: number,
                         tasks: Map<number, Task[]>,
-                        completedTasks: CompletedTask[],
-                        settings: Map<SettingsType, boolean>,
-                        fullMode = true) {
+                        completedTasks: CompletedTask[]) {
         this._selectedDate = selectedDate;
         this._tasks = tasks;
         this._completedTasks = completedTasks || []
-        this._settings = settings;
-        this._fullMode = fullMode
     }
 
     get tasks(): Map<number, Task[] | CompletedTask[]> {
@@ -33,16 +27,8 @@ export class BaseTasksState {
         return this._completedTasks;
     }
 
-    get settings(): Map<SettingsType, boolean> {
-        return this._settings;
-    }
-
     get selectedDate(): number {
         return this._selectedDate;
-    }
-
-    get fullMode(): boolean {
-        return this._fullMode;
     }
 
     public moveTask(from: number, to: number, task: Task | CompletedTask): BaseTasksState {
@@ -118,22 +104,10 @@ export class BaseTasksState {
         return newTasks
     }
 
-    public toggleSetting = (type: SettingsType) => {
-        const settings = new Map<SettingsType, boolean>(this.settings)
-        settings.set(type, !this.settings.get(type))
-        return this.mergeAndCreateNewState({settings: settings})
-    }
-
-    public toggleFullMode = () => {
-        return this.mergeAndCreateNewState({fullMode: !this.fullMode})
-    }
-
     public static newStateFrom = (selectedDate: number,
                                   tasks: Map<number, Task[]>,
-                                  completedTasks: CompletedTask[],
-                                  settings: Map<SettingsType, boolean>,
-                                  fullMode = true) => {
-        return new BaseTasksState(selectedDate, tasks, completedTasks, settings, fullMode)
+                                  completedTasks: CompletedTask[]) => {
+        return new BaseTasksState(selectedDate, tasks, completedTasks)
     }
 
     public static emptyState = (): BaseTasksState => {
@@ -141,8 +115,6 @@ export class BaseTasksState {
             getTodayKey(),
             new Map<number, Task[] | CompletedTask[]>(),
             [],
-            new Map(),
-            true
         )
     }
 
@@ -151,8 +123,6 @@ export class BaseTasksState {
             toBeMerged.selectedDate || this.selectedDate,
             new Map<number, Task[] | CompletedTask[]>(toBeMerged.tasks || this.tasks),
             [...(toBeMerged.completedTasks || this.completedTasks)],
-            new Map(toBeMerged.settings || this.settings),
-            toBeMerged.fullMode !== undefined ? toBeMerged.fullMode : this.fullMode
         )
     }
 }

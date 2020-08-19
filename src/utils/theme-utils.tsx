@@ -1,11 +1,10 @@
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import { StateStore } from "../types/state-store";
 import { SettingsType } from "../types/types";
-import { getTodayBgUrl } from "./settings-local-storage";
+import { SettingsStateStore } from "../types/settings-state";
 
 export const getTheme = () => {
 
-    if (!StateStore.isSetting(SettingsType.BACKGROUND_MODE)) {
+    if (!SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE)) {
         return createMuiTheme({
             overrides: {
                 MuiPaper: {
@@ -15,9 +14,9 @@ export const getTheme = () => {
                 }
             },
             palette: {
-                type: StateStore.isDarkModeEnabled() ? 'dark' : 'light',
+                type: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) ? 'dark' : 'light',
                 primary: {
-                    main: StateStore.isDarkModeEnabled() ? '#FFFF' : '#1976d2',
+                    main: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) ? '#FFFF' : '#1976d2',
                 },
             }
         });
@@ -49,7 +48,7 @@ export const getTheme = () => {
 }
 
 export const getRootPaperStyle = (): any => {
-    if (!StateStore.isSetting(SettingsType.BACKGROUND_MODE)) {
+    if (!SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE)) {
         return {
             width: '100%',
             minHeight: '100%',
@@ -64,8 +63,7 @@ export const getRootPaperStyle = (): any => {
         minHeight: '100%',
         height: '100%',
         position: 'absolute',
-        backgroundImage: `url(${getTodayBgUrl()})`,
-        //backgroundImage: `url('https://source.unsplash.com/sMQiL_2v4vs/2400x1900')`,
+        backgroundImage: `url(${SettingsStateStore.getTodayBgUrl()})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         overflow: 'auto'
@@ -74,6 +72,6 @@ export const getRootPaperStyle = (): any => {
 }
 
 export const getBlackBackground = (index: number) => {
-    return !StateStore.isFullMode() || (index === 0 || !StateStore.isSetting(SettingsType.BACKGROUND_MODE))
+    return !SettingsStateStore.isFullMode() || (index === 0 || !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE))
         ? `rgba(0, 0, 0, 0)` : `rgba(0, 0, 0, 0.3)`
 }

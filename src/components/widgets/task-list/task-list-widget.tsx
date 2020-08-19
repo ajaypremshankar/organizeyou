@@ -6,6 +6,8 @@ import { StateStore } from "../../../types/state-store";
 import OverdueTaskList from "../../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../../task-lists-container/completed-task-list";
+import { SettingsStateStore } from "../../../types/settings-state";
+import { SettingsType } from "../../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,8 +50,8 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
                 <FormControlLabel
                     control={
                         <Switch
-                            checked={StateStore.isShowAllTasks()}
-                            onChange={StateStore.handleShowAllToggle}
+                            checked={SettingsStateStore.isShowAllTasks()}
+                            onChange={SettingsStateStore.handleShowAllToggle}
                             name="checkedB"
                             color="primary"
                             edge={'start'}
@@ -59,9 +61,9 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
                     label="Show all tasks"
                 />
             </div>
-            {!StateStore.isShowAllTasks() && getOverdueList()}
+            {!SettingsStateStore.isShowAllTasks() && getOverdueList()}
             {getSelectedDateList()}
-            {props.showCompleted && getCompletedList()}
+            { SettingsStateStore.isEnabled(SettingsType.SHOW_COMPLETED_TASKS) && props.showCompleted && getCompletedList()}
         </div>
     );
 }
