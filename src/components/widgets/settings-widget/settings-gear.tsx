@@ -1,11 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import { SettingsType } from "../../../types/types";
-import { SettingsStateStore } from "../../../state-stores/settings-state";
+import { SettingsStateStore, SettingsType } from "../../../state-stores/settings/settings-state";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import SettingsIcon from "@material-ui/icons/Settings";
+import { getTransparentBackgroundColor } from "../../../utils/theme-utils";
 
 const useStyles = makeStyles({
     arrow: {
@@ -27,7 +27,7 @@ export default function SettingsGear(props: SettingsGearProps) {
     return (
         <div>
             <ToggleButtonGroup
-                style={{background: !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? `rgba(0, 0, 0, 0)` : `rgba(0, 0, 0, 0.3)`}}
+                style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.3)}}
                 exclusive
                 size={"small"}
                 orientation="vertical"

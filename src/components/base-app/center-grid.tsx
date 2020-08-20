@@ -6,11 +6,14 @@ import AddTaskWidget from "../widgets/add-task/add-task-widget";
 import CenterMenuWidget from "../widgets/top-menu/center-menu-widget";
 import TaskListWidget from "../widgets/task-list/task-list-widget";
 import SearchBarWidget from "../widgets/search-bar/search-bar-widget";
-import { SettingsStateStore } from "../../state-stores/settings-state";
-import { SettingsType } from "../../types/types";
+import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { getTransparentBackgroundColor } from "../../utils/theme-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        root: {
+            marginTop: '15px'
+        },
         paperCenter: {
             height: '100%',
             width: '48vw',
@@ -31,8 +34,8 @@ export default function CenterGrid() {
 
     return (
 
-        <Grid item xs={6} key={`center-grid-item`}>
-            <div style={{background: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? `rgba(0, 0, 0, 0.2)`: `rgba(0, 0, 0, 0)`}}>
+        <Grid item xs={6} key={`center-grid-item`} className={classes.root}>
+            <div style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.2)}}>
             {[0, 1, 2, 3].map((value) => (<Grid key={`center-grid-container-${value}`} container justify="center">
                 <Grid key={`center-grid-item-${value}`} item>
                     <div>
@@ -45,5 +48,5 @@ export default function CenterGrid() {
             </Grid>))}
             </div>
         </Grid>
-        );
+    );
 }

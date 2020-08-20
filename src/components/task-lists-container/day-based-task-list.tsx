@@ -9,8 +9,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import AppAccordion from "../common/app-accordian";
-import { StateStore } from "../../state-stores/state-store";
-import { SettingsStateStore } from "../../state-stores/settings-state";
+import { StateStore } from "../../state-stores/tasks/state-store";
+import { SettingsStateStore } from "../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

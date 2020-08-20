@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { loadAppState } from "../../utils/app-state-facade-utils";
-import { StateStore } from "../../state-stores/state-store";
-import { BaseTasksState } from "../../state-stores/base-tasks-state";
-import { initSyncStorageListener } from "../../utils/browser-app-state-utils";
+import { loadAppState } from "../../state-stores/tasks/app-state-facade-utils";
+import { StateStore } from "../../state-stores/tasks/state-store";
+import { BaseTasksState } from "../../state-stores/tasks/base-tasks-state";
 import CenterGrid from "./center-grid";
 import LeftGrid from "./left-grid";
 import RightGrid from "./right-grid";
 import { getRootPaperStyle, getTheme } from "../../utils/theme-utils";
-import { SettingsStateStore } from "../../state-stores/settings-state";
+import { SettingsStateStore } from "../../state-stores/settings/settings-state";
+import { initSyncStorageListener } from "../../state-stores/tasks/bucketed-tasks-state-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

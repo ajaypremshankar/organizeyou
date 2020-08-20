@@ -1,11 +1,35 @@
-import { SettingsType } from "../types/types";
-import { getTodayKey } from "../utils/date-utils";
+import { getTodayKey } from "../../utils/date-utils";
+import { migrateToBucketedKeySupport } from "../tasks/bucketed-migrations-utils";
 
-export interface SettingsState {
+/***
+ * Enum type used as key for settings
+ */
+export enum SettingsType {
+    REMEMBER_SELECTED_DATE = 'Remember selected Date',
+    SHOW_SECONDS = 'Seconds on clock',
+    SHOW_AM_PM = "Show AM/PM",
+    SHOW_ALL_TASKS = 'Show all tasks list',
+    SHOW_COMPLETED_TASKS = 'Show completed tasks list',
+    ABOUT_US = 'Who are we?',
+    DARK_THEME = 'Dark theme',
+    BACKGROUND_MODE = 'Daily background wallpaper',
+    FULL_MODE = 'Full mode',
+    MIGRATE_TO_BUCKETED_STORE = 'oy_m_t_b_s',
+}
+
+/***
+ * Data structure for settings
+ */
+interface SettingsState {
     toggleSettings: Map<SettingsType, boolean>
     objectSettings: Map<SettingsType, any>
 }
 
+/***
+ * Settings management done here.
+ * * Get settings
+ * * Add/update settings
+ */
 export class SettingsStateStore {
     private static settingsState: SettingsState
     private static setSettingsState: any
@@ -39,6 +63,13 @@ export class SettingsStateStore {
             toggleSettings.set(SettingsType.SHOW_AM_PM, true)
         }
 
+
+        if(!SettingsStateStore.isEnabled(SettingsType.MIGRATE_TO_BUCKETED_STORE)) {
+            migrateToBucketedKeySupport();
+            // Mark migration complete
+            toggleSettings.set(SettingsType.MIGRATE_TO_BUCKETED_STORE, true)
+        }
+
         const background = objectSettings.get(SettingsType.BACKGROUND_MODE)
 
         if (!background || Number(background.day) < getTodayKey()) {
@@ -50,6 +81,7 @@ export class SettingsStateStore {
                     })
 
                     // Update state & store only after loading image.
+                    // DO-NOT take this state-update out of promise.then
                     SettingsStateStore.updateState({
                         toggleSettings: toggleSettings,
                         objectSettings: objectSettings
@@ -75,14 +107,16 @@ export class SettingsStateStore {
         return new Map<SettingsType, boolean>(SettingsStateStore.settingsState.toggleSettings)
     }
 
-    public static toggleSetting = (type: SettingsType) => {
+    public static toggleSetting = (type: SettingsType, setValueTo?: boolean) => {
         const toggleSettings = new Map<SettingsType, boolean>(SettingsStateStore.settingsState.toggleSettings)
-        toggleSettings.set(type, !toggleSettings.get(type))
+        toggleSettings.set(type, setValueTo !== undefined ? setValueTo : !toggleSettings.get(type))
 
         const settings: SettingsState = {
             toggleSettings: toggleSettings,
             objectSettings: SettingsStateStore.settingsState.objectSettings
         }
+
+        console.log(settings)
 
         SettingsStateStore.updateState(settings)
         return settings
@@ -161,6 +195,9 @@ export class SettingsStateStore {
     }
 }
 
+/***
+ * Settings interaction with local-storage goes here.
+ */
 class SettingsStateStorage {
     private static key: string = "oy-settings"
 

@@ -1,6 +1,5 @@
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import { SettingsType } from "../types/types";
-import { SettingsStateStore } from "../state-stores/settings-state";
+import { SettingsStateStore, SettingsType } from "../state-stores/settings/settings-state";
 
 export const getTheme = () => {
 
@@ -71,7 +70,6 @@ export const getRootPaperStyle = (): any => {
 
 }
 
-export const getBlackBackground = (index: number) => {
-    return !SettingsStateStore.isFullMode() || (index === 0 || !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE))
-        ? `rgba(0, 0, 0, 0)` : `rgba(0, 0, 0, 0.3)`
+export const getTransparentBackgroundColor = (preCondition: boolean, transparencyLevel: number) => {
+    return preCondition ? `rgba(0, 0, 0, ${transparencyLevel})` : `rgba(0, 0, 0, 0)`
 }

@@ -1,9 +1,6 @@
-import { CompletedTask, Task } from "../types/types";
-import { BaseTasksState } from "../state-stores/base-tasks-state";
-import { getTodayKey } from "./date-utils";
-import { loadAppState } from "./app-state-facade-utils";
-import { StateStore } from "../state-stores/state-store";
-import { wrapThrottle } from "./wrapper-utils";
+import { CompletedTask, Task } from "../../types/types";
+import { BaseTasksState } from "./base-tasks-state";
+import { getTodayKey } from "../../utils/date-utils";
 
 /***
  * Separated keys because of storage restrictions on a key
@@ -27,10 +24,10 @@ export const updateBrowserAppState = (updatedState: BaseTasksState) => {
 }
 
 export function loadBrowserAppState(): Promise<BaseTasksState> {
-    return getLocalStorageValue()
+    return getBrowserStorageValue()
 }
 
-function getLocalStorageValue(): Promise<BaseTasksState> {
+function getBrowserStorageValue(): Promise<BaseTasksState> {
     return new Promise((resolve, reject) => {
         try {
             chrome.storage.sync.get([
@@ -38,8 +35,8 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
                 "organizeyou_completed_tasks"
             ], function (value) {
                 if (value) {
-                    const currentTasks = JSON.parse(value.organizeyou_current_tasks)
-                    const completedTasks = JSON.parse(value.organizeyou_completed_tasks) || []
+                    const currentTasks = JSON.parse(value['organizeyou_current_tasks'])
+                    const completedTasks = JSON.parse(value['organizeyou_completed_tasks']) || []
                     const allTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(currentTasks.tasks)
 
                     resolve(BaseTasksState.newStateFrom(
@@ -61,17 +58,4 @@ function getLocalStorageValue(): Promise<BaseTasksState> {
 
 export const clearBrowserState = () => {
     chrome.storage.sync.clear()
-}
-
-export const initSyncStorageListener = () => {
-
-    if(chrome && chrome.storage) {
-        chrome.storage.onChanged.addListener(wrapThrottle(function (changes: any, area:any) {
-            if (area === "sync") {
-                loadAppState().then(value => {
-                    StateStore.setToStore(value)
-                })
-            }
-        }, 1000));
-    }
 }

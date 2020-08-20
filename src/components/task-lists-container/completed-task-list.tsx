@@ -10,7 +10,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RestoreIcon from '@material-ui/icons/Restore';
 import { formatToListTitle } from "../../utils/date-utils";
 import AppAccordion from "../common/app-accordian";
-import { StateStore } from "../../state-stores/state-store";
+import { StateStore } from "../../state-stores/tasks/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

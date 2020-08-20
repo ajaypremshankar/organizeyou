@@ -1,10 +1,11 @@
 import { BaseTasksState } from "./base-tasks-state";
-import { CompletedTask, ListType, SettingsType, Task, TaskSorter } from "../types/types";
-import { updateAppState } from "../utils/app-state-facade-utils";
-import { DisplayableTaskList } from "../types/displayable-task-list";
-import { getTodayKey } from "../utils/date-utils";
-import { KeyTitlePair } from "../types/key-title-pair";
-import { SettingsStateStore } from "./settings-state";
+import { CompletedTask, ListType, Task, TaskSorter } from "../../types/types";
+import { updateAppState } from "./app-state-facade-utils";
+import { DisplayableTaskList } from "../../types/displayable-task-list";
+import { getCurrentMillis, getTodayKey } from "../../utils/date-utils";
+import { KeyTitlePair } from "../../types/key-title-pair";
+import { SettingsStateStore, SettingsType } from "../settings/settings-state";
+import { TASK_STATE_ACTION } from "./bucketed-tasks-state-utils";
 
 /**
  * Exposing app state-stores to rest of the app.
@@ -34,35 +35,51 @@ export class StateStore {
         return new KeyTitlePair(StateStore.baseState.selectedDate)
     }
 
-    public static updateBaseState = (newState: BaseTasksState, persist: boolean = true) => {
+    public static updateBaseState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task,
+                                     newState: BaseTasksState, persist: boolean = true) => {
         if (persist) {
-            updateAppState(newState)
+            updateAppState(action, plannedOn, targetTask, newState)
         }
         StateStore.setToStore(newState)
     }
 
     public static updateCurrentlySelectedDate = (date: number) => {
-        StateStore.updateBaseState(StateStore.baseState.updateCurrentlySelectedDate(date), false)
+        StateStore.setToStore(StateStore.baseState.updateCurrentlySelectedDate(date))
     }
 
     public static handleTaskCompletion = (key: number, task: Task) => {
-        StateStore.updateBaseState(StateStore.baseState.completeTask(key, task))
+        const completeTask: CompletedTask = {
+            ...task,
+            completedDate: getCurrentMillis(),
+        }
+
+        StateStore.updateBaseState(
+            TASK_STATE_ACTION.COMPLETE_TASK, key, completeTask,
+            StateStore.baseState.completeTask(key, task))
     }
 
     public static handleTaskAdditionOrUpdation = (key: number, task: Task) => {
-        StateStore.updateBaseState(StateStore.baseState.addOrUpdateTask(key, task))
+        StateStore.updateBaseState(
+            TASK_STATE_ACTION.ADD_UPDATE_TASK, key, task,
+            StateStore.baseState.addOrUpdateTask(key, task))
     }
 
     public static handleTaskDeletion = (key: number, task: Task) => {
-        StateStore.updateBaseState(StateStore.baseState.removeTask(key, task))
+        StateStore.updateBaseState(
+            TASK_STATE_ACTION.DELETE_TASK, key, task,
+            StateStore.baseState.removeTask(key, task))
     }
 
     public static handleTaskMovement = (from: number, to: number, task: Task) => {
-        StateStore.updateBaseState(StateStore.baseState.moveTask(from, to, task))
+        StateStore.updateBaseState(
+            TASK_STATE_ACTION.MOVE_TASK, from, task,
+            StateStore.baseState.moveTask(from, to, task))
     }
 
     public static handleUndoComplete = (task: CompletedTask) => {
-        StateStore.updateBaseState(StateStore.baseState.undoCompleteTask(task))
+        StateStore.updateBaseState(
+            TASK_STATE_ACTION.UNDO_COMPLETE_TASK, task.plannedOn, task,
+            StateStore.baseState.undoCompleteTask(task))
     }
 
     public static getTargetTasks = (sorter?: TaskSorter) => {

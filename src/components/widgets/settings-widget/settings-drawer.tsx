@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import SettingsList from "./settings-list";
-import { SettingsType } from "../../../types/types";
-import { SettingsStateStore } from "../../../state-stores/settings-state";
+import { SettingsStateStore, SettingsType } from "../../../state-stores/settings/settings-state";
+import { getTransparentBackgroundColor } from "../../../utils/theme-utils";
 
 const useStyles = makeStyles({
     list: {
@@ -41,7 +41,7 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
                 onClose={props.toggleDrawer(false)}
                 onOpen={props.toggleDrawer(true)}>
                 <div
-                    style={{background: !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? `rgba(0, 0, 0, 0)` : `rgba(0, 0, 0, 0.3)`}}
+                    style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.3)}}
                     role="presentation">
                     <SettingsList/>
                 </div>

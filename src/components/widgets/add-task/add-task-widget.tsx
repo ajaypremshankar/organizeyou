@@ -5,7 +5,7 @@ import AddNewTask from "./add-new-task";
 import Grid from "@material-ui/core/Grid";
 import { KeyTitlePair } from "../../../types/key-title-pair";
 import { getCurrentMillis } from "../../../utils/date-utils";
-import { StateStore } from "../../../state-stores/state-store";
+import { StateStore } from "../../../state-stores/tasks/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

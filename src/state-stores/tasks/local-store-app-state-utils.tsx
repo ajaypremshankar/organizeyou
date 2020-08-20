@@ -1,6 +1,6 @@
-import { BaseTasksState } from "../state-stores/base-tasks-state";
-import { getTodayKey } from "./date-utils";
-import { Task } from "../types/types";
+import { BaseTasksState } from "./base-tasks-state";
+import { getTodayKey } from "../../utils/date-utils";
+import { Task } from "../../types/types";
 
 export const updateLocalAppState = (updatedState: BaseTasksState) => {
 

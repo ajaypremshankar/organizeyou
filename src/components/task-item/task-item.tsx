@@ -13,7 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { formatToListTitle, getCurrentMillis } from "../../utils/date-utils";
 import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
-import { StateStore } from "../../state-stores/state-store";
+import { StateStore } from "../../state-stores/tasks/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

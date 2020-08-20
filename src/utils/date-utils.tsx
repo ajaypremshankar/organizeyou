@@ -27,7 +27,7 @@ export const neitherTodayNorTomorrow = (key: number): boolean => {
 }
 
 export const getLocaleTime = (options: any) =>{
-    return new Date().toLocaleTimeString([], options)
+    return new Date().toLocaleTimeString('en-US', options)
 }
 
 export const getDate = () =>{

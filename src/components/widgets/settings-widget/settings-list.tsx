@@ -6,7 +6,6 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Switch from "@material-ui/core/Switch";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { SettingsType } from "../../../types/types";
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -14,7 +13,7 @@ import { Divider } from "@material-ui/core";
 import AboutUs from "../../settings-drawer/about-us";
 import PaletteIcon from '@material-ui/icons/Palette';
 import ImageIcon from '@material-ui/icons/Image';
-import { SettingsStateStore } from "../../../state-stores/settings-state";
+import { SettingsStateStore, SettingsType } from "../../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles({
     listItemReleased: {
@@ -104,7 +103,9 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemIcon><ImageIcon/></ListItemIcon>
                 <ListItemText
                     id={SettingsType.BACKGROUND_MODE}
-                    primary={SettingsType.BACKGROUND_MODE}/>
+                    primary={SettingsType.BACKGROUND_MODE}
+                    secondary={'Credits: Unsplash.com'}
+                />
                 <ListItemSecondaryAction>
                     <Switch
                         color={'primary'}
