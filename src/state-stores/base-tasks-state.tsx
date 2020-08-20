@@ -1,10 +1,10 @@
-import { CompletedTask, Task } from "./types";
+import { CompletedTask, Task } from "../types/types";
 import { getCurrentMillis, getTodayKey } from "../utils/date-utils";
 
 /***
  * This class functionalities should be accessed through `StateStore`.
- * 1) Logic for modifying state stays with this class.
- * 2) Logic for transforming and returned curated state related info stays with `StateStore`
+ * 1) Logic for modifying state-stores stays with this class.
+ * 2) Logic for transforming and returned curated state-stores related info stays with `StateStore`
  */
 export class BaseTasksState {
     private readonly _selectedDate: number;

@@ -1,6 +1,6 @@
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { SettingsType } from "../types/types";
-import { SettingsStateStore } from "../types/settings-state";
+import { SettingsStateStore } from "../state-stores/settings-state";
 
 export const getTheme = () => {
 

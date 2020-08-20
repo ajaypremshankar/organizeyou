@@ -6,7 +6,7 @@ import AddTaskWidget from "../widgets/add-task/add-task-widget";
 import CenterMenuWidget from "../widgets/top-menu/center-menu-widget";
 import TaskListWidget from "../widgets/task-list/task-list-widget";
 import SearchBarWidget from "../widgets/search-bar/search-bar-widget";
-import { SettingsStateStore } from "../../types/settings-state";
+import { SettingsStateStore } from "../../state-stores/settings-state";
 import { SettingsType } from "../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,7 +32,7 @@ export default function CenterGrid() {
     return (
 
         <Grid item xs={6} key={`center-grid-item`}>
-            <div style={{background: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? `rgba(0, 0, 0, 0.3)`: `rgba(0, 0, 0, 0)`}}>
+            <div style={{background: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? `rgba(0, 0, 0, 0.2)`: `rgba(0, 0, 0, 0)`}}>
             {[0, 1, 2, 3].map((value) => (<Grid key={`center-grid-container-${value}`} container justify="center">
                 <Grid key={`center-grid-item-${value}`} item>
                     <div>

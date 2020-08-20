@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import SettingsList from "./settings-list";
 import { SettingsType } from "../../../types/types";
-import { SettingsStateStore } from "../../../types/settings-state";
+import { SettingsStateStore } from "../../../state-stores/settings-state";
 
 const useStyles = makeStyles({
     list: {

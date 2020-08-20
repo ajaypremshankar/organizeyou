@@ -1,8 +1,8 @@
 import { CompletedTask, Task } from "../types/types";
-import { BaseTasksState } from "../types/base-tasks-state";
+import { BaseTasksState } from "../state-stores/base-tasks-state";
 import { getTodayKey } from "./date-utils";
 import { loadAppState } from "./app-state-facade-utils";
-import { StateStore } from "../types/state-store";
+import { StateStore } from "../state-stores/state-store";
 import { wrapThrottle } from "./wrapper-utils";
 
 /***

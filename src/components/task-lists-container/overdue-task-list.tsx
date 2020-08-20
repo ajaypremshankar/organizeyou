@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { Task } from "../../types/types";
 import TaskItem from "../task-item/task-item";
 import AppAccordion from "../common/app-accordian";
-import { StateStore } from "../../types/state-store";
+import { StateStore } from "../../state-stores/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

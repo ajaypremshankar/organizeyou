@@ -1,5 +1,5 @@
 import { SettingsType } from "../types/types";
-import { SettingsStateStore } from "../types/settings-state";
+import { SettingsStateStore } from "../state-stores/settings-state";
 
 export const getClockOptions = () => {
     return {

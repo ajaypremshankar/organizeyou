@@ -1,4 +1,4 @@
-import { SettingsType } from "./types";
+import { SettingsType } from "../types/types";
 import { getTodayKey } from "../utils/date-utils";
 
 export interface SettingsState {
@@ -16,14 +16,52 @@ export class SettingsStateStore {
     }
 
     public static loadState = () => {
-        const state = SettingsStateStorage.load()
-        SettingsStateStore.setSettingsState(state)
-        SettingsStateStore.settingsState = state
+        SettingsStateStore.setDefaultsIfNotAvailable()
     }
 
     private static setToStore = (state: SettingsState) => {
         SettingsStateStore.setSettingsState(state)
         SettingsStateStore.settingsState = state
+    }
+
+    private static setDefaultsIfNotAvailable = () => {
+        let toggleSettings = new Map<SettingsType, boolean>();
+        let objectSettings = new Map<SettingsType, any>();
+        const stateFromStorage = SettingsStateStorage.load()
+
+        if (stateFromStorage !== undefined) {
+            toggleSettings = stateFromStorage.toggleSettings
+            objectSettings = stateFromStorage.objectSettings
+        } else {
+            toggleSettings.set(SettingsType.FULL_MODE, true)
+            toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
+            toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
+            toggleSettings.set(SettingsType.SHOW_AM_PM, true)
+        }
+
+        const background = objectSettings.get(SettingsType.BACKGROUND_MODE)
+
+        if (!background || Number(background.day) < getTodayKey()) {
+            fetch(`https://source.unsplash.com/featured/3200x1800?hill,desktop,wallpapers`).then(value => {
+                SettingsStateStore.loadAndCacheImage(value.url).then(url => {
+                    objectSettings.set(SettingsType.BACKGROUND_MODE, {
+                        day: getTodayKey(),
+                        url: url,
+                    })
+
+                    // Update state & store only after loading image.
+                    SettingsStateStore.updateState({
+                        toggleSettings: toggleSettings,
+                        objectSettings: objectSettings
+                    });
+                })
+            })
+        } else {
+            SettingsStateStore.updateState({
+                toggleSettings: toggleSettings,
+                objectSettings: objectSettings
+            })
+        }
     }
 
     public static updateState = (newState: SettingsState, persist: boolean = true) => {
@@ -43,7 +81,7 @@ export class SettingsStateStore {
 
         const settings: SettingsState = {
             toggleSettings: toggleSettings,
-            objectSettings: new Map<SettingsType, Object>(SettingsStateStore.settingsState.objectSettings)
+            objectSettings: SettingsStateStore.settingsState.objectSettings
         }
 
         SettingsStateStore.updateState(settings)
@@ -70,29 +108,11 @@ export class SettingsStateStore {
         SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.FULL_MODE))
     }
 
-
-    public static setIfNotTodayImageUrl = (force = false) => {
-        const background = SettingsStateStore.settingsState?.objectSettings?.get(SettingsType.BACKGROUND_MODE)
-        if (force || !background || Number(background.day) < getTodayKey()) {
-
-            fetch(`https://source.unsplash.com/featured/1920x1080?hill,desktop,wallpapers`).then(value => {
-
-                SettingsStateStore.loadAndCacheImage(value.url).then(url =>
-                    SettingsStateStore.updateObjectSetting(SettingsType.BACKGROUND_MODE, {
-                        day: getTodayKey(),
-                        url: url,
-                    })
-                )
-            })
-        }
-    }
-
     public static getTodayBgUrl = (): string => {
         const background = SettingsStateStore.settingsState?.objectSettings?.get(SettingsType.BACKGROUND_MODE)
         if (!background || Number(background.day) < getTodayKey()) {
             return './pure-white-background.jpg'
         }
-
         return background.url
     }
 
@@ -144,10 +164,10 @@ export class SettingsStateStore {
 class SettingsStateStorage {
     private static key: string = "oy-settings"
 
-    public static update = (deltaState: any) => {
+    public static update = (updatedState: any) => {
         localStorage.setItem(SettingsStateStorage.key, JSON.stringify({
-            toggleSettings: [...Array.from(deltaState.toggleSettings || new Map())],
-            objectSettings: [...Array.from(deltaState.objectSettings || new Map())],
+            toggleSettings: [...Array.from(updatedState.toggleSettings || new Map())],
+            objectSettings: [...Array.from(updatedState.objectSettings || new Map())],
         }))
     }
 
@@ -155,7 +175,11 @@ class SettingsStateStorage {
 
         const persistedState = localStorage.getItem(SettingsStateStorage.key);
 
-        const settings = JSON.parse(persistedState || '{}')
+        if(persistedState === null){
+            return undefined
+        }
+
+        const settings = JSON.parse(persistedState)
 
         return {
             toggleSettings: settings.toggleSettings ? new Map<SettingsType, boolean>(settings.toggleSettings) : new Map(),

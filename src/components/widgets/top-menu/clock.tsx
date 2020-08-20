@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getDate, getLocaleTime } from '../../../utils/date-utils'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { SettingsStateStore } from "../../../types/settings-state";
+import { SettingsStateStore } from "../../../state-stores/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

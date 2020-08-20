@@ -1,4 +1,4 @@
-import { BaseTasksState } from "../types/base-tasks-state";
+import { BaseTasksState } from "../state-stores/base-tasks-state";
 import { getTodayKey } from "./date-utils";
 import { Task } from "../types/types";
 
@@ -9,7 +9,6 @@ export const updateLocalAppState = (updatedState: BaseTasksState) => {
         tasks: [...Array.from(updatedState.tasks)],
         completedTasks: updatedState.completedTasks,
     }
-
     localStorage.setItem("organizeyou-base-app-2", JSON.stringify(state))
 }
 

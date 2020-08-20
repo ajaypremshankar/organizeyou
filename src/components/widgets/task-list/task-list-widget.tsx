@@ -2,11 +2,11 @@ import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { StateStore } from "../../../types/state-store";
+import { StateStore } from "../../../state-stores/state-store";
 import OverdueTaskList from "../../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../../task-lists-container/completed-task-list";
-import { SettingsStateStore } from "../../../types/settings-state";
+import { SettingsStateStore } from "../../../state-stores/settings-state";
 import { SettingsType } from "../../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>

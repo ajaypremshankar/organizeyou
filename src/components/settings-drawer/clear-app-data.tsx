@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper, { PaperProps } from '@material-ui/core/Paper';
 import { clearLocalState } from "../../utils/app-state-facade-utils";
 import ClearAllIcon from '@material-ui/icons/ClearAll';
-import { SettingsStateStore } from "../../types/settings-state";
+import { SettingsStateStore } from "../../state-stores/settings-state";
 import { SettingsType } from "../../types/types";
 
 function PaperComponent(props: PaperProps) {

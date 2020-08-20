@@ -7,7 +7,7 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import HomeIcon from '@material-ui/icons/Home';
 import AppsIcon from '@material-ui/icons/Apps';
 import Tooltip from '@material-ui/core/Tooltip';
-import { SettingsStateStore } from "../../../types/settings-state";
+import { SettingsStateStore } from "../../../state-stores/settings-state";
 import { SettingsType } from "../../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,7 +60,6 @@ export default function NavigationLinks(props: TopButtonGroupProps) {
         window.chrome.tabs.getCurrent(tab => {
             if(tab && tab.id) {
                 window.chrome.tabs.update(tab.id, {url: link})
-                console.log('updated')
             }
         })
     }

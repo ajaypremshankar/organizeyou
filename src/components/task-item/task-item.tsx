@@ -13,7 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { formatToListTitle, getCurrentMillis } from "../../utils/date-utils";
 import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
-import { StateStore } from "../../types/state-store";
+import { StateStore } from "../../state-stores/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -59,7 +59,7 @@ export default function TaskItem(props: TaskItemProps) {
             ...taskItemState,
             element: getTaskContentWithTooltip(props.task.value, props)
         })
-    }, [taskItemState, props, props.showPlannedOn])
+    }, [props.showPlannedOn])
 
     const [datePickerState, setDatePickerState] = useState(false);
 

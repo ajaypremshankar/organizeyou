@@ -14,7 +14,7 @@ import { Divider } from "@material-ui/core";
 import AboutUs from "../../settings-drawer/about-us";
 import PaletteIcon from '@material-ui/icons/Palette';
 import ImageIcon from '@material-ui/icons/Image';
-import { SettingsStateStore } from "../../../types/settings-state";
+import { SettingsStateStore } from "../../../state-stores/settings-state";
 
 const useStyles = makeStyles({
     listItemReleased: {

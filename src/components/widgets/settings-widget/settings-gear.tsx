@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import { SettingsType } from "../../../types/types";
-import { SettingsStateStore } from "../../../types/settings-state";
+import { SettingsStateStore } from "../../../state-stores/settings-state";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -33,6 +33,7 @@ export default function SettingsGear(props: SettingsGearProps) {
                 orientation="vertical"
                 aria-label="text alignment">
                 <ToggleButton
+                    value={'settings'}
                     className={classes.arrow}
                     onClick={props.toggleDrawer(true)}
                     aria-label="arrow">

@@ -1,16 +1,16 @@
 import { BaseTasksState } from "./base-tasks-state";
-import { CompletedTask, ListType, SettingsType, Task, TaskSorter } from "./types";
+import { CompletedTask, ListType, SettingsType, Task, TaskSorter } from "../types/types";
 import { updateAppState } from "../utils/app-state-facade-utils";
-import { DisplayableTaskList } from "./displayable-task-list";
+import { DisplayableTaskList } from "../types/displayable-task-list";
 import { getTodayKey } from "../utils/date-utils";
-import { KeyTitlePair } from "./key-title-pair";
+import { KeyTitlePair } from "../types/key-title-pair";
 import { SettingsStateStore } from "./settings-state";
 
 /**
- * Exposing app state to rest of the app.
+ * Exposing app state-stores to rest of the app.
  * This pattern will make decision to use Redux in future easier.
- * <b>This class will NOT change state data </b>
- * NOTE: Logic for transforming and returned curated state related info stays with `StateStore`
+ * <b>This class will NOT change state-stores data </b>
+ * NOTE: Logic for transforming and returned curated state-stores related info stays with `StateStore`
  */
 export class StateStore {
     private static baseState: BaseTasksState

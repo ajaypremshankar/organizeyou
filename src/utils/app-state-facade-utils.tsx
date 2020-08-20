@@ -1,7 +1,7 @@
-import { BaseTasksState } from "../types/base-tasks-state";
+import { BaseTasksState } from "../state-stores/base-tasks-state";
 import { clearBrowserState, loadBrowserAppState, updateBrowserAppState } from "./browser-app-state-utils";
 import { clearLocalStorageState, loadLocalAppState, updateLocalAppState } from "./local-store-app-state-utils";
-import { SettingsStateStore } from "../types/settings-state";
+import { SettingsStateStore } from "../state-stores/settings-state";
 
 export const updateAppState = (updatedState: BaseTasksState) => {
     if (chrome && chrome.storage) {
