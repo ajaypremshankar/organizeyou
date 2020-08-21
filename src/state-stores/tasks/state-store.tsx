@@ -1,6 +1,6 @@
 import { BaseTasksState } from "./base-tasks-state";
 import { CompletedTask, ListType, Task, TaskSorter } from "../../types/types";
-import { updateAppState } from "./app-state-facade-utils";
+import { loadAppState, updateAppState } from "./app-state-facade-utils";
 import { DisplayableTaskList } from "../../types/displayable-task-list";
 import { getCurrentMillis, getTodayKey } from "../../utils/date-utils";
 import { KeyTitlePair } from "../../types/key-title-pair";
@@ -25,6 +25,10 @@ export class StateStore {
     public static setToStore = (state: BaseTasksState) => {
         StateStore.setBaseState(state)
         StateStore.baseState = state
+    }
+
+    public static loadState = () => {
+        loadAppState().then(value => StateStore.setBaseState(value))
     }
 
     public static getTasks = (): Map<number, Task[]> => {

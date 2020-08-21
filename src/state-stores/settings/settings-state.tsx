@@ -138,8 +138,8 @@ export class SettingsStateStore {
         SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.SHOW_ALL_TASKS))
     }
 
-    public static handleFullModeToggle = () => {
-        SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.FULL_MODE))
+    public static handleFullModeToggle = (setTo: boolean) => {
+        SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.FULL_MODE, setTo))
     }
 
     public static getTodayBgUrl = (): string => {

@@ -1,7 +1,38 @@
-import { Task } from "../../types/types";
-import { TASK_BUCKET_TYPE, TASK_STATE_ACTION } from "./bucketed-tasks-state-utils";
-import { clearBrowserState, loadBrowserAppState } from "./browser-app-state-utils";
+import { CompletedTask, Task } from "../../types/types";
+import { getTaskBucketKey, TASK_STATE_ACTION } from "./bucketed-tasks-state-utils";
 import { isExtension } from "../../utils/platform-utils";
+import { BaseTasksState } from "./base-tasks-state";
+import { getTodayKey } from "../../utils/date-utils";
+import { StateStore } from "./state-store";
+
+function getNonBucketedBrowserStorage(): Promise<BaseTasksState> {
+    return new Promise((resolve, reject) => {
+        try {
+            chrome.storage.sync.get([
+                'organizeyou_current_tasks',
+                "organizeyou_completed_tasks"
+            ], function (value) {
+                if (value) {
+                    const currentTasks = JSON.parse(value['organizeyou_current_tasks'] || '{}')
+                    const completedTasks = JSON.parse(value['organizeyou_completed_tasks'] || '[]')
+                    const allTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(currentTasks.tasks)
+
+                    resolve(BaseTasksState.newStateFrom(
+                        // Load today by default.
+                        getTodayKey(),
+                        allTasks,
+                        completedTasks
+                        )
+                    )
+                } else {
+                    resolve(BaseTasksState.emptyState())
+                }
+            })
+        } catch (ex) {
+            reject(ex);
+        }
+    });
+}
 
 export const migrateToBucketedKeySupport = () => {
     if (!isExtension()) {
@@ -10,7 +41,7 @@ export const migrateToBucketedKeySupport = () => {
 
     const syncState: any = {}
     //transform from old to new state
-    loadBrowserAppState().then(state => {
+    getNonBucketedBrowserStorage().then(state => {
         state.tasks.forEach((tasks, key) => {
             (tasks || []).forEach(task => {
                 getMigratedSyncState(syncState, TASK_STATE_ACTION.ADD_UPDATE_TASK, task.plannedOn, task)
@@ -22,13 +53,14 @@ export const migrateToBucketedKeySupport = () => {
         })
 
         // clear old state
-        clearBrowserState()
-
-        // persist new state
-        if(syncState !== {}) {
-            chrome.storage.sync.set(syncState)
-        }
-
+        chrome.storage.sync.clear(() => {
+            console.log(syncState)
+            // Once clear, persist new state
+            if(syncState !== {}) {
+                chrome.storage.sync.set(syncState)
+                StateStore.loadState()
+            }
+        })
     })
 }
 
@@ -50,11 +82,3 @@ const getMigratedSyncState = (syncState: any, action: TASK_STATE_ACTION, planned
             break;
     }
 }
-
-const getTaskBucketKey = (plannedOn: number, complete: boolean) => {
-    if (complete) {
-        return `${TASK_BUCKET_TYPE.COMPLETED_TASK}${(plannedOn % 100) + 100}`
-    } else {
-        return `${TASK_BUCKET_TYPE.ACTIVE_TASK}${plannedOn % 100}`
-    }
-};

@@ -17,15 +17,14 @@ export default function AppMode() {
                 exclusive
                 size={"small"}
                 orientation="vertical"
-                onChange={SettingsStateStore.handleFullModeToggle}
                 aria-label="text alignment">
                 <ToggleButton
-                    disabled={!SettingsStateStore.isEnabled(SettingsType.FULL_MODE)}
+                    onClick={() => SettingsStateStore.handleFullModeToggle(false)}
                     value="compact" aria-label="left aligned">
                     <Tooltip title={'Compact mode'}><ViewCompactIcon/></Tooltip>
                 </ToggleButton>
                 <ToggleButton
-                    disabled={SettingsStateStore.isEnabled(SettingsType.FULL_MODE)}
+                    onClick={() => SettingsStateStore.handleFullModeToggle(true)}
                     value="full" aria-label="centered">
                     <Tooltip title={'Full mode'}><SubjectIcon/></Tooltip>
                 </ToggleButton>

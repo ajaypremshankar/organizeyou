@@ -1,38 +1,38 @@
 import { BaseTasksState } from "./base-tasks-state";
-import { getTodayKey } from "../../utils/date-utils";
 import { Task } from "../../types/types";
+import {
+    deserializeBucketedToBaseState,
+    getBucketedStateToUpdate,
+    TASK_STATE_ACTION
+} from "./bucketed-tasks-state-utils";
 
-export const updateLocalAppState = (updatedState: BaseTasksState) => {
-
-    const state = {
-        selectedDate: updatedState.selectedDate,
-        tasks: [...Array.from(updatedState.tasks)],
-        completedTasks: updatedState.completedTasks,
+const getLocalStorageInObjectForm = (): any => {
+    const data = Object.assign({}, localStorage)
+    const persistedState: any = {}
+    for (let key in data) {
+        persistedState[key] = JSON.parse(data[key])
     }
-    localStorage.setItem("organizeyou-base-app-2", JSON.stringify(state))
+    return persistedState;
+}
+
+export const updateLocalAppState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task) => {
+
+    const persistedState = getLocalStorageInObjectForm();
+
+    let stateToUpdate: any = getBucketedStateToUpdate(action, plannedOn, targetTask, persistedState)
+
+    for (let key in stateToUpdate) {
+        localStorage.setItem(key, JSON.stringify(stateToUpdate[key]))
+    }
 }
 
 
 export const loadLocalAppState = (): Promise<BaseTasksState> => {
 
-    const persistedState = localStorage.getItem("organizeyou-base-app-2");
-
-    if (!persistedState) {
-        return new Promise((resolve, reject) => {
-            resolve(BaseTasksState.emptyState())
-        })
-    }
-
-    const updatedState = JSON.parse(persistedState)
-    const migratedState = BaseTasksState.newStateFrom(
-        // Load today by default
-        getTodayKey(),
-        new Map<number, Task[]>(updatedState.tasks),
-        updatedState.completedTasks,
-    )
+    const persistedState = getLocalStorageInObjectForm();
 
     return new Promise((resolve, reject) => {
-        resolve(migratedState)
+        resolve(deserializeBucketedToBaseState(persistedState))
     })
 }
 

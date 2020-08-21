@@ -17,112 +17,96 @@ export enum TASK_BUCKET_TYPE {
     COMPLETED_TASK = 'oy_ct_',
 }
 
-export function loadBucketedState(): Promise<BaseTasksState> {
-    return getBucketedSyncStorage()
-}
-
-function getBucketedSyncStorage(): Promise<BaseTasksState> {
-    return new Promise((resolve, reject) => {
-        try {
-            chrome.storage.sync.get(null, function (synState) {
-                if (synState) {
-                    let currentState: BaseTasksState = BaseTasksState.emptyState()
-
-                    for (const syncKey in synState) {
-                        if (syncKey.startsWith(TASK_BUCKET_TYPE.ACTIVE_TASK)) {
-                            currentState = pushTasksIntoBucket(currentState, TASK_BUCKET_TYPE.ACTIVE_TASK, synState[syncKey])
-                        } else if (syncKey.startsWith(TASK_BUCKET_TYPE.COMPLETED_TASK)) {
-                            currentState = pushTasksIntoBucket(currentState, TASK_BUCKET_TYPE.COMPLETED_TASK, synState[syncKey])
-                        }
-                    }
-                    resolve(currentState)
-                } else {
-                    resolve(BaseTasksState.emptyState())
-                }
-            })
-        } catch (ex) {
-            reject(ex);
-        }
-    });
-}
-
-export const updateBucketedSyncState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task) => {
-
-    chrome.storage.sync.get(null, function (currentSyncState) {
-        if (currentSyncState) {
-
-            let syncState: any = {}
-            switch (action) {
-                case TASK_STATE_ACTION.ADD_UPDATE_TASK:
-                    let key = getTaskBucketKey(plannedOn, false)
-                    let tasks = [...((currentSyncState[key] || []) as Task[])
-                        .filter(t => t.id !== targetTask.id), targetTask]
-
-                    syncState[key] = tasks
-                    break;
-                case TASK_STATE_ACTION.MOVE_TASK:
-                    key = getTaskBucketKey(plannedOn, false)
-                    const removedTasks = [...((currentSyncState[key] || []) as Task[])
-                        .filter(t => t.id !== targetTask.id)]
-
-                    const newBucketKey = getTaskBucketKey(targetTask.plannedOn, false)
-                    let addedTasks = [...currentSyncState[newBucketKey] || [], targetTask]
-
-                    syncState[key] = removedTasks
-                    syncState[newBucketKey] = addedTasks
-                    break;
-
-                case TASK_STATE_ACTION.DELETE_TASK:
-                    key = getTaskBucketKey(plannedOn, false)
-                    tasks = [...((currentSyncState[key] || []) as Task[])
-                        .filter(t => t.id !== targetTask.id)]
-
-                    syncState[key] = tasks
-                    break;
-
-                case TASK_STATE_ACTION.COMPLETE_TASK:
-                    key = getTaskBucketKey(plannedOn, false)
-                    tasks = [...((currentSyncState[key] || []) as Task[])
-                        .filter(t => t.id !== targetTask.id)]
-                    const completedBucketKey = getTaskBucketKey(targetTask.plannedOn, true)
-                    let completedTasks = [...currentSyncState[completedBucketKey] || [], targetTask]
-
-                    //syncState[key] = tasks
-                    syncState[completedBucketKey] = completedTasks
-                    break;
-
-                case TASK_STATE_ACTION.UNDO_COMPLETE_TASK:
-                    key = getTaskBucketKey(plannedOn, true)
-                    tasks = [...((currentSyncState[key] || []) as Task[])
-                        .filter(t => t.id !== targetTask.id)]
-                    const activeBucketKey = getTaskBucketKey(targetTask.plannedOn, false)
-                    let activeTasks = [...currentSyncState[activeBucketKey] || [], targetTask]
-                    syncState[key] = tasks
-                    syncState[activeBucketKey] = activeTasks
-            }
-
-            if(syncState !== {}) {
-                chrome.storage.sync.set(syncState)
+export function deserializeBucketedToBaseState(storageData: any): any {
+    if (storageData) {
+        let baseState: BaseTasksState = BaseTasksState.emptyState()
+        for (const storageKey in storageData) {
+            if (storageKey.startsWith(TASK_BUCKET_TYPE.ACTIVE_TASK)) {
+                baseState = pushTasksIntoBucket(baseState, TASK_BUCKET_TYPE.ACTIVE_TASK, storageData[storageKey])
+            } else if (storageKey.startsWith(TASK_BUCKET_TYPE.COMPLETED_TASK)) {
+                baseState = pushTasksIntoBucket(baseState, TASK_BUCKET_TYPE.COMPLETED_TASK, storageData[storageKey])
             }
         }
-    })
+        return baseState
+    }
+
+    return BaseTasksState.emptyState()
 }
 
-export const clearBucketedState = () => {
-    chrome.storage.sync.clear()
+export const getBucketedStateToUpdate = (action: TASK_STATE_ACTION, plannedOn: number,
+                                         targetTask: Task, currentStorageData: any): any => {
+    let syncState: any = {}
+
+    if (currentStorageData) {
+
+        switch (action) {
+            case TASK_STATE_ACTION.ADD_UPDATE_TASK:
+                const addOrUpdateKey = getTaskBucketKey(plannedOn, false)
+                const addOrUpdateTasks = [...((currentStorageData[addOrUpdateKey] || []) as Task[])
+                    .filter(t => t.id !== targetTask.id), targetTask]
+
+                syncState[addOrUpdateKey] = addOrUpdateTasks
+                break;
+            case TASK_STATE_ACTION.MOVE_TASK:
+                const moveKey = getTaskBucketKey(plannedOn, false)
+                const removedTasks = [...((currentStorageData[moveKey] || []) as Task[])
+                    .filter(t => t.id !== targetTask.id)]
+
+                const newBucketKey = getTaskBucketKey(targetTask.plannedOn, false)
+                let addedTasks = [...currentStorageData[newBucketKey] || [], targetTask]
+
+                syncState[moveKey] = removedTasks
+                syncState[newBucketKey] = addedTasks
+                break;
+
+            case TASK_STATE_ACTION.DELETE_TASK:
+                const deleteKey = getTaskBucketKey(plannedOn, false)
+                const tasksAfterDelete = [...((currentStorageData[deleteKey] || []) as Task[])
+                    .filter(t => t.id !== targetTask.id)]
+
+                syncState[deleteKey] = tasksAfterDelete
+                break;
+
+            case TASK_STATE_ACTION.COMPLETE_TASK:
+                const toCompleteKey = getTaskBucketKey(plannedOn, false)
+                const newActiveTasks = [...((currentStorageData[toCompleteKey] || []) as Task[])
+                    .filter(t => t.id !== targetTask.id)]
+                const completedBucketKey = getTaskBucketKey(targetTask.plannedOn, true)
+                let completedTasks = [...currentStorageData[completedBucketKey] || [], targetTask]
+
+                syncState[toCompleteKey] = newActiveTasks
+                syncState[completedBucketKey] = completedTasks
+                break;
+
+            case TASK_STATE_ACTION.UNDO_COMPLETE_TASK:
+                const currentlyCompleteKey = getTaskBucketKey(plannedOn, true)
+                const newCompleteTasks = [...((currentStorageData[currentlyCompleteKey] || []) as Task[])
+                    .filter(t => t.id !== targetTask.id)]
+                const activeBucketKey = getTaskBucketKey(targetTask.plannedOn, false)
+                let activeTasks = [...currentStorageData[activeBucketKey] || [], targetTask]
+                syncState[currentlyCompleteKey] = newCompleteTasks
+                syncState[activeBucketKey] = activeTasks
+        }
+    }
+
+    return syncState
 }
 
 /***
  * oy_at_<0> to oy_at_<99> = active tasks keys
- * oy_ct_<100> to oy_ct_<199> = completed tasks keys
+ * oy_ct_<0> to oy_ct_<99> = completed tasks keys
  * @param plannedOn
  * @param complete
  */
-const getTaskBucketKey = (plannedOn: number, complete: boolean) => {
+export const getTaskBucketKey = (plannedOn: number, complete: boolean) => {
+
+    const lastThreeDigitsReversed = (plannedOn % 1000).toString().split("").reverse().join("")
+    const bucket = Number(lastThreeDigitsReversed) % 100;
+
     if (complete) {
-        return `${TASK_BUCKET_TYPE.COMPLETED_TASK}${(plannedOn % 100) + 100}`
+        return `${TASK_BUCKET_TYPE.COMPLETED_TASK}${bucket}`
     } else {
-        return `${TASK_BUCKET_TYPE.ACTIVE_TASK}${plannedOn % 100}`
+        return `${TASK_BUCKET_TYPE.ACTIVE_TASK}${bucket}`
     }
 }
 
