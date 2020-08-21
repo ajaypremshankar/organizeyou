@@ -28,7 +28,15 @@ export class StateStore {
     }
 
     public static loadState = () => {
-        loadAppState().then(value => StateStore.setBaseState(value))
+        loadAppState().then(value => {
+            // Since selected Date is not persisted anymore.
+            // Don't drop the ball, when it is set in state.
+            const selectedDate = StateStore.baseState?.selectedDate
+            StateStore.setBaseState(value)
+            if(selectedDate) {
+                StateStore.updateCurrentlySelectedDate(selectedDate)
+            }
+        })
     }
 
     public static getTasks = (): Map<number, Task[]> => {
@@ -96,7 +104,9 @@ export class StateStore {
                 }
             })
 
-            return new DisplayableTaskList(ListType.ALL, reducedList, sorter)
+            return new DisplayableTaskList(ListType.ALL, reducedList, (a: Task|CompletedTask, b: Task|CompletedTask) => {
+                return a.plannedOn - b.plannedOn
+            })
         } else {
             return StateStore.getSelectedDateTasks(sorter)
         }

@@ -63,22 +63,25 @@ export default function TaskItem(props: TaskItemProps) {
             ...taskItemState,
             element: getTaskContentWithTooltip(props.task.value, props)
         })
-    }, [props.showPlannedOn])
+    }, [props.showPlannedOn, props.task])
 
     const [datePickerState, setDatePickerState] = useState(false);
 
     const handleTaskDateChange = (newPlannedOn: number) => {
-        StateStore.handleTaskMovement(props.task.plannedOn,
-            newPlannedOn,
-            {
-                ...props.task,
-                plannedOn: newPlannedOn,
-                updatedOn: getCurrentMillis()
+
+        if (newPlannedOn !== props.task.plannedOn) {
+            StateStore.handleTaskMovement(props.task.plannedOn,
+                newPlannedOn,
+                {
+                    ...props.task,
+                    plannedOn: newPlannedOn,
+                    updatedOn: getCurrentMillis()
+                })
+            setTaskItemState({
+                ...taskItemState,
+                element: <span>{props.task.value}</span>,
             })
-        setTaskItemState({
-            ...taskItemState,
-            element: <span>{props.task.value}</span>,
-        })
+        }
 
         setDatePickerState(!datePickerState)
     };

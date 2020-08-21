@@ -47,14 +47,16 @@ export class BucketUtils {
                     break;
                 case TASK_STATE_ACTION.MOVE_TASK:
                     const moveKey = BucketUtils.getBucketKey(plannedOn, false)
-                    const removedTasks = [...((currentStorageData[moveKey] || []) as Task[])
-                        .filter(t => t.id !== targetTask.id)]
-
                     const newBucketKey = BucketUtils.getBucketKey(targetTask.plannedOn, false)
-                    let addedTasks = [...currentStorageData[newBucketKey] || [], targetTask]
 
-                    syncState[moveKey] = removedTasks
-                    syncState[newBucketKey] = addedTasks
+                    if(moveKey !== newBucketKey) {
+                        const removedTasks = [...((currentStorageData[moveKey] || []) as Task[])
+                            .filter(t => t.id !== targetTask.id)]
+                        const addedTasks = [...currentStorageData[newBucketKey] || [], targetTask]
+
+                        syncState[moveKey] = removedTasks
+                        syncState[newBucketKey] = addedTasks
+                    }
                     break;
 
                 case TASK_STATE_ACTION.DELETE_TASK:

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
             letterSpacing: SettingsStateStore.isFullMode() ? '0px' : '-4px',
             fontSize: SettingsStateStore.isFullMode() ? '2.5em' : '3em',
             fontWeight: 500,
-            marginBottom: SettingsStateStore.isFullMode() ? '-40px' : '-60px',
+            marginBottom: SettingsStateStore.isFullMode() ? '-25px' : '-40px',
         },
         date: {
             fontWeight: 400,
