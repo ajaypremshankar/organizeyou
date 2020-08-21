@@ -10,6 +10,7 @@ import LeftGrid from "./left-grid";
 import RightGrid from "./right-grid";
 import { getRootPaperStyle, getTheme } from "../../utils/theme-utils";
 import { SettingsStateStore } from "../../state-stores/settings/settings-state";
+import AppLoader from "../common/app-loader";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,6 +52,7 @@ export default function WidgetBasedApp() {
     return (
         <ThemeProvider theme={getTheme()}>
             <Paper style={getRootPaperStyle()} elevation={0}>
+                <AppLoader/>
                 <Grid container className={classes.root}>
                     <LeftGrid key={`left-grid`}/>
                     <CenterGrid key={`center-grid`}/>

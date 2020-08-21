@@ -4,6 +4,7 @@ import { hasChromeStoragePermission } from "../../utils/platform-utils";
 import { BaseTasksState } from "./base-tasks-state";
 import { getTodayKey } from "../../utils/date-utils";
 import { StateStore } from "./state-store";
+import { SettingsStateStore } from "../settings/settings-state";
 
 const getNonBucketedBrowserStorage = (): Promise<BaseTasksState> => {
     return new Promise((resolve, reject) => {

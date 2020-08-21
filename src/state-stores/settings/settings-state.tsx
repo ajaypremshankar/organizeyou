@@ -15,6 +15,7 @@ export enum SettingsType {
     BACKGROUND_MODE = 'Daily background wallpaper',
     FULL_MODE = 'Full mode',
     MIGRATE_TO_BUCKETED_STORE = 'oy_m_t_b_s',
+    APP_LOADING = 'loading',
 }
 
 /***
@@ -57,12 +58,12 @@ export class SettingsStateStore {
             toggleSettings = stateFromStorage.toggleSettings
             objectSettings = stateFromStorage.objectSettings
         } else {
+            SettingsStateStore.toggleAppLoader(true)
             toggleSettings.set(SettingsType.FULL_MODE, true)
             toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
             toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
             toggleSettings.set(SettingsType.SHOW_AM_PM, true)
         }
-
 
         if(!SettingsStateStore.isEnabled(SettingsType.MIGRATE_TO_BUCKETED_STORE)) {
             migrateToBucketedKeySupport();
@@ -82,6 +83,7 @@ export class SettingsStateStore {
 
                     // Update state & store only after loading image.
                     // DO-NOT take this state-update out of promise.then
+                    toggleSettings.set(SettingsType.APP_LOADING, false)
                     SettingsStateStore.updateState({
                         toggleSettings: toggleSettings,
                         objectSettings: objectSettings
@@ -89,6 +91,7 @@ export class SettingsStateStore {
                 })
             })
         } else {
+            toggleSettings.set(SettingsType.APP_LOADING, false)
             SettingsStateStore.updateState({
                 toggleSettings: toggleSettings,
                 objectSettings: objectSettings
@@ -138,6 +141,10 @@ export class SettingsStateStore {
 
     public static handleFullModeToggle = (setTo: boolean) => {
         SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.FULL_MODE, setTo))
+    }
+
+    public static toggleAppLoader = (setToValue: boolean) => {
+        SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.APP_LOADING, setToValue), false)
     }
 
     public static getTodayBgUrl = (): string => {
