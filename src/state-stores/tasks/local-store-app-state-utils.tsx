@@ -9,7 +9,9 @@ const getLocalStorageInObjectForm = (): any => {
     const data = Object.assign({}, localStorage)
     const persistedState: any = {}
     for (let key in data) {
-        persistedState[key] = JSON.parse(data[key])
+        if (key.startsWith('oy_')) {
+            persistedState[key] = JSON.parse(data[key])
+        }
     }
     return persistedState;
 }

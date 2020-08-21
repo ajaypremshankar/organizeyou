@@ -53,7 +53,10 @@ export const getRootPaperStyle = (): any => {
             minHeight: '100%',
             height: '100%',
             position: 'absolute',
-            overflow: 'auto'
+            overflow: 'auto',
+            fontWeight: 'bold',
+            fontSize: '16px',
+            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
         }
     }
 
@@ -65,7 +68,10 @@ export const getRootPaperStyle = (): any => {
         backgroundImage: `url(${SettingsStateStore.getTodayBgUrl()})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
-        overflow: 'auto'
+        overflow: 'auto',
+        fontWeight: 'bold',
+        fontSize: '16px',
+        fontFamily: '"Helvetica-Neue", Helvetica, Arial',
     }
 
 }

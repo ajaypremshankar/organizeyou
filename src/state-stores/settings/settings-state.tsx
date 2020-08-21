@@ -14,7 +14,7 @@ export enum SettingsType {
     DARK_THEME = 'Dark theme',
     BACKGROUND_MODE = 'Daily background wallpaper',
     FULL_MODE = 'Full mode',
-    MIGRATE_TO_BUCKETED_STORE = 'oy_m_t_b_s',
+    BUCKETED_STORE_MIGRATION_COMPLETE = 'oy_m_t_b_s',
     APP_LOADING = 'loading',
 }
 
@@ -60,21 +60,21 @@ export class SettingsStateStore {
         } else {
             SettingsStateStore.toggleAppLoader(true)
             toggleSettings.set(SettingsType.FULL_MODE, true)
-            toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
             toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
             toggleSettings.set(SettingsType.SHOW_AM_PM, true)
         }
 
-        if(!SettingsStateStore.isEnabled(SettingsType.MIGRATE_TO_BUCKETED_STORE)) {
+        if(!toggleSettings.get(SettingsType.BUCKETED_STORE_MIGRATION_COMPLETE)) {
             migrateToBucketedKeySupport();
             // Mark migration complete
-            toggleSettings.set(SettingsType.MIGRATE_TO_BUCKETED_STORE, true)
+            toggleSettings.set(SettingsType.BUCKETED_STORE_MIGRATION_COMPLETE, true)
         }
 
         const background = objectSettings.get(SettingsType.BACKGROUND_MODE)
 
+        //https://source.unsplash.com/featured/3200x1800?scenery,nature,wallpapers,hd
         if (!background || Number(background.day) < getTodayKey()) {
-            fetch(`https://source.unsplash.com/featured/3200x1800?hill,desktop,wallpapers`).then(value => {
+            fetch(`https://source.unsplash.com/collection/220388/4056x2280`).then(value => {
                 SettingsStateStore.loadAndCacheImage(value.url).then(url => {
                     objectSettings.set(SettingsType.BACKGROUND_MODE, {
                         day: getTodayKey(),
@@ -83,11 +83,26 @@ export class SettingsStateStore {
 
                     // Update state & store only after loading image.
                     // DO-NOT take this state-update out of promise.then
+                    toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
                     toggleSettings.set(SettingsType.APP_LOADING, false)
                     SettingsStateStore.updateState({
                         toggleSettings: toggleSettings,
                         objectSettings: objectSettings
                     });
+                }).catch(reason => {
+                    toggleSettings.set(SettingsType.APP_LOADING, false)
+                    toggleSettings.set(SettingsType.BACKGROUND_MODE, false)
+                    SettingsStateStore.updateState({
+                        toggleSettings: toggleSettings,
+                        objectSettings: objectSettings
+                    })
+                })
+            }).catch(reason => {
+                toggleSettings.set(SettingsType.APP_LOADING, false)
+                toggleSettings.set(SettingsType.BACKGROUND_MODE, false)
+                SettingsStateStore.updateState({
+                    toggleSettings: toggleSettings,
+                    objectSettings: objectSettings
                 })
             })
         } else {

@@ -35,7 +35,7 @@ export default function CenterGrid() {
     return (
 
         <Grid item xs={6} key={`center-grid-item`} className={classes.root}>
-            <div style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.2)}}>
+            <div style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.3)}}>
             {[0, 1, 2, 3].map((value) => (<Grid key={`center-grid-container-${value}`} container justify="center">
                 <Grid key={`center-grid-item-${value}`} item>
                     <div>

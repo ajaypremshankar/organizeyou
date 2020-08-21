@@ -11,6 +11,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import { formatToListTitle } from "../../utils/date-utils";
 import AppAccordion from "../common/app-accordian";
 import { StateStore } from "../../state-stores/tasks/state-store";
+import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,8 +22,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         title: {
             textAlign: 'left',
+            fontSize: theme.typography.pxToRem(15),
             width: '100%',
             margin: 'auto',
+            flexShrink: 0,
+            fontWeight: 'bold',
         },
         inline: {
             display: 'inline',
@@ -63,7 +67,10 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
                                                 id={labelId}
                                                 primaryTypographyProps={{
                                                     style: {
-                                                        textDecoration: 'line-through'
+                                                        textDecoration: 'line-through',
+                                                        fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
+                                                        fontSize: '16px',
+                                                        fontFamily: '"Helvetica-Neue", Helvetica, Arial',
                                                     }
                                                 }}
                                                 primary={value.value}

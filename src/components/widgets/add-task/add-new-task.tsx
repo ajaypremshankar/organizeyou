@@ -7,6 +7,9 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         textField: {
             width: '100%',
+            fontWeight: 'bold',
+            fontSize: '16px',
+            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
         },
     }),
 );

@@ -14,6 +14,7 @@ import { formatToListTitle, getCurrentMillis } from "../../utils/date-utils";
 import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
 import { StateStore } from "../../state-stores/tasks/state-store";
+import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
             font: 'inherit',
             width: '100%',
             cursor: 'pointer',
+            fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
+            fontSize: '16px',
+            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
         },
         textField: {
             width: '100%',
