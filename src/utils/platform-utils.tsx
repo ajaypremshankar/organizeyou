@@ -20,5 +20,13 @@ export const getPlatform = (): PLATFORM => {
 }
 
 export const isExtension = () => {
+    return hasChromeStoragePermission() && hasChromeTabsPermission()
+}
+
+export const hasChromeStoragePermission = () => {
     return window.chrome && window.chrome.storage
+}
+
+export const hasChromeTabsPermission = () => {
+    return window.chrome && window.chrome.tabs
 }

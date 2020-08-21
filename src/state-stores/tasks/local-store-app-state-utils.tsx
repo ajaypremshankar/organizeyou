@@ -1,10 +1,9 @@
 import { BaseTasksState } from "./base-tasks-state";
 import { Task } from "../../types/types";
 import {
-    deserializeBucketedToBaseState,
-    getBucketedStateToUpdate,
+    BucketUtils,
     TASK_STATE_ACTION
-} from "./bucketed-tasks-state-utils";
+} from "./bucket-utils";
 
 const getLocalStorageInObjectForm = (): any => {
     const data = Object.assign({}, localStorage)
@@ -19,7 +18,7 @@ export const updateLocalAppState = (action: TASK_STATE_ACTION, plannedOn: number
 
     const persistedState = getLocalStorageInObjectForm();
 
-    let stateToUpdate: any = getBucketedStateToUpdate(action, plannedOn, targetTask, persistedState)
+    let stateToUpdate: any = BucketUtils.getBucketedState(action, plannedOn, targetTask, persistedState)
 
     for (let key in stateToUpdate) {
         localStorage.setItem(key, JSON.stringify(stateToUpdate[key]))
@@ -32,7 +31,7 @@ export const loadLocalAppState = (): Promise<BaseTasksState> => {
     const persistedState = getLocalStorageInObjectForm();
 
     return new Promise((resolve, reject) => {
-        resolve(deserializeBucketedToBaseState(persistedState))
+        resolve(BucketUtils.deserializeToBaseState(persistedState))
     })
 }
 

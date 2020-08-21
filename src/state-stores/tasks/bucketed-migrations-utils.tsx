@@ -1,11 +1,11 @@
 import { CompletedTask, Task } from "../../types/types";
-import { getTaskBucketKey, TASK_STATE_ACTION } from "./bucketed-tasks-state-utils";
-import { isExtension } from "../../utils/platform-utils";
+import { BucketUtils, TASK_STATE_ACTION } from "./bucket-utils";
+import { hasChromeStoragePermission } from "../../utils/platform-utils";
 import { BaseTasksState } from "./base-tasks-state";
 import { getTodayKey } from "../../utils/date-utils";
 import { StateStore } from "./state-store";
 
-function getNonBucketedBrowserStorage(): Promise<BaseTasksState> {
+const getNonBucketedBrowserStorage = (): Promise<BaseTasksState> => {
     return new Promise((resolve, reject) => {
         try {
             chrome.storage.sync.get([
@@ -35,7 +35,7 @@ function getNonBucketedBrowserStorage(): Promise<BaseTasksState> {
 }
 
 export const migrateToBucketedKeySupport = () => {
-    if (!isExtension()) {
+    if (!hasChromeStoragePermission()) {
         return;
     }
 
@@ -54,7 +54,6 @@ export const migrateToBucketedKeySupport = () => {
 
         // clear old state
         chrome.storage.sync.clear(() => {
-            console.log(syncState)
             // Once clear, persist new state
             if(syncState !== {}) {
                 chrome.storage.sync.set(syncState)
@@ -69,14 +68,14 @@ const getMigratedSyncState = (syncState: any, action: TASK_STATE_ACTION, planned
     switch (action) {
         // Add to active tasks bucket
         case TASK_STATE_ACTION.ADD_UPDATE_TASK:
-            const key = getTaskBucketKey(plannedOn, false)
+            const key = BucketUtils.getBucketKey(plannedOn, false)
             const tasks = [...(syncState[key] || []), targetTask]
             syncState[key] = tasks
             break;
 
         // Add to completed tasks bucket
         case TASK_STATE_ACTION.COMPLETE_TASK:
-            const completedBucketKey = getTaskBucketKey(targetTask.plannedOn, true)
+            const completedBucketKey = BucketUtils.getBucketKey(targetTask.plannedOn, true)
             const completedTasks = [...syncState[completedBucketKey] || [], targetTask]
             syncState[completedBucketKey] = completedTasks
             break;

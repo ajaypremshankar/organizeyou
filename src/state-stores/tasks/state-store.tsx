@@ -5,7 +5,7 @@ import { DisplayableTaskList } from "../../types/displayable-task-list";
 import { getCurrentMillis, getTodayKey } from "../../utils/date-utils";
 import { KeyTitlePair } from "../../types/key-title-pair";
 import { SettingsStateStore, SettingsType } from "../settings/settings-state";
-import { TASK_STATE_ACTION } from "./bucketed-tasks-state-utils";
+import { TASK_STATE_ACTION } from "./bucket-utils";
 
 /**
  * Exposing app state-stores to rest of the app.
@@ -22,7 +22,7 @@ export class StateStore {
         StateStore.setBaseState = setState;
     }
 
-    public static setToStore = (state: BaseTasksState) => {
+    static setToStore = (state: BaseTasksState) => {
         StateStore.setBaseState(state)
         StateStore.baseState = state
     }
@@ -42,7 +42,7 @@ export class StateStore {
     public static updateBaseState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task,
                                      newState: BaseTasksState, persist: boolean = true) => {
         if (persist) {
-            updateAppState(action, plannedOn, targetTask, newState)
+            updateAppState(action, plannedOn, targetTask)
         }
         StateStore.setToStore(newState)
     }

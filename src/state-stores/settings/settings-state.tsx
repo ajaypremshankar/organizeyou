@@ -116,8 +116,6 @@ export class SettingsStateStore {
             objectSettings: SettingsStateStore.settingsState.objectSettings
         }
 
-        console.log(settings)
-
         SettingsStateStore.updateState(settings)
         return settings
     }

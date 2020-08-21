@@ -4,10 +4,13 @@ import { clearLocalStorageState, loadLocalAppState, updateLocalAppState } from "
 import { SettingsStateStore } from "../settings/settings-state";
 import { Task } from "../../types/types";
 import { clearBrowserState, loadBrowserAppState, updateBrowserAppState } from "./browser-app-state-utils";
-import { TASK_STATE_ACTION } from "./bucketed-tasks-state-utils";
+import { TASK_STATE_ACTION } from "./bucket-utils";
+import { wrapThrottle } from "../../utils/wrapper-utils";
+import { StateStore } from "./state-store";
+import { hasChromeStoragePermission } from "../../utils/platform-utils";
 
-export const updateAppState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task, updatedState: BaseTasksState) => {
-    if (chrome && chrome.storage) {
+export const updateAppState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task) => {
+    if (hasChromeStoragePermission()) {
         updateBrowserAppState(action, plannedOn, targetTask)
     } else {
         updateLocalAppState(action, plannedOn, targetTask)
@@ -15,7 +18,7 @@ export const updateAppState = (action: TASK_STATE_ACTION, plannedOn: number, tar
 }
 
 export const loadAppState = (): Promise<BaseTasksState> => {
-    if (chrome && chrome.storage) {
+    if (hasChromeStoragePermission()) {
         return loadBrowserAppState()
     } else {
         return loadLocalAppState()
@@ -23,9 +26,20 @@ export const loadAppState = (): Promise<BaseTasksState> => {
 }
 
 export const clearAppState = () => {
-    if (chrome && chrome.storage) {
+    if (hasChromeStoragePermission()) {
         clearBrowserState()
     }
     clearLocalStorageState()
     SettingsStateStore.clear()
+}
+
+export const initSyncStorageListener = () => {
+
+    if (hasChromeStoragePermission()) {
+        chrome.storage.onChanged.addListener(wrapThrottle(function (changes: any, area: any) {
+            if (area === "sync") {
+                StateStore.loadState()
+            }
+        }, 1000));
+    }
 }
