@@ -74,7 +74,7 @@ export class SettingsStateStore {
 
         //https://source.unsplash.com/featured/3200x1800?scenery,nature,wallpapers,hd
         if (!background || Number(background.day) < getTodayKey()) {
-            fetch(`https://source.unsplash.com/collection/220388/4056x2280`).then(value => {
+            fetch(`https://source.unsplash.com/collection/220388/1920x1080`).then(value => {
                 SettingsStateStore.loadAndCacheImage(value.url).then(url => {
                     objectSettings.set(SettingsType.BACKGROUND_MODE, {
                         day: getTodayKey(),
@@ -165,7 +165,7 @@ export class SettingsStateStore {
     public static getTodayBgUrl = (): string => {
         const background = SettingsStateStore.settingsState?.objectSettings?.get(SettingsType.BACKGROUND_MODE)
         if (!background || Number(background.day) < getTodayKey()) {
-            return './pure-white-background.jpg'
+            return './default_bg.jpg'
         }
         return background.url
     }

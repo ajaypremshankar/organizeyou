@@ -63,7 +63,7 @@ export default function TaskItem(props: TaskItemProps) {
             ...taskItemState,
             element: getTaskContentWithTooltip(props.task.value, props)
         })
-    }, [props.showPlannedOn, props.task])
+    }, [props])
 
     const [datePickerState, setDatePickerState] = useState(false);
 

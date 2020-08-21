@@ -28,6 +28,7 @@ export default function AppLoader() {
                 open={SettingsStateStore.isEnabled(SettingsType.APP_LOADING)}>
                 <CircularProgress color="inherit"/>
             </Backdrop>
+
             <Snackbar open={SettingsStateStore.isEnabled(SettingsType.APP_LOADING)} autoHideDuration={6000}>
                 <Alert severity="info">
                     Initializing app state
