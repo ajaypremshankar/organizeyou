@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import DaySelectButtonGroup from "./day-select-button-group";
 import AddNewTask from "./add-new-task";
-import { Task } from "../../../types/types";
 import Grid from "@material-ui/core/Grid";
 import { KeyTitlePair } from "../../../types/key-title-pair";
 import { getCurrentMillis } from "../../../utils/date-utils";
+import { StateStore } from "../../../state-stores/tasks/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
             flexDirection: 'row',
             alignItems: 'center',
             margin: 'auto',
+            width: '100%',
             align: 'center',
             '& > *': {
                 margin: theme.spacing(2),
@@ -23,24 +24,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface AddTaskWidgetProps {
-    keyTitle: KeyTitlePair,
-    changeSelectedDate: (date: number) => void,
-    addTask: (key: number, task: Task) => void,
+    showDaySelect: boolean
 }
 
 export default function AddTaskWidget(props: AddTaskWidgetProps) {
     const classes = useStyles()
 
-    const [addTaskState, setAddTaskState] = useState(props.keyTitle)
+    const [addTaskState, setAddTaskState] = useState(StateStore.getKeyTitle())
 
     const handleDateChange = (date: number) => {
         setAddTaskState(new KeyTitlePair(date))
-        props.changeSelectedDate(date)
+        StateStore.updateCurrentlySelectedDate(date)
     }
 
     const handleAddTask = (value: string) => {
         const now = getCurrentMillis()
-        props.addTask(
+        StateStore.handleTaskAdditionOrUpdation(
             addTaskState.key,
             {
                 id: now,
@@ -53,9 +52,9 @@ export default function AddTaskWidget(props: AddTaskWidgetProps) {
 
     return (
         <Grid className={classes.container} container justify="space-around">
-            <DaySelectButtonGroup
+            { props.showDaySelect && <DaySelectButtonGroup
                 keyTitle={addTaskState}
-                chooseDate={handleDateChange}/>
+                chooseDate={handleDateChange}/> }
             <AddNewTask
                 keyTitle={addTaskState}
                 addTask={handleAddTask}/>

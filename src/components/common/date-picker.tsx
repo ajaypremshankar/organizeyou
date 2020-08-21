@@ -5,7 +5,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
 import { Task } from "../../types/types";
-import { StateStore } from "../../types/state-store";
+import { StateStore } from "../../state-stores/tasks/state-store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

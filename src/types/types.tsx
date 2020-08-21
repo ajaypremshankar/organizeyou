@@ -22,13 +22,4 @@ export enum ListTitleType {
     ALL = 'all',
 }
 
-export enum SettingsType {
-    REMEMBER_SELECTED_DATE = 'Remember selected Date',
-    SHOW_SECONDS = 'Seconds on clock',
-    SHOW_AM_PM = "Show AM/PM",
-    SHOW_ALL_TASKS = 'Show all tasks list',
-    ABOUT_US = 'Who are we?',
-    DARK_THEME = 'Dark Theme'
-}
-
 export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => number

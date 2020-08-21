@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { getDate, getLocaleTime } from '../../../utils/date-utils'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { StateStore } from "../../../types/state-store";
+import { SettingsStateStore } from "../../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         clock: {
-            fontWeight: 'bold',
-            letterSpacing: '2pt',
-            fontSize: StateStore.isFullMode() ? '2em' : '2.5em'
+            letterSpacing: SettingsStateStore.isFullMode() ? '0px' : '-4px',
+            fontSize: SettingsStateStore.isFullMode() ? '2.5em' : '3em',
+            fontWeight: 500,
+            marginBottom: SettingsStateStore.isFullMode() ? '-25px' : '-40px',
         },
         date: {
-            fontWeight: 'bold',
-            letterSpacing: '2pt',
-            fontSize: StateStore.isFullMode() ? '0.7em' : '0.9em'
+            fontWeight: 400,
+            letterSpacing: SettingsStateStore.isFullMode() ? '0px' : '-1px',
+            fontSize: SettingsStateStore.isFullMode() ? '0.7em' : '0.9em',
+            marginBottom: SettingsStateStore.isFullMode() ? '70px' : '110px',
         }
     }),
 );
@@ -27,7 +29,6 @@ export default function Clock(props: ClockProps) {
 
     const classes = useStyles();
     const [ctime, setCtime] = useState(getLocaleTime(props.options))
-
 
     useEffect(() => {
 
@@ -47,9 +48,9 @@ export default function Clock(props: ClockProps) {
             <Typography variant="subtitle1" gutterBottom className={classes.clock} color="primary">
                 {ctime.toUpperCase()}
             </Typography>
-            {<Typography variant="subtitle1" gutterBottom className={classes.date} color="primary">
+            <Typography variant="subtitle1" gutterBottom className={classes.date} color="primary">
                 {getDate()}
-            </Typography>}
+            </Typography>
         </div>
     )
 }

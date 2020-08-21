@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -13,7 +13,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { formatToListTitle, getCurrentMillis } from "../../utils/date-utils";
 import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
-import { StateStore } from "../../types/state-store";
+import { StateStore } from "../../state-stores/tasks/state-store";
+import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
             font: 'inherit',
             width: '100%',
             cursor: 'pointer',
+            fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
+            fontSize: '16px',
+            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
         },
         textField: {
             width: '100%',
@@ -54,20 +58,30 @@ export default function TaskItem(props: TaskItemProps) {
         editMode: false
     });
 
+    useEffect(() => {
+        setTaskItemState({
+            ...taskItemState,
+            element: getTaskContentWithTooltip(props.task.value, props)
+        })
+    }, [props])
+
     const [datePickerState, setDatePickerState] = useState(false);
 
     const handleTaskDateChange = (newPlannedOn: number) => {
-        StateStore.handleTaskMovement(props.task.plannedOn,
-            newPlannedOn,
-            {
-                ...props.task,
-                plannedOn: newPlannedOn,
-                updatedOn: getCurrentMillis()
+
+        if (newPlannedOn !== props.task.plannedOn) {
+            StateStore.handleTaskMovement(props.task.plannedOn,
+                newPlannedOn,
+                {
+                    ...props.task,
+                    plannedOn: newPlannedOn,
+                    updatedOn: getCurrentMillis()
+                })
+            setTaskItemState({
+                ...taskItemState,
+                element: <span>{props.task.value}</span>,
             })
-        setTaskItemState({
-            ...taskItemState,
-            element: <span>{props.task.value}</span>,
-        })
+        }
 
         setDatePickerState(!datePickerState)
     };
@@ -95,7 +109,7 @@ export default function TaskItem(props: TaskItemProps) {
 
     const handleEditClick = () => {
 
-        if(!taskItemState.editMode) {
+        if (!taskItemState.editMode) {
             setTaskItemState(
                 {
                     ...taskItemState,

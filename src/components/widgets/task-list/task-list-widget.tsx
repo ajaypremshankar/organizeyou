@@ -2,20 +2,20 @@ import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { StateStore } from "../../../types/state-store";
+import { StateStore } from "../../../state-stores/tasks/state-store";
 import OverdueTaskList from "../../task-lists-container/overdue-task-list";
 import DayBasedTaskList from "../../task-lists-container/day-based-task-list";
 import CompletedTaskList from "../../task-lists-container/completed-task-list";
+import { SettingsStateStore, SettingsType } from "../../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         list: {
             width: '100%',
             margin: 'auto',
-            backgroundColor: theme.palette.background.paper,
         },
         fullWidth: {
-            width: '100%'
+            width: '100%',
         }
     }),
 );
@@ -49,8 +49,8 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
                 <FormControlLabel
                     control={
                         <Switch
-                            checked={StateStore.isShowAllTasks()}
-                            onChange={StateStore.handleShowAllToggle}
+                            checked={SettingsStateStore.isShowAllTasks()}
+                            onChange={SettingsStateStore.handleShowAllToggle}
                             name="checkedB"
                             color="primary"
                             edge={'start'}
@@ -60,9 +60,9 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
                     label="Show all tasks"
                 />
             </div>
-            {!StateStore.isShowAllTasks() && getOverdueList()}
+            {!SettingsStateStore.isShowAllTasks() && getOverdueList()}
             {getSelectedDateList()}
-            {props.showCompleted && getCompletedList()}
+            { SettingsStateStore.isEnabled(SettingsType.SHOW_COMPLETED_TASKS) && props.showCompleted && getCompletedList()}
         </div>
     );
 }

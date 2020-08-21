@@ -42,24 +42,6 @@ export default function AboutUs() {
                       details={
                           <Card className={classes.card} variant="outlined">
                               <CardContent>
-                                  <Typography className={classes.posUp} color="textSecondary">
-                                      Created by
-                                  </Typography>
-                                  <Typography variant="subtitle1" component="h6">
-                                      <Link target={'_blank'} href="https://www.linkedin.com/in/ajaypremshankar/">
-                                          Ajay Prem Shankar
-                                      </Link>
-                                  </Typography>
-                                  <Divider/>
-                                  <Typography className={classes.posUp} color="textSecondary">
-                                      Special thanks to
-                                  </Typography>
-                                  <Typography variant="subtitle1" component="h6">
-                                      <Link target={'_blank'} href="https://www.linkedin.com/in/spratap124/">
-                                          Surya Pratap
-                                      </Link>
-                                  </Typography>
-                                  <Divider/>
                                   <Typography className={classes.posUp} variant="subtitle2">
                                       <Link target={'_blank'} color={'secondary'}
                                             href={`https://forms.gle/4eEfLWPqLWQCwkjA8`}>
