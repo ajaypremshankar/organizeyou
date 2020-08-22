@@ -71,6 +71,9 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
                                                         fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
                                                         fontSize: '16px',
                                                         fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+                                                        width: '93%',
+                                                        cursor: 'pointer',
+                                                        wordWrap: 'break-word'
                                                     }
                                                 }}
                                                 primary={value.value}

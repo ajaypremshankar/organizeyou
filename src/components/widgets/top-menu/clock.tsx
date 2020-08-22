@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getDate, getLocaleTime } from '../../../utils/date-utils'
+import { getTimeWithAsPerSettings, getDate } from '../../../utils/date-utils'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { SettingsStateStore } from "../../../state-stores/settings/settings-state";
@@ -28,13 +28,12 @@ interface ClockProps {
 export default function Clock(props: ClockProps) {
 
     const classes = useStyles();
-    const [ctime, setCtime] = useState(getLocaleTime(props.options))
+    const [ctime, setCtime] = useState(getTimeWithAsPerSettings())
 
     useEffect(() => {
 
         const updateTime = () => {
-            const time = getLocaleTime(props.options)
-            setCtime(time)
+            setCtime(getTimeWithAsPerSettings())
         }
 
         const interval = setInterval(updateTime, 1000);

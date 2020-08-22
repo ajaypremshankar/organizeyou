@@ -27,7 +27,6 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
     const classes = useStyles();
 
     return (
-        <React.Fragment key={'right'}>
             <SwipeableDrawer
                 ModalProps={{
                     BackdropProps: {
@@ -35,6 +34,10 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
                             root: classes.BackdropProps
                         }
                     }
+                }}
+
+                PaperProps={{
+                    style: {width: '27%'}
                 }}
                 anchor={'right'}
                 open={props.open}
@@ -46,6 +49,5 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
                     <SettingsList/>
                 </div>
             </SwipeableDrawer>
-        </React.Fragment>
     );
 }
