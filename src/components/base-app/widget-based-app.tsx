@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
             flexGrow: 0,
             width: '99vw',
             height: '99vh',
+            overflow: 'auto',
         }
     }),
 );
