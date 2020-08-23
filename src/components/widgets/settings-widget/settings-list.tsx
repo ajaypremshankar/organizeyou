@@ -14,13 +14,17 @@ import AboutUs from "../../settings-drawer/about-us";
 import PaletteIcon from '@material-ui/icons/Palette';
 import ImageIcon from '@material-ui/icons/Image';
 import { SettingsStateStore, SettingsType } from "../../../state-stores/settings/settings-state";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles({
     listItemReleased: {
         width: '100%',
         margin: 'auto',
-        marginBottom: '5px'
+        marginBottom: '5px',
     },
+    secondaryAction: {
+        marginRight: '20px'
+    }
 });
 
 interface SettingsListProps {
@@ -32,7 +36,10 @@ export default function SettingsList(props: SettingsListProps) {
         <List className={classes.listItemReleased}>
             <ListItem color={'primary'} className={classes.listItemReleased}>
                 <ListItemIcon><SettingsIcon/></ListItemIcon>
-                <ListItemText primary={'Settings'}/>
+                <ListItemText
+                    primary={<Typography variant="h5" color="primary">
+                        Preferences
+                    </Typography>}/>
             </ListItem>
             <Divider/>
             <ListItem className={classes.listItemReleased} style={{display: 'none'}}>
@@ -40,7 +47,7 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText
                     id={SettingsType.SHOW_SECONDS}
                     primary={SettingsType.SHOW_SECONDS}/>
-                <ListItemSecondaryAction style={{display: 'none'}}>
+                <ListItemSecondaryAction className={classes.secondaryAction} style={{display: 'none'}}>
                     <Switch
                         style={{display: 'none'}}
                         color={'primary'}
@@ -56,7 +63,7 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText
                     id={SettingsType.SHOW_AM_PM}
                     primary={SettingsType.SHOW_AM_PM}/>
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction className={classes.secondaryAction}>
                     <Switch
                         color={'primary'}
                         edge="end"
@@ -72,7 +79,7 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText
                     id={SettingsType.SHOW_COMPLETED_TASKS}
                     primary={SettingsType.SHOW_COMPLETED_TASKS}/>
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction className={classes.secondaryAction}>
                     <Switch
                         color={'primary'}
                         edge="end"
@@ -88,7 +95,7 @@ export default function SettingsList(props: SettingsListProps) {
                 <ListItemText
                     id={SettingsType.DARK_THEME}
                     primary={SettingsType.DARK_THEME}/>
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction className={classes.secondaryAction}>
                     <Switch
                         color={'primary'}
                         edge="end"
@@ -106,7 +113,7 @@ export default function SettingsList(props: SettingsListProps) {
                     primary={SettingsType.BACKGROUND_MODE}
                     secondary={'Credits: Unsplash.com'}
                 />
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction className={classes.secondaryAction}>
                     <Switch
                         color={'primary'}
                         edge="end"
@@ -116,7 +123,7 @@ export default function SettingsList(props: SettingsListProps) {
                     />
                 </ListItemSecondaryAction>
             </ListItem>
-            <Divider />
+            <Divider/>
             <ListItem className={classes.listItemReleased}>
                 <ListItemText
                     id={SettingsType.ABOUT_US}

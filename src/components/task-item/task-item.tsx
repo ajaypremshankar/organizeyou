@@ -20,11 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         itemText: {
             font: 'inherit',
-            width: '100%',
+            width: '93%',
             cursor: 'pointer',
             fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
             fontSize: '16px',
             fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+            wordWrap: 'break-word'
         },
         textField: {
             width: '100%',

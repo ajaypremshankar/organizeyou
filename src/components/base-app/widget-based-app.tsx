@@ -16,8 +16,9 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             flexGrow: 0,
-            width: '100vw',
-            height: '100vh',
+            width: '99vw',
+            height: '99vh',
+            overflow: 'overlay',
         }
     }),
 );

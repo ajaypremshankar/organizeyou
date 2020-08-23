@@ -6,6 +6,9 @@ import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
 import { Task } from "../../types/types";
 import { StateStore } from "../../state-stores/tasks/state-store";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { ThemeProvider } from "@material-ui/styles";
+import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,42 +45,61 @@ export default function AppDatePicker(props: AppDatePickerProps) {
         props.close()
     };
 
+    const defaultMaterialTheme = createMuiTheme({
+        overrides: {
+            MuiPaper: {
+                root: {
+                    opacity: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 0.8 : 1
+                }
+            }
+        },
+        palette: {
+            type: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) && !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'dark' : 'light',
+            primary: {
+                main: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) && !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? '#FFFF' : '#1976d2',
+            },
+        },
+
+    });
+
     const tasksMap: Map<number, Task[]> = StateStore.getTasks()
 
     return (
 
         <div style={{display: 'none'}}>
-            <MuiPickersUtilsProvider
-                utils={DateFnsUtils}>
-                <DatePicker
-                    disableToolbar
-                    disablePast
-                    variant="dialog"
-                    label={props.label}
-                    value={parseFromKey(props.value)}
-                    onChange={handleDateChange}
-                    autoOk={true}
-                    format='yyyyMMdd'
-                    open={props.open}
-                    onClose={() => props.close()}
-                    renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-                        if (day == null) return dayComponent
+            <ThemeProvider theme={defaultMaterialTheme}>
+                <MuiPickersUtilsProvider
+                    utils={DateFnsUtils}>
+                    <DatePicker
+                        disableToolbar
+                        disablePast
+                        variant="dialog"
+                        label={props.label}
+                        value={parseFromKey(props.value)}
+                        onChange={handleDateChange}
+                        autoOk={true}
+                        format='yyyyMMdd'
+                        open={props.open}
+                        onClose={() => props.close()}
+                        renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
+                            if (day == null) return dayComponent
 
-                        const currentKey = formatToKey(day)
-                        const tasksOnDay = tasksMap.get(currentKey)
-                        const isSelected = !isPastKey(currentKey) && isInCurrentMonth
-                            && tasksOnDay && tasksOnDay.length > 0;
+                            const currentKey = formatToKey(day)
+                            const tasksOnDay = tasksMap.get(currentKey)
+                            const isSelected = !isPastKey(currentKey) && isInCurrentMonth
+                                && tasksOnDay && tasksOnDay.length > 0;
 
-                        // You can also use our internal <Day /> component
-                        return isSelected ? <Badge
-                            overlap="circle"
-                            badgeContent={isSelected && tasksOnDay ? tasksOnDay.length : undefined}
-                            variant={"dot"}
-                            classes={{badge: classes.customBadge}}
-                            color={"secondary"}>{dayComponent}</Badge> : dayComponent;
-                    }}
-                />
-            </MuiPickersUtilsProvider>
+                            // You can also use our internal <Day /> component
+                            return isSelected ? <Badge
+                                overlap="circle"
+                                badgeContent={isSelected && tasksOnDay ? tasksOnDay.length : undefined}
+                                variant={"dot"}
+                                classes={{badge: classes.customBadge}}
+                                color={"secondary"}>{dayComponent}</Badge> : dayComponent;
+                        }}
+                    />
+                </MuiPickersUtilsProvider>
+            </ThemeProvider>
         </div>
 
     );

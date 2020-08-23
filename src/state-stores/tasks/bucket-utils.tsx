@@ -56,6 +56,11 @@ export class BucketUtils {
 
                         syncState[moveKey] = removedTasks
                         syncState[newBucketKey] = addedTasks
+                    } else {
+                        const updatedTasks = [...((currentStorageData[moveKey] || []) as Task[])
+                            .filter(t => t.id !== targetTask.id), targetTask]
+
+                        syncState[moveKey] = updatedTasks
                     }
                     break;
 
@@ -80,7 +85,7 @@ export class BucketUtils {
 
                 case TASK_STATE_ACTION.UNDO_COMPLETE_TASK:
                     const currentlyCompleteKey = BucketUtils.getBucketKey(plannedOn, true)
-                    const newCompleteTasks = [...((currentStorageData[currentlyCompleteKey] || []) as Task[])
+                    const newCompleteTasks = [...((currentStorageData[currentlyCompleteKey] || []) as CompletedTask[])
                         .filter(t => t.id !== targetTask.id)]
                     const activeBucketKey = BucketUtils.getBucketKey(targetTask.plannedOn, false)
                     let activeTasks = [...currentStorageData[activeBucketKey] || [], targetTask]

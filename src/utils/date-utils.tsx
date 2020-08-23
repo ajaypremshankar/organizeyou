@@ -1,4 +1,5 @@
 import { addDays, format, parse } from "date-fns";
+import { SettingsStateStore, SettingsType } from "../state-stores/settings/settings-state";
 
 export const formatToKey = (date: Date): number => {
     return parseInt(format(date, 'yyyyMMdd'))
@@ -26,10 +27,6 @@ export const neitherTodayNorTomorrow = (key: number): boolean => {
     return key !== getTodayKey() && key !== getTomorrowKey()
 }
 
-export const getLocaleTime = (options: any) =>{
-    return new Date().toLocaleTimeString('en-US', options)
-}
-
 export const getDate = () =>{
     return format(new Date(),'EEE, do MMM, yyyy')
 }
@@ -42,6 +39,25 @@ export const isPastKey = (key: number): boolean => {
     return getTodayKey() > key
 }
 
+export const getTimeInFormatAsPerSettings =() => {
+    const date = new Date()
+    let hours: any = date.getHours();
+    let minutes: any = date.getMinutes();
+    let ampm = hours >= 12 ? 'pm' : 'am';
 
+    if(SettingsStateStore.isEnabled(SettingsType.SHOW_AM_PM)) {
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+    }
+    minutes = minutes < 10 ? '0'+ minutes : minutes;
+    hours = hours < 10 ? '0'+ hours : hours;
+    let time = hours + ':' + minutes;
+
+    if(SettingsStateStore.isEnabled(SettingsType.SHOW_AM_PM)) {
+        time = time + ' ' + ampm
+    }
+
+    return time;
+}
 
 
