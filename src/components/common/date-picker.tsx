@@ -49,14 +49,14 @@ export default function AppDatePicker(props: AppDatePickerProps) {
         overrides: {
             MuiPaper: {
                 root: {
-                    opacity: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 0.9 : 1
+                    opacity: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 0.8 : 1
                 }
             }
         },
         palette: {
-            type: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) || SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'dark' : 'light',
+            type: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) && !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'dark' : 'light',
             primary: {
-                main: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) || SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? '#FFFF' : '#1976d2',
+                main: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) && !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? '#FFFF' : '#1976d2',
             },
         },
 
