@@ -39,7 +39,7 @@ export const isPastKey = (key: number): boolean => {
     return getTodayKey() > key
 }
 
-export const getTimeWithAsPerSettings =() => {
+export const getTimeInFormatAsPerSettings =() => {
     const date = new Date()
     let hours: any = date.getHours();
     let minutes: any = date.getMinutes();

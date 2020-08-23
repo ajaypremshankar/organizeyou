@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getTimeWithAsPerSettings, getDate } from '../../../utils/date-utils'
+import { getTimeInFormatAsPerSettings, getDate } from '../../../utils/date-utils'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { SettingsStateStore } from "../../../state-stores/settings/settings-state";
@@ -22,25 +22,24 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ClockProps {
-    options: any
 }
 
 export default function Clock(props: ClockProps) {
 
     const classes = useStyles();
-    const [ctime, setCtime] = useState(getTimeWithAsPerSettings())
+    const [ctime, setCtime] = useState(getTimeInFormatAsPerSettings())
 
     useEffect(() => {
 
         const updateTime = () => {
-            setCtime(getTimeWithAsPerSettings())
+            setCtime(getTimeInFormatAsPerSettings())
         }
 
         const interval = setInterval(updateTime, 1000);
         return () => {
             clearInterval(interval);
         };
-    }, [props.options]);
+    }, [props, SettingsStateStore.getToggleSettings()]);
 
     return (
         <div className={classes.clock}>

@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '99vw',
             height: '99vh',
             overflow: 'auto',
+            overflowY: `scroll`
         }
     }),
 );

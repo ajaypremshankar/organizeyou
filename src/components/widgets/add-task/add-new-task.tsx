@@ -26,7 +26,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
 
     const handleKeyPressChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (taskContentState.trim() !== '' && event.key === 'Enter') {
-            props.addTask(taskContentState)
+            props.addTask(taskContentState.trim())
             setTaskContentState('')
         }
     }
