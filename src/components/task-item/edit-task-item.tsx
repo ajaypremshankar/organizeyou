@@ -26,7 +26,7 @@ export default function EditTaskItem(props: AddNewTaskProps) {
         if (event.key === 'Escape') {
             props.editBlur()
         } else if (taskContentState.trim() !== '' && event.key === 'Enter') {
-            props.updateTask(taskContentState)
+            props.updateTask(taskContentState.trim())
             setTaskContentState('')
         }
     }
