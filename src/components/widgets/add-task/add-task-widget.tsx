@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import { KeyTitlePair } from "../../../types/key-title-pair";
 import { getCurrentMillis } from "../../../utils/date-utils";
 import { StateStore } from "../../../state-stores/tasks/state-store";
+import { TagUtils } from "../../../utils/tag-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -39,6 +40,7 @@ export default function AddTaskWidget(props: AddTaskWidgetProps) {
 
     const handleAddTask = (value: string) => {
         const now = getCurrentMillis()
+        const tags = TagUtils.getTags(value)
         StateStore.handleTaskAdditionOrUpdation(
             addTaskState.key,
             {
@@ -46,7 +48,8 @@ export default function AddTaskWidget(props: AddTaskWidgetProps) {
                 plannedOn: addTaskState.key,
                 value: value,
                 createdOn: now,
-                updatedOn: now
+                updatedOn: now,
+                tags: tags
             })
     }
 

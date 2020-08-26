@@ -38,5 +38,10 @@ export const loadLocalAppState = (): Promise<BaseTasksState> => {
 }
 
 export const clearLocalStorageState = () => {
-    localStorage.removeItem("organizeyou-base-app-2")
+    const data = Object.assign({}, localStorage)
+    for (let key in data) {
+        if (key.startsWith('oy_')) {
+            localStorage.removeItem(key)
+        }
+    }
 }

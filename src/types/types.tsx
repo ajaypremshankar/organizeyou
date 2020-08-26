@@ -4,6 +4,7 @@ export interface Task {
     plannedOn: number;
     createdOn: number;
     updatedOn: number;
+    tags?: string[]
 }
 
 export interface CompletedTask extends Task {

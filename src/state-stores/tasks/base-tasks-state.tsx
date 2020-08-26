@@ -1,5 +1,6 @@
 import { CompletedTask, Task } from "../../types/types";
 import { getCurrentMillis, getTodayKey } from "../../utils/date-utils";
+import { TagUtils } from "../../utils/tag-utils";
 
 /***
  * This class functionalities should be accessed through `StateStore`.
@@ -96,6 +97,7 @@ export class BaseTasksState {
 
     private internalAddOrUpdateTask(key: number, task: Task | CompletedTask,
                                     tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
+
         const reducedList = [...tasks.get(key) || []].filter(t => t.id !== task.id)
         reducedList.push(task)
         const newTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(tasks)

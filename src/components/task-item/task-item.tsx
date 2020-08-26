@@ -15,12 +15,13 @@ import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
 import { StateStore } from "../../state-stores/tasks/state-store";
 import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { TagUtils } from "../../utils/tag-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         itemText: {
             font: 'inherit',
-            width: '93%',
+            width: '92%',
             cursor: 'pointer',
             fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
             fontSize: '16px',
@@ -88,11 +89,13 @@ export default function TaskItem(props: TaskItemProps) {
     };
 
     const updateTask = (value: string) => {
+        const tags = TagUtils.getTags(value)
         StateStore.handleTaskAdditionOrUpdation(props.task.plannedOn,
             {
                 ...props.task,
                 value: value,
-                updatedOn: getCurrentMillis()
+                updatedOn: getCurrentMillis(),
+                tags: tags,
             })
         setTaskItemState({
             ...taskItemState,

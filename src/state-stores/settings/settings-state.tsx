@@ -50,21 +50,9 @@ export class SettingsStateStore {
     }
 
     private static setDefaultsIfNotAvailable = () => {
-        let toggleSettings = new Map<SettingsType, boolean>();
-        let objectSettings = new Map<SettingsType, any>();
-        const stateFromStorage = SettingsStateStorage.load()
+        let {toggleSettings, objectSettings} = SettingsStateStore.loadSettings();
 
-        if (stateFromStorage !== undefined) {
-            toggleSettings = stateFromStorage.toggleSettings
-            objectSettings = stateFromStorage.objectSettings
-        } else {
-            SettingsStateStore.toggleAppLoader(true)
-            toggleSettings.set(SettingsType.FULL_MODE, true)
-            toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
-            toggleSettings.set(SettingsType.SHOW_AM_PM, true)
-        }
-
-        if(!toggleSettings.get(SettingsType.BUCKETED_STORE_MIGRATION_COMPLETE)) {
+        if (!toggleSettings.get(SettingsType.BUCKETED_STORE_MIGRATION_COMPLETE)) {
             migrateToBucketedKeySupport();
             // Mark migration complete
             toggleSettings.set(SettingsType.BUCKETED_STORE_MIGRATION_COMPLETE, true)
@@ -83,35 +71,44 @@ export class SettingsStateStore {
 
                     // Update state & store only after loading image.
                     // DO-NOT take this state-update out of promise.then
-                    toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
-                    toggleSettings.set(SettingsType.APP_LOADING, false)
-                    SettingsStateStore.updateState({
-                        toggleSettings: toggleSettings,
-                        objectSettings: objectSettings
-                    });
+                    SettingsStateStore.saveSettings(toggleSettings, objectSettings);
                 }).catch(reason => {
-                    toggleSettings.set(SettingsType.APP_LOADING, false)
-                    toggleSettings.set(SettingsType.BACKGROUND_MODE, false)
-                    SettingsStateStore.updateState({
-                        toggleSettings: toggleSettings,
-                        objectSettings: objectSettings
-                    })
+                    SettingsStateStore.saveSettings(toggleSettings, objectSettings);
                 })
             }).catch(reason => {
-                toggleSettings.set(SettingsType.APP_LOADING, false)
-                toggleSettings.set(SettingsType.BACKGROUND_MODE, false)
-                SettingsStateStore.updateState({
-                    toggleSettings: toggleSettings,
-                    objectSettings: objectSettings
-                })
+                SettingsStateStore.saveSettings(toggleSettings, objectSettings);
             })
         } else {
-            toggleSettings.set(SettingsType.APP_LOADING, false)
-            SettingsStateStore.updateState({
-                toggleSettings: toggleSettings,
-                objectSettings: objectSettings
-            })
+            SettingsStateStore.saveSettings(toggleSettings, objectSettings);
         }
+    }
+
+    private static saveSettings(toggleSettings: Map<SettingsType, boolean>, objectSettings: Map<SettingsType, any>) {
+
+        toggleSettings.set(SettingsType.APP_LOADING, false)
+
+        SettingsStateStore.updateState({
+            toggleSettings: toggleSettings,
+            objectSettings: objectSettings
+        });
+    }
+
+    private static loadSettings() {
+        let toggleSettings = new Map<SettingsType, boolean>();
+        let objectSettings = new Map<SettingsType, any>();
+        const stateFromStorage = SettingsStateStorage.load()
+
+        if (stateFromStorage !== undefined) {
+            toggleSettings = stateFromStorage.toggleSettings
+            objectSettings = stateFromStorage.objectSettings
+        } else {
+            SettingsStateStore.toggleAppLoader(true)
+            toggleSettings.set(SettingsType.FULL_MODE, true)
+            toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
+            toggleSettings.set(SettingsType.SHOW_AM_PM, true)
+            toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
+        }
+        return {toggleSettings, objectSettings};
     }
 
     public static updateState = (newState: SettingsState, persist: boolean = true) => {
@@ -232,7 +229,7 @@ class SettingsStateStorage {
 
         const persistedState = localStorage.getItem(SettingsStateStorage.key);
 
-        if(persistedState === null){
+        if (persistedState === null) {
             return undefined
         }
 
