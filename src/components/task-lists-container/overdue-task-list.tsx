@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { Task } from "../../types/types";
 import TaskItem from "../task-item/task-item";
 import AppAccordion from "../common/app-accordian";
-import { StateStore } from "../../state-stores/tasks/state-store";
+import { AppStateService } from "../../state-stores/tasks/app-state-service";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,7 +33,11 @@ interface OverdueTaskListProps {
 export default function OverdueTaskList(props: OverdueTaskListProps) {
 
     const classes = useStyles();
-    const overdueTaskList = StateStore.getOverdueTasks()
+    const overdueTaskList = AppStateService.getOverdueTasks()
+
+    if(overdueTaskList.isEmpty()) {
+        return null
+    }
 
     const getTasks = (tasks: Task[]) => {
         return tasks.map((value, index) => {

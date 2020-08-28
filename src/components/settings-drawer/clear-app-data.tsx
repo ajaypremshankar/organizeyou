@@ -6,14 +6,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper, { PaperProps } from '@material-ui/core/Paper';
-import { clearAppState } from "../../state-stores/tasks/app-state-facade-utils";
 import ClearAllIcon from '@material-ui/icons/ClearAll';
-import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
 import { getTransparentBackgroundColor } from "../../utils/theme-utils";
+import { AppStateRepository } from "../../state-stores/tasks/app-state-repository";
 
 function PaperComponent(props: PaperProps) {
     return (
-            <Paper style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.6)}} {...props} />
+            <Paper style={{background: getTransparentBackgroundColor(SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE), 0.6)}} {...props} />
     );
 }
 
@@ -56,7 +56,7 @@ export default function ClearAppData(props: ClearAppDataProps) {
                         Cancel
                     </Button>
                     <Button onClick={() => {
-                        clearAppState()
+                        AppStateRepository.clearAppState()
                         handleClose()
                     }} color="secondary">
                         Clear app data

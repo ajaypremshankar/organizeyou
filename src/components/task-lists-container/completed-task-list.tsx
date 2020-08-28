@@ -10,8 +10,10 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RestoreIcon from '@material-ui/icons/Restore';
 import { formatToListTitle } from "../../utils/date-utils";
 import AppAccordion from "../common/app-accordian";
-import { StateStore } from "../../state-stores/tasks/state-store";
-import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { AppStateService } from "../../state-stores/tasks/app-state-service";
+import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
+import Tooltip from "@material-ui/core/Tooltip";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,20 +43,26 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
 
     const classes = useStyles();
 
+    const completedTasks = AppStateService.getCompletedTasks()
+
+    if(completedTasks.isEmpty()) {
+        return null
+    }
+
     return (
         <div>
             <AppAccordion
                 id={'completed-task'}
-                initialExpanded={false}
+                initialExpanded={SettingsStateService.isHashTagsVisible()}
                 summary={
                     <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {StateStore.getCompletedTasks().title.toUpperCase()}
+                        {completedTasks.title.toUpperCase()} {SettingsStateService.isShowAllTasks() ? "" : ` (${AppStateService.getEffectiveTitle().toUpperCase()})` }
                     </Typography>
                 }
                 details={
                     <List className={classes.list}>
                         {
-                            (StateStore.getCompletedTasks().tasks as CompletedTask[])
+                            (completedTasks.tasks as CompletedTask[])
                                 .map((value, index) => {
                                     const labelId = `completed-task-list-label-${value.id}`;
 
@@ -68,7 +76,7 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
                                                 primaryTypographyProps={{
                                                     style: {
                                                         textDecoration: 'line-through',
-                                                        fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
+                                                        fontWeight: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
                                                         fontSize: '16px',
                                                         fontFamily: '"Helvetica-Neue", Helvetica, Arial',
                                                         width: '92%',
@@ -81,8 +89,16 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
                                             />
                                             <ListItemSecondaryAction>
                                                 <IconButton edge="start" aria-label="restore"
-                                                            onClick={() => StateStore.handleUndoComplete(value)}>
+                                                            onClick={() => AppStateService.handleUndoComplete(value)}>
+                                                    <Tooltip title="Restore to pending" aria-label={`restore-task-tooltip-${labelId}`}>
                                                     <RestoreIcon/>
+                                                    </Tooltip>
+                                                </IconButton>
+                                                <IconButton edge="end" aria-label={`delete-${labelId}`}
+                                                            onClick={() => AppStateService.handleCompletedTaskDeletion(value)}>
+                                                    <Tooltip title="Delete task" aria-label={`delete-task-tooltip-${labelId}`}>
+                                                        <DeleteIcon fontSize={"small"}/>
+                                                    </Tooltip>
                                                 </IconButton>
                                             </ListItemSecondaryAction>
                                         </ListItem>

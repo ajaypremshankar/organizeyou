@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import { SettingsStateStore, SettingsType } from "../../../state-stores/settings/settings-state";
+import { SettingsStateService, SettingsType } from "../../../state-stores/settings/settings-state";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -27,7 +27,7 @@ export default function SettingsGear(props: SettingsGearProps) {
     return (
         <div>
             <ToggleButtonGroup
-                style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.3)}}
+                style={{background: getTransparentBackgroundColor(SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE), 0.3)}}
                 exclusive
                 size={"small"}
                 orientation="vertical"

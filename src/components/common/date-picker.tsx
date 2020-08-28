@@ -5,10 +5,10 @@ import DateFnsUtils from "@date-io/date-fns";
 import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
 import { Task } from "../../types/types";
-import { StateStore } from "../../state-stores/tasks/state-store";
+import { AppStateService } from "../../state-stores/tasks/app-state-service";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { ThemeProvider } from "@material-ui/styles";
-import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,20 +49,20 @@ export default function AppDatePicker(props: AppDatePickerProps) {
         overrides: {
             MuiPaper: {
                 root: {
-                    opacity: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 0.8 : 1
+                    opacity: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 0.8 : 1
                 }
             }
         },
         palette: {
-            type: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) && !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'dark' : 'light',
+            type: SettingsStateService.isEnabled(SettingsType.DARK_THEME) && !SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 'dark' : 'light',
             primary: {
-                main: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) && !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? '#FFFF' : '#1976d2',
+                main: SettingsStateService.isEnabled(SettingsType.DARK_THEME) && !SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? '#FFFF' : '#1976d2',
             },
         },
 
     });
 
-    const tasksMap: Map<number, Task[]> = StateStore.getTasks()
+    const tasksMap: Map<number, Task[]> = AppStateService.getTasks()
 
     return (
 

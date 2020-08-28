@@ -1,32 +1,125 @@
+import { CompletedTask, HashTagTaskMapping, Task } from "../types/types";
+
 export class TagUtils {
-    private static regexp = /\B\#\w\w+\b/g
+
+    private static regexp = /\B#\w\w+\b/g
     public static getTags = (content: string): string[] => {
         return (content.match(TagUtils.regexp) || [])
             .map(function (s) {
-                return s.trim()
+                return s.trim().replace("#", "").toLowerCase()
             });
     }
 
-    public static assignColors = (tags: string[], existingSettings: Map<string, string>) => {
+    public static addHashTags = (newTask: Task, allTagsMap: Map<string, HashTagTaskMapping[]>)
+        : Map<string, HashTagTaskMapping[]> => {
 
-        tags.forEach((tag) => {
-            let color = TagUtils.getRandomColor()
-            while (existingSettings.get(color)) {
-                color = TagUtils.getRandomColor()
-            }
+        const newTags = newTask ? newTask.tags : []
+        const tagTaskMap: Map<string, HashTagTaskMapping[]> = new Map<string, HashTagTaskMapping[]>();
 
-            existingSettings.set(color, tag)
+        (newTags || []).forEach(tag => {
+            const tagTaskArr: HashTagTaskMapping[] = allTagsMap.get(tag) || []
+            tagTaskArr.push({
+                value: tag,
+                plannedOn: newTask.plannedOn,
+                taskId: newTask.id,
+                completed: false
+            })
+            tagTaskMap.set(tag, tagTaskArr)
         })
 
-        return existingSettings
+        return tagTaskMap
     }
 
-    private static getRandomColor = () => {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
+    public static deleteHashTags = (targetTask: Task | CompletedTask, allTagsMap: Map<string, HashTagTaskMapping[]>)
+        : Map<string, HashTagTaskMapping[]> => {
+
+        const existingTags = targetTask ? targetTask.tags : []
+
+        const tagTaskMap: Map<string, HashTagTaskMapping[]> = new Map<string, HashTagTaskMapping[]>();
+
+        (existingTags || []).forEach(existingTag => {
+            const tagTaskArr: HashTagTaskMapping[] = allTagsMap.get(existingTag) || []
+            tagTaskMap.set(existingTag, tagTaskArr.filter(x => x.taskId !== targetTask.id))
+        })
+
+        return tagTaskMap
+    }
+
+    public static addOrUpdateHashTags = (currentTask: Task | null, updatedTask: Task | null,
+                                    allTagsMap: Map<string, HashTagTaskMapping[]>)
+        : Map<string, HashTagTaskMapping[]> => {
+
+        const existingTags = currentTask ? currentTask.tags : []
+        const newTags = updatedTask ? updatedTask.tags : []
+
+        if (existingTags === newTags) return new Map<string, HashTagTaskMapping[]>()
+
+        return new Map([
+            ...(currentTask ? Array.from(TagUtils.deleteHashTags(currentTask, allTagsMap).entries()) : []),
+            ...(updatedTask ? Array.from(TagUtils.addHashTags(updatedTask, allTagsMap).entries()) : []),
+        ])
+    }
+
+    public static moveHashTags = (movedTask: Task, allTagsMap: Map<string, HashTagTaskMapping[]>)
+        : Map<string, HashTagTaskMapping[]> => {
+
+        const existingTags = movedTask ? movedTask.tags : []
+
+        const tagTaskMap: Map<string, HashTagTaskMapping[]> = new Map<string, HashTagTaskMapping[]>();
+
+        (existingTags || []).forEach(existingTag => {
+            const tagTaskArr: HashTagTaskMapping[] = allTagsMap.get(existingTag) || []
+
+            tagTaskMap.set(existingTag, tagTaskArr.map(value => {
+                return {
+                    ...value,
+                    plannedOn: movedTask.plannedOn,
+                }
+            }))
+        })
+
+        return tagTaskMap
+    }
+
+    public static completeHashTags = (completedTask: CompletedTask, allTagsMap: Map<string, HashTagTaskMapping[]>)
+        : Map<string, HashTagTaskMapping[]> => {
+
+        const existingTags = completedTask ? completedTask.tags : []
+
+        const tagTaskMap: Map<string, HashTagTaskMapping[]> = new Map<string, HashTagTaskMapping[]>();
+
+        (existingTags || []).forEach(existingTag => {
+            const tagTaskArr: HashTagTaskMapping[] = allTagsMap.get(existingTag) || []
+
+            tagTaskMap.set(existingTag, tagTaskArr.map(value => {
+                return {
+                    ...value,
+                    completed: true,
+                }
+            }))
+        })
+
+        return tagTaskMap
+    }
+
+    public static undoCompleteHashTags = (undoCompletedTask: Task, allTagsMap: Map<string, HashTagTaskMapping[]>)
+        : Map<string, HashTagTaskMapping[]> => {
+
+        const existingTags = undoCompletedTask ? undoCompletedTask.tags : []
+
+        const tagTaskMap: Map<string, HashTagTaskMapping[]> = new Map<string, HashTagTaskMapping[]>();
+
+        (existingTags || []).forEach(existingTag => {
+            const tagTaskArr: HashTagTaskMapping[] = allTagsMap.get(existingTag) || []
+
+            tagTaskMap.set(existingTag, tagTaskArr.map(value => {
+                return {
+                    ...value,
+                    completed: false,
+                }
+            }))
+        })
+
+        return tagTaskMap
     }
 }

@@ -23,4 +23,11 @@ export enum ListTitleType {
     ALL = 'all',
 }
 
+export interface HashTagTaskMapping {
+    value: string
+    plannedOn: number
+    taskId: number
+    completed: boolean
+}
+
 export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => number

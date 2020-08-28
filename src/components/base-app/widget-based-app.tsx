@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { initSyncStorageListener } from "../../state-stores/tasks/app-state-facade-utils";
-import { StateStore } from "../../state-stores/tasks/state-store";
-import { BaseTasksState } from "../../state-stores/tasks/base-tasks-state";
+import { AppStateService } from "../../state-stores/tasks/app-state-service";
+import { TasksState } from "../../state-stores/tasks/tasks-state";
 import CenterGrid from "./center-grid";
 import LeftGrid from "./left-grid";
 import RightGrid from "./right-grid";
 import { getRootPaperStyle, getTheme } from "../../utils/theme-utils";
-import { SettingsStateStore } from "../../state-stores/settings/settings-state";
+import { SettingsStateService } from "../../state-stores/settings/settings-state";
 import AppLoader from "../common/app-loader";
+import { AppStateRepository } from "../../state-stores/tasks/app-state-repository";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,27 +26,27 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function WidgetBasedApp() {
     const classes = useStyles();
     const [baseState, setBaseState] = useState(
-        BaseTasksState.emptyState()
+        TasksState.emptyState()
     )
 
     const [settingsState, setSettingsState] = useState(
-        SettingsStateStore.emptyState()
+        SettingsStateService.emptyState()
     )
 
-    StateStore.initStore(baseState, setBaseState)
-    SettingsStateStore.initStore(settingsState, setSettingsState)
+    AppStateService.initStore(baseState, setBaseState)
+    SettingsStateService.initStore(settingsState, setSettingsState)
 
     useEffect(() => {
-        StateStore.loadState()
-        initSyncStorageListener()
+        AppStateService.loadState()
+        AppStateRepository.initSyncStorageListener()
     }, [])
 
     useEffect(() => {
-        SettingsStateStore.loadState()
+        SettingsStateService.loadState()
     }, [])
 
     useEffect(() => {
-        const pendingTasksCount = StateStore.pendingTasksCount()
+        const pendingTasksCount = AppStateService.pendingTasksCount()
         document.title = `(${pendingTasksCount}) ${pendingTasksCount === 1 ? 'task' : 'tasks'} pending`
     }, [baseState, baseState.tasks])
 

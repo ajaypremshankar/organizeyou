@@ -13,8 +13,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { formatToListTitle, getCurrentMillis } from "../../utils/date-utils";
 import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
-import { StateStore } from "../../state-stores/tasks/state-store";
-import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { AppStateService } from "../../state-stores/tasks/app-state-service";
+import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
 import { TagUtils } from "../../utils/tag-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
             font: 'inherit',
             width: '92%',
             cursor: 'pointer',
-            fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
+            fontWeight: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold' : 'normal',
             fontSize: '16px',
             fontFamily: '"Helvetica-Neue", Helvetica, Arial',
             wordWrap: 'break-word'
@@ -40,16 +40,13 @@ interface TaskItemProps {
 }
 
 const getTaskContentWithTooltip = (value: string, props: TaskItemProps) => {
-    const labelId = `task-item-label-${props.task.id}`;
     return (
-        <Tooltip title="Click to edit" aria-label={`tooltip-${labelId}`}>
-                <span>
+        <span>
             {value}
-                    <span style={{color: 'lightgray', font: 'caption'}}>
+            <span style={{color: 'lightgray', font: 'caption'}}>
                 {props.showPlannedOn ? ` (planned on ${formatToListTitle(props.task.plannedOn)})` : ''}
             </span>
-                </span>
-        </Tooltip>)
+        </span>)
 }
 
 export default function TaskItem(props: TaskItemProps) {
@@ -72,8 +69,7 @@ export default function TaskItem(props: TaskItemProps) {
     const handleTaskDateChange = (newPlannedOn: number) => {
 
         if (newPlannedOn !== props.task.plannedOn) {
-            StateStore.handleTaskMovement(props.task.plannedOn,
-                newPlannedOn,
+            AppStateService.handleTaskMovement(props.task.plannedOn,
                 {
                     ...props.task,
                     plannedOn: newPlannedOn,
@@ -88,9 +84,17 @@ export default function TaskItem(props: TaskItemProps) {
         setDatePickerState(!datePickerState)
     };
 
+    const handleTaskCompletion = () => {
+        AppStateService.handleTaskCompletion({
+            ...props.task,
+            updatedOn: getCurrentMillis(),
+            completedDate: getCurrentMillis()
+        })
+    };
+
     const updateTask = (value: string) => {
         const tags = TagUtils.getTags(value)
-        StateStore.handleTaskAdditionOrUpdation(props.task.plannedOn,
+        AppStateService.handleTaskAdditionOrUpdation(props.task,
             {
                 ...props.task,
                 value: value,
@@ -142,11 +146,12 @@ export default function TaskItem(props: TaskItemProps) {
 
             <ListItemIcon>
                 <Checkbox
+                    size={"small"}
                     edge="start"
                     tabIndex={-1}
                     disableRipple
                     inputProps={{'aria-labelledby': labelId}}
-                    onClick={() => StateStore.handleTaskCompletion(props.task.plannedOn, props.task)}
+                    onClick={handleTaskCompletion}
                 />
             </ListItemIcon>
             <ListItemText
@@ -163,14 +168,14 @@ export default function TaskItem(props: TaskItemProps) {
                         setDatePickerState(true)
                     }}
                     edge="start" aria-label={`move-${labelId}`}>
-                    <Tooltip title="Click to change date" aria-label={`change-date-tooltip-${labelId}`}>
-                        <EventIcon/>
+                    <Tooltip title="Move task to other date" aria-label={`change-date-tooltip-${labelId}`}>
+                        <EventIcon fontSize={"small"}/>
                     </Tooltip>
                 </IconButton>
                 <IconButton edge="end" aria-label={`delete-${labelId}`}
-                            onClick={() => StateStore.handleTaskDeletion(props.task.plannedOn, props.task)}>
-                    <Tooltip title="Click to delete task" aria-label={`delete-task-tooltip-${labelId}`}>
-                        <DeleteIcon/>
+                            onClick={() => AppStateService.handleTaskDeletion(props.task)}>
+                    <Tooltip title="Delete task" aria-label={`delete-task-tooltip-${labelId}`}>
+                        <DeleteIcon fontSize={"small"}/>
                     </Tooltip>
                 </IconButton>
             </ListItemSecondaryAction>}

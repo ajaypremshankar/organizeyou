@@ -1,26 +1,17 @@
 import { CompletedTask, Task, TaskSorter } from "./types";
-import { KeyTitlePair } from "./key-title-pair";
 
 export class DisplayableTaskList {
 
-    private readonly _keyTitle: KeyTitlePair;
+    private readonly _title: string;
     private readonly _tasks: Task[] | CompletedTask[];
 
-    constructor(key: number, tasks: Task[] | CompletedTask[], sorter: TaskSorter = DisplayableTaskList.defaultAscSorting) {
-        this._keyTitle = new KeyTitlePair(key);
+    constructor(title: string, tasks: Task[] | CompletedTask[], sorter: TaskSorter = DisplayableTaskList.defaultAscSorting) {
+        this._title = title;
         this._tasks = tasks.sort(sorter)
     }
 
-    get key(): number {
-        return this._keyTitle.key;
-    }
-
     get title(): string {
-        return this._keyTitle.title;
-    }
-
-    get keyTitle(): KeyTitlePair {
-        return this._keyTitle;
+        return this._title;
     }
 
     get tasks(): Task[] | CompletedTask[] {

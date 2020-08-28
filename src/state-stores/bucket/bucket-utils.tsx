@@ -1,5 +1,5 @@
-import { CompletedTask, Task } from "../../types/types";
-import { BaseTasksState } from "./base-tasks-state";
+import { CompletedTask, HashTagTaskMapping, Task } from "../../types/types";
+import { TasksState } from "../tasks/tasks-state";
 
 export enum TASK_STATE_ACTION {
     ADD_UPDATE_TASK,
@@ -7,28 +7,32 @@ export enum TASK_STATE_ACTION {
     DELETE_TASK,
     COMPLETE_TASK,
     UNDO_COMPLETE_TASK,
+    DELETE_COMPLETED_TASK,
 }
 
 export enum TASK_BUCKET_TYPE {
     ACTIVE_TASK = 'oy_at_',
     COMPLETED_TASK = 'oy_ct_',
+    HASH_TAGS = 'oy_ht_'
 }
 
 export class BucketUtils {
     public static deserializeToBaseState = (storageData: any): any => {
         if (storageData) {
-            let baseState: BaseTasksState = BaseTasksState.emptyState()
+            let baseState: TasksState = TasksState.emptyState()
             for (const storageKey in storageData) {
                 if (storageKey.startsWith(TASK_BUCKET_TYPE.ACTIVE_TASK)) {
                     baseState = BucketUtils.pushBucketedTasksToBaseState(baseState, TASK_BUCKET_TYPE.ACTIVE_TASK, storageData[storageKey])
                 } else if (storageKey.startsWith(TASK_BUCKET_TYPE.COMPLETED_TASK)) {
                     baseState = BucketUtils.pushBucketedTasksToBaseState(baseState, TASK_BUCKET_TYPE.COMPLETED_TASK, storageData[storageKey])
+                } else if (storageKey.startsWith(TASK_BUCKET_TYPE.HASH_TAGS)) {
+                    baseState = BucketUtils.pushBucketedTasksToBaseState(baseState, TASK_BUCKET_TYPE.HASH_TAGS, storageData[storageKey])
                 }
             }
             return baseState
         }
 
-        return BaseTasksState.emptyState()
+        return TasksState.emptyState()
     }
 
     public static getBucketedState = (action: TASK_STATE_ACTION, plannedOn: number,
@@ -97,7 +101,23 @@ export class BucketUtils {
                 let activeTasks = [...currentStorageData[activeBucketKey] || [], targetTask]
                 syncState[currentlyCompleteKey] = newCompleteTasks
                 syncState[activeBucketKey] = activeTasks
+                break;
+            case TASK_STATE_ACTION.DELETE_COMPLETED_TASK:
+                const toBeDeletedCompleteKey = BucketUtils.getBucketKey(targetTask.plannedOn, true)
+                const postDeleteCompleteTasks = [...((currentStorageData[toBeDeletedCompleteKey] || []) as CompletedTask[])
+                    .filter(t => t.id !== targetTask.id)]
+                syncState[toBeDeletedCompleteKey] = postDeleteCompleteTasks
         }
+
+        return syncState
+    }
+
+    public static getHashTagBuckets = (deltaTagsMap: Map<string, HashTagTaskMapping[]>): any => {
+        let syncState: any = {}
+
+        deltaTagsMap.forEach((value, key) => {
+            syncState[`${TASK_BUCKET_TYPE.HASH_TAGS}${key}`] = value
+        })
 
         return syncState
     }
@@ -126,17 +146,21 @@ export class BucketUtils {
      * @param bucketType
      * @param bucketedValue
      */
-    private static pushBucketedTasksToBaseState = (currentState: BaseTasksState,
-                                                   bucketType: TASK_BUCKET_TYPE, bucketedValue: any[]): BaseTasksState => {
+    private static pushBucketedTasksToBaseState = (currentState: TasksState,
+                                                   bucketType: TASK_BUCKET_TYPE, bucketedValue: any[]): TasksState => {
         if (!bucketType || !bucketedValue) return currentState
         if (bucketType === TASK_BUCKET_TYPE.ACTIVE_TASK) {
             return currentState.addTasks(bucketedValue)
         } else if (bucketType === TASK_BUCKET_TYPE.COMPLETED_TASK) {
-            return BaseTasksState.newStateFrom(
+            return TasksState.newStateFrom(
                 currentState.selectedDate,
+                currentState.selectedList,
                 currentState.tasks,
-                [...currentState.completedTasks, ...bucketedValue as CompletedTask[]]
+                [...currentState.completedTasks, ...bucketedValue as CompletedTask[]],
+                new Map<string, HashTagTaskMapping[]>(currentState.hashTags)
             )
+        } else if (bucketType === TASK_BUCKET_TYPE.HASH_TAGS) {
+            return currentState.addHashTags(bucketedValue)
         } else {
             return currentState
         }
