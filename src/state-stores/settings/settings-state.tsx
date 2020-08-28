@@ -16,7 +16,7 @@ export enum SettingsType {
     FULL_MODE = 'Full mode',
     BUCKETED_STORE_MIGRATION_COMPLETE = 'oy_m_t_b_s',
     APP_LOADING = 'app_loading',
-    SHOWING_HASH_TAGS = 'showing_hash_tags',
+    SHOWING_HASH_TAG_BASED_LIST = 'showing_hash_tag_based_list',
 }
 
 /***
@@ -60,7 +60,7 @@ export class SettingsStateService {
         }
 
         // Every app load should reset hash-tags showing
-        toggleSettings.set(SettingsType.SHOWING_HASH_TAGS, false)
+        toggleSettings.set(SettingsType.SHOWING_HASH_TAG_BASED_LIST, false)
 
         const background = objectSettings.get(SettingsType.BACKGROUND_MODE)
 
@@ -98,12 +98,12 @@ export class SettingsStateService {
     }
 
     public static isHashTagsVisible = () => {
-        return SettingsStateService.isEnabled(SettingsType.SHOWING_HASH_TAGS)
+        return SettingsStateService.isEnabled(SettingsType.SHOWING_HASH_TAG_BASED_LIST)
     }
 
     public static setShowHashTags = (toValue: boolean) => {
         const toggleSettings = new Map<SettingsType, boolean>(SettingsStateService.settingsState.toggleSettings)
-        toggleSettings.set(SettingsType.SHOWING_HASH_TAGS, toValue)
+        toggleSettings.set(SettingsType.SHOWING_HASH_TAG_BASED_LIST, toValue)
 
         const settings: SettingsState = {
             toggleSettings: toggleSettings,

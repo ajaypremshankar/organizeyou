@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import { getTodayKey, getTomorrowKey, neitherTodayNorTomorrow } from "../../../utils/date-utils";
+import { getTodayKey, getTomorrowKey, isPastKey, neitherTodayNorTomorrow } from "../../../utils/date-utils";
 import { KeyTitleUtils } from "../../../utils/key-title-utils";
 import AppDatePicker from "../../common/date-picker";
 
@@ -68,7 +68,7 @@ export default function DaySelectButtonGroup(props: DaySelectButtonGroupProps) {
                     variant={neitherTodayNorTomorrow(props.date) ? 'contained' : 'outlined'}
                     onClick={() => {
                         setDatePickerState(true)
-                    }}>{neitherTodayNorTomorrow(props.date) ? KeyTitleUtils.getTitleByKey(props.date) : 'Date'}</Button>
+                    }}>{ !isPastKey(props.date) && neitherTodayNorTomorrow(props.date) ? KeyTitleUtils.getTitleByKey(props.date) : 'Date'}</Button>
             </ButtonGroup>
         </div>
     );
