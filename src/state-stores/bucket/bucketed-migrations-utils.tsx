@@ -1,13 +1,13 @@
 import { CompletedTask, HashTagTaskMapping, Task } from "../../types/types";
 import { BucketUtils, TASK_STATE_ACTION } from "./bucket-utils";
-import { hasChromeStoragePermission } from "../../utils/platform-utils";
+import { hasBrowserStoragePermission } from "../../utils/platform-utils";
 import { TasksState } from "../tasks/tasks-state";
 import { getTodayKey } from "../../utils/date-utils";
 import { AppStateService } from "../tasks/app-state-service";
 import { KeyTitleUtils } from "../../utils/key-title-utils";
 
 const loadNonBucketedStorage = (): Promise<TasksState> => {
-    if (hasChromeStoragePermission()) {
+    if (hasBrowserStoragePermission()) {
         return getNonBucketedBrowserStorage()
     } else {
         return getNonBucketedLocalStorage()
@@ -31,7 +31,7 @@ const getNonBucketedBrowserStorage = (): Promise<TasksState> => {
                     resolve(TasksState.newStateFrom(
                         // Load today by default.
                         getTodayKey(),
-                        KeyTitleUtils.getTitleByKey(getTodayKey()),
+                        "",
                         allTasks,
                         completedTasks,
                         new Map<string, HashTagTaskMapping[]>()
@@ -60,7 +60,7 @@ const getNonBucketedLocalStorage = (): Promise<TasksState> => {
     const loadedLocalBaseState = TasksState.newStateFrom(
         // Load today by default
         getTodayKey(),
-        KeyTitleUtils.getTitleByKey(getTodayKey()),
+        "",
         new Map<number, Task[]>(updatedState.tasks),
         updatedState.completedTasks,
         new Map<string, HashTagTaskMapping[]>()
@@ -90,7 +90,7 @@ export const migrateToBucketedKeySupport = () => {
 
         // clear old state
         if (bucketedData !== {}) {
-            if (hasChromeStoragePermission()) {
+            if (hasBrowserStoragePermission()) {
                 chrome.storage.sync.clear(() => {
                     // Once clear, persist new state
                     chrome.storage.sync.set(bucketedData)

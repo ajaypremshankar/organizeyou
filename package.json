@@ -19,6 +19,7 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
+    "prebuild": "react-scripts test --watchAll",
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false && react-scripts build",
     "test": "react-scripts test",

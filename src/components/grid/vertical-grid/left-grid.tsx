@@ -16,8 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function LeftGrid() {
     const classes = useStyles();
 
-    const leftWidgets: JSX.Element[] = [
-    ]
+    const leftWidgets: JSX.Element[] = []
 
     return (
         <Grid item xs={3} key={`left-grid-item`}>

@@ -72,15 +72,18 @@ export default function DayBasedTaskList(props: DayBasedTaskListProps) {
         })
     }
 
+    function getSummary() {
+        return <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
+            {targetTaskList.title.toUpperCase()}
+        </Typography>;
+    }
+
     return (
         <div>
             <AppAccordion
                 id={`${targetTaskList.title}-task`}
                 initialExpanded={true}
-                summary={
-                    <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {targetTaskList.title.toUpperCase()}
-                    </Typography>}
+                summary={getSummary()}
                 details={
                     <List className={classes.list}>
                         {getTasks()}

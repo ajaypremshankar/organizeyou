@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         noHashtags: {
             fontSize: "small",
-            color: 'gray'
+            color: 'secondary'
         }
     }),
 );
@@ -30,12 +30,14 @@ interface HashTagsWidgetProps {
 export default function HashTagsWidget(props: HashTagsWidgetProps) {
     const classes = useStyles();
     const sortedKeyValueArr = Array.from(AppStateService.getHashTags().entries())
+        .map(value => [value[0], [...value[1].filter(x => !x.completed)]])
+        .filter(value => value[1].length > 0)
         .sort((a, b) => b[1].length - a[1].length)
         .slice(0, 5)
 
     if (sortedKeyValueArr.length === 0) {
         return <div className={classes.root}>
-            <span className={classes.noHashtags}>Your #tags will appear here.</span>
+            <span className={classes.noHashtags}>Your top 5 #tags will appear here.</span>
         </div>
     }
 
@@ -51,19 +53,16 @@ export default function HashTagsWidget(props: HashTagsWidgetProps) {
             <div className={classes.root}>{
                 sortedKeyValueArr
                     .map((value, index) => {
-                        const noOfHashTags = value[1].filter(x => !x.completed).length
-
-                        if (noOfHashTags <= 0) return null
 
                         const color = ColorUtils.getColorAt(index)
-                        return <span key={value[0]}
+                        return <span key={value[0] as string}
                                      style={{
                                          cursor: 'pointer',
                                          color: `${color}`,
                                          fontWeight: AppStateService.getSelectedList() === value[0] ? "bold" : "normal",
                                          fontSize: AppStateService.getSelectedList() === value[0] ? 'large' : 'medium'
-                                     }} onClick={() => AppStateService.updateCurrentlySelectedList(value[0])}>
-                            {getSupSuffix(value[0], noOfHashTags)}
+                                     }} onClick={() => AppStateService.updateCurrentlySelectedList(value[0] as string)}>
+                            {getSupSuffix(value[0] as string, value[1].length)}
                         </span>
                     })}
             </div>

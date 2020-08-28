@@ -42,6 +42,9 @@ export default function DaySelectButtonGroup(props: DaySelectButtonGroupProps) {
         <div className={classes.fullWidth}>
             <ButtonGroup
                 size="large"
+                disableRipple
+                disableFocusRipple
+                disableElevation
                 color="primary"
                 className={classes.buttonGroup}
                 aria-label="large button group"

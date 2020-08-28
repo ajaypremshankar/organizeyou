@@ -35,7 +35,7 @@ export default function OverdueTaskList(props: OverdueTaskListProps) {
     const classes = useStyles();
     const overdueTaskList = AppStateService.getOverdueTasks()
 
-    if(overdueTaskList.isEmpty()) {
+    if (overdueTaskList.isEmpty()) {
         return null
     }
 
@@ -46,26 +46,26 @@ export default function OverdueTaskList(props: OverdueTaskListProps) {
                 <TaskItem
                     showPlannedOn={true}
                     key={labelId} task={value}
-                    />
+                />
             );
         })
     }
 
+    function getSummary() {
+        return <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
+            {overdueTaskList.title.toUpperCase()}
+        </Typography>;
+    }
+
     return (
-        //This div saves overdue world from shaking. Don't ask me how!
-        <div>
-            <AppAccordion
-                id={'overdue-task'}
-                initialExpanded={true}
-                summary={
-                    <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {overdueTaskList.title.toUpperCase()}
-                    </Typography>
-                }
-                details={
-                    <List className={classes.list}>
-                        {getTasks(overdueTaskList.tasks)}
-                    </List>}/>
-        </div>
+        <AppAccordion
+            id={'overdue-task'}
+            initialExpanded={true}
+            summary={getSummary()}
+            details={
+                <List className={classes.list}>
+                    {getTasks(overdueTaskList.tasks)}
+                </List>}
+        />
     );
 }

@@ -4,13 +4,13 @@ import { Task } from "../../types/types";
 import { BucketUtils, TASK_STATE_ACTION } from "../bucket/bucket-utils";
 import { wrapThrottle } from "../../utils/wrapper-utils";
 import { AppStateService } from "./app-state-service";
-import { hasChromeStoragePermission } from "../../utils/platform-utils";
+import { hasBrowserStoragePermission } from "../../utils/platform-utils";
 
 
 export class AppStateRepository {
 
     public static updateAppState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task) => {
-        if (hasChromeStoragePermission()) {
+        if (hasBrowserStoragePermission()) {
             BrowserSyncStorageRepository.updateBrowserAppState(action, plannedOn, targetTask)
         } else {
             LocalStorageRepository.updateLocalAppState(action, plannedOn, targetTask)
@@ -18,7 +18,7 @@ export class AppStateRepository {
     }
 
     public static loadAppState = (): Promise<TasksState> => {
-        if (hasChromeStoragePermission()) {
+        if (hasBrowserStoragePermission()) {
             return BrowserSyncStorageRepository.loadBrowserAppState()
         } else {
             return LocalStorageRepository.loadLocalAppState()
@@ -26,7 +26,7 @@ export class AppStateRepository {
     }
 
     public static clearAppState = () => {
-        if (hasChromeStoragePermission()) {
+        if (hasBrowserStoragePermission()) {
             BrowserSyncStorageRepository.clearBrowserState()
         }
         LocalStorageRepository.clearLocalStorageState()
@@ -35,7 +35,7 @@ export class AppStateRepository {
 
     public static initSyncStorageListener = () => {
 
-        if (hasChromeStoragePermission()) {
+        if (hasBrowserStoragePermission()) {
             chrome.storage.onChanged.addListener(wrapThrottle(function (changes: any, area: any) {
                 if (area === "sync") {
                     AppStateService.loadState()

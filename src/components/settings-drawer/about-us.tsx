@@ -31,34 +31,42 @@ const useStyles = makeStyles({
 export default function AboutUs() {
     const classes = useStyles();
 
+    function getDetails() {
+        return <Card className={classes.card} variant="outlined">
+            <CardContent>
+                <Typography className={classes.posUp} variant="subtitle2">
+                    <Link target={'_blank'} color={'secondary'}
+                          href={`https://forms.gle/4eEfLWPqLWQCwkjA8`}>
+                        Report a bug
+                    </Link>
+                </Typography>
+                <Typography className={classes.posUp} variant="subtitle2">
+                    <Link target={'_blank'} color={'primary'}
+                          href={`https://forms.gle/dv3P8KpzvvWfA5ur6`}>
+                        Request a feature
+                    </Link>
+                </Typography>
+                <Divider/>
+                <Typography className={classes.posUp} variant="subtitle2">
+                    Having trouble using app? <br/>
+                    <ClearAppData/>
+                </Typography>
+            </CardContent>
+        </Card>;
+    }
+
+    function getSummary() {
+        return <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
+            v{process.env.REACT_APP_VERSION}
+        </Typography>;
+    }
+
     return (
-        <AppAccordion id={'about-us'}
-                      initialExpanded={false}
-                      summary={
-                          <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                              v{process.env.REACT_APP_VERSION}
-                          </Typography>
-                      }
-                      details={
-                          <Card className={classes.card} variant="outlined">
-                              <CardContent>
-                                  <Typography className={classes.posUp} variant="subtitle2">
-                                      <Link target={'_blank'} color={'secondary'}
-                                            href={`https://forms.gle/4eEfLWPqLWQCwkjA8`}>
-                                          Report a bug
-                                      </Link>
-                                  </Typography>
-                                  <Typography className={classes.posUp} variant="subtitle2">
-                                      <Link target={'_blank'} color={'primary'}
-                                            href={`https://forms.gle/dv3P8KpzvvWfA5ur6`}>
-                                          Request a feature
-                                      </Link>
-                                  </Typography>
-                                  <Divider/>
-                                  <Typography className={classes.posUp} variant="subtitle2">
-                                      Having trouble using app? <br/>
-                                      <ClearAppData/>
-                                  </Typography>
-                              </CardContent>
-                          </Card>}/>)
+        <AppAccordion
+            id={'about-us'}
+            initialExpanded={false}
+            summary={getSummary()}
+            details={getDetails()}
+        />
+    )
 }

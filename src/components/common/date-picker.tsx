@@ -8,6 +8,7 @@ import { Task } from "../../types/types";
 import { AppStateService } from "../../state-stores/tasks/app-state-service";
 import { ThemeProvider } from "@material-ui/styles";
 import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -63,6 +64,24 @@ export default function AppDatePicker(props: AppDatePickerProps) {
 
     const tasksMap: Map<number, Task[]> = AppStateService.getTasks()
 
+    function getRenderDay(day: MaterialUiPickersDate, selectedDate: MaterialUiPickersDate, dayInCurrentMonth: boolean, dayComponent: JSX.Element) {
+        if (day == null) return dayComponent
+
+        const currentKey = formatToKey(day)
+        const tasksOnDay = tasksMap.get(currentKey)
+        const isSelected = !isPastKey(currentKey) && dayInCurrentMonth
+            && tasksOnDay && tasksOnDay.length > 0;
+
+        // You can also use our internal <Day /> component
+        return isSelected ? <Badge
+            overlap="circle"
+            badgeContent={isSelected && tasksOnDay ? tasksOnDay.length : undefined}
+            variant={"dot"}
+            classes={{badge: classes.customBadge}}
+            color={"secondary"}>{dayComponent}</Badge> : dayComponent;
+
+    }
+
     return (
 
         <div style={{display: 'none'}}>
@@ -80,22 +99,7 @@ export default function AppDatePicker(props: AppDatePickerProps) {
                         format='yyyyMMdd'
                         open={props.open}
                         onClose={() => props.close()}
-                        renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-                            if (day == null) return dayComponent
-
-                            const currentKey = formatToKey(day)
-                            const tasksOnDay = tasksMap.get(currentKey)
-                            const isSelected = !isPastKey(currentKey) && isInCurrentMonth
-                                && tasksOnDay && tasksOnDay.length > 0;
-
-                            // You can also use our internal <Day /> component
-                            return isSelected ? <Badge
-                                overlap="circle"
-                                badgeContent={isSelected && tasksOnDay ? tasksOnDay.length : undefined}
-                                variant={"dot"}
-                                classes={{badge: classes.customBadge}}
-                                color={"secondary"}>{dayComponent}</Badge> : dayComponent;
-                        }}
+                        renderDay={getRenderDay}
                     />
                 </MuiPickersUtilsProvider>
             </ThemeProvider>

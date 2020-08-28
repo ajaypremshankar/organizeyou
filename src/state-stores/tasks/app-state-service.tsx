@@ -34,9 +34,14 @@ export class AppStateService {
             // Since selected Date is not persisted anymore.
             // Don't drop the ball, when it is set in state.
             const selectedDate = AppStateService.baseState?.selectedDate
+            const selectedList = AppStateService.baseState?.selectedList
             AppStateService.setBaseState(value)
             if (selectedDate) {
                 AppStateService.updateCurrentlySelectedDate(selectedDate)
+            }
+
+            if (selectedList) {
+                AppStateService.updateCurrentlySelectedList(selectedList)
             }
         })
     }
@@ -81,6 +86,7 @@ export class AppStateService {
     }
 
     public static getTargetTasks = (sorter?: TaskSorter) => {
+
         if (SettingsStateService.isEnabled(SettingsType.SHOW_ALL_TASKS)) {
             const reducedList: Task[] = []
 

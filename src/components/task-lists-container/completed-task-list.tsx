@@ -4,7 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import { CompletedTask } from "../../types/types";
+import { CompletedTask, Task } from "../../types/types";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RestoreIcon from '@material-ui/icons/Restore';
@@ -45,67 +45,85 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
 
     const completedTasks = AppStateService.getCompletedTasks()
 
-    if(completedTasks.isEmpty()) {
+    if (completedTasks.isEmpty()) {
         return null
+    }
+
+    const handleUndoComplete = (value: CompletedTask) => {
+
+        const task = {...value}
+        delete task.completedDate
+
+        AppStateService.handleUndoComplete(task)
+    }
+
+    function getSummary() {
+        return <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
+            {completedTasks.title.toUpperCase()} {SettingsStateService.isShowAllTasks() ? "" : ` (${AppStateService.getEffectiveTitle().toUpperCase()})`}
+        </Typography>;
+    }
+
+    function getListItem(value: CompletedTask) {
+        const labelId = `completed-task-list-label-${value.id}`;
+        return (
+            <ListItem
+                divider={true}
+                key={labelId}
+                role={undefined} dense button>
+                <ListItemText
+                    id={labelId}
+                    primaryTypographyProps={{
+                        style: {
+                            textDecoration: 'line-through',
+                            fontWeight: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold' : 'normal',
+                            fontSize: '16px',
+                            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+                            width: '92%',
+                            cursor: 'pointer',
+                            wordWrap: 'break-word'
+                        }
+                    }}
+                    primary={value.value}
+                    secondary={` — On ${formatToListTitle(new Date(value.completedDate))}`}
+                />
+                <ListItemSecondaryAction>
+                    <IconButton edge="start" aria-label="restore"
+                                onClick={() => handleUndoComplete(value)}>
+                        <Tooltip title="Restore to pending"
+                                 aria-label={`restore-task-tooltip-${labelId}`}>
+                            <RestoreIcon/>
+                        </Tooltip>
+                    </IconButton>
+                    <IconButton edge="end" aria-label={`delete-${labelId}`}
+                                onClick={() => AppStateService.handleCompletedTaskDeletion(value)}>
+                        <Tooltip title="Delete task" aria-label={`delete-task-tooltip-${labelId}`}>
+                            <DeleteIcon fontSize={"small"}/>
+                        </Tooltip>
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
+        );
+    }
+
+    function getDetails() {
+        return <List className={classes.list}>
+            {
+                (completedTasks.tasks as CompletedTask[])
+                    .map((value, index) => {
+
+                        return getListItem(value);
+                    })}
+        </List>;
     }
 
     return (
         <div>
             <AppAccordion
                 id={'completed-task'}
-                initialExpanded={SettingsStateService.isHashTagsVisible()}
-                summary={
-                    <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {completedTasks.title.toUpperCase()} {SettingsStateService.isShowAllTasks() ? "" : ` (${AppStateService.getEffectiveTitle().toUpperCase()})` }
-                    </Typography>
-                }
-                details={
-                    <List className={classes.list}>
-                        {
-                            (completedTasks.tasks as CompletedTask[])
-                                .map((value, index) => {
-                                    const labelId = `completed-task-list-label-${value.id}`;
-
-                                    return (
-                                        <ListItem
-                                            divider={true}
-                                            key={labelId}
-                                            role={undefined} dense button>
-                                            <ListItemText
-                                                id={labelId}
-                                                primaryTypographyProps={{
-                                                    style: {
-                                                        textDecoration: 'line-through',
-                                                        fontWeight: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
-                                                        fontSize: '16px',
-                                                        fontFamily: '"Helvetica-Neue", Helvetica, Arial',
-                                                        width: '92%',
-                                                        cursor: 'pointer',
-                                                        wordWrap: 'break-word'
-                                                    }
-                                                }}
-                                                primary={value.value}
-                                                secondary={` — On ${formatToListTitle(new Date(value.completedDate))}`}
-                                            />
-                                            <ListItemSecondaryAction>
-                                                <IconButton edge="start" aria-label="restore"
-                                                            onClick={() => AppStateService.handleUndoComplete(value)}>
-                                                    <Tooltip title="Restore to pending" aria-label={`restore-task-tooltip-${labelId}`}>
-                                                    <RestoreIcon/>
-                                                    </Tooltip>
-                                                </IconButton>
-                                                <IconButton edge="end" aria-label={`delete-${labelId}`}
-                                                            onClick={() => AppStateService.handleCompletedTaskDeletion(value)}>
-                                                    <Tooltip title="Delete task" aria-label={`delete-task-tooltip-${labelId}`}>
-                                                        <DeleteIcon fontSize={"small"}/>
-                                                    </Tooltip>
-                                                </IconButton>
-                                            </ListItemSecondaryAction>
-                                        </ListItem>
-                                    );
-                                })}
-                    </List>
-                }/>
+                initialExpanded={false}
+                summary={getSummary()}
+                details={getDetails()}
+            />
         </div>
     );
 }

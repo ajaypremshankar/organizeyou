@@ -1,5 +1,5 @@
 import { HashTagTaskMapping } from "../../types/types";
-import { hasChromeStoragePermission } from "../../utils/platform-utils";
+import { hasBrowserStoragePermission } from "../../utils/platform-utils";
 import { BucketUtils } from "../bucket/bucket-utils";
 
 export class HashTagRepository {
@@ -7,7 +7,7 @@ export class HashTagRepository {
 
         const deltaHashState = BucketUtils.getHashTagBuckets(deltaHashTags)
 
-        if (hasChromeStoragePermission()) {
+        if (hasBrowserStoragePermission()) {
 
             const hashTagStateToUpdate: any = {}
             const keysToDelete: string[] = []

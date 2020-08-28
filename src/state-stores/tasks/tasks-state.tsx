@@ -1,6 +1,5 @@
 import { CompletedTask, HashTagTaskMapping, Task } from "../../types/types";
 import { getCurrentMillis, getTodayKey } from "../../utils/date-utils";
-import { KeyTitleUtils } from "../../utils/key-title-utils";
 
 /***
  * This class functionalities should be accessed through `StateStore`.
@@ -46,17 +45,15 @@ export class TasksState {
         return this._selectedList;
     }
 
-    public moveTask(from: number, movingTask: Task | CompletedTask): TasksState {
+    public moveTask(from: number, movingTask: Task): TasksState {
 
-        const now = getCurrentMillis()
-        const newTasks = this.internalAddOrUpdateTaskTo(movingTask.plannedOn, {
+        const withNewlyAddedTask = this.internalAddOrUpdateTaskTo(movingTask.plannedOn, {
             ...movingTask,
-            updatedOn: now
         }, this.tasks)
 
-        const removedTasks: Map<number, Task[] | CompletedTask[]> = this.internalRemoveTaskFrom(from, movingTask, newTasks)
+        const withRemovedTask: Map<number, Task[] | CompletedTask[]> = this.internalRemoveTaskFrom(from, movingTask, withNewlyAddedTask)
 
-        return this.mergeAndCreateNewState({tasks: removedTasks})
+        return this.mergeAndCreateNewState({tasks: withRemovedTask})
     }
 
     public completeTask(task: CompletedTask): TasksState {
@@ -143,7 +140,7 @@ export class TasksState {
     }
 
     private internalAddOrUpdateTaskTo(key: number, task: Task | CompletedTask,
-                                    tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
+                                      tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
 
         const reducedList = [...(tasks.get(key) || [])].filter(t => t.id !== task.id)
         reducedList.push(task)
@@ -153,10 +150,15 @@ export class TasksState {
     }
 
     private internalRemoveTaskFrom(key: number, task: Task | CompletedTask,
-                               tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
+                                   tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
         const reducedList = [...(tasks.get(key) || [])].filter(t => t.id !== task.id)
         const newTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(tasks)
-        newTasks.set(key, Array.from(reducedList))
+
+        if (reducedList.length > 0) {
+            newTasks.set(key, reducedList)
+        } else {
+            newTasks.delete(key)
+        }
         return newTasks
     }
 
@@ -171,7 +173,7 @@ export class TasksState {
     public static emptyState = (): TasksState => {
         return TasksState.newStateFrom(
             getTodayKey(),
-            KeyTitleUtils.getTitleByKey(getTodayKey()),
+            "",
             new Map<number, Task[] | CompletedTask[]>(),
             [],
             new Map<string, HashTagTaskMapping[]>()
