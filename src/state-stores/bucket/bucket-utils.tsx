@@ -62,7 +62,7 @@ export class BucketUtils {
                 if (moveKey !== newBucketKey) {
                     const removedTasks = [...((currentStorageData[moveKey] || []) as Task[])
                         .filter(t => t.id !== targetTask.id)]
-                    const addedTasks = [...currentStorageData[newBucketKey] || [], targetTask]
+                    const addedTasks = [...(currentStorageData[newBucketKey] || []), targetTask]
 
                     syncState[moveKey] = removedTasks
                     syncState[newBucketKey] = addedTasks
@@ -87,7 +87,7 @@ export class BucketUtils {
                 const newActiveTasks = [...((currentStorageData[toCompleteKey] || []) as Task[])
                     .filter(t => t.id !== targetTask.id)]
                 const completedBucketKey = BucketUtils.getBucketKey(targetTask.plannedOn, true)
-                let completedTasks = [...currentStorageData[completedBucketKey] || [], targetTask]
+                let completedTasks = [...(currentStorageData[completedBucketKey] || []), targetTask]
 
                 syncState[toCompleteKey] = newActiveTasks
                 syncState[completedBucketKey] = completedTasks
@@ -98,7 +98,7 @@ export class BucketUtils {
                 const newCompleteTasks = [...((currentStorageData[currentlyCompleteKey] || []) as CompletedTask[])
                     .filter(t => t.id !== targetTask.id)]
                 const activeBucketKey = BucketUtils.getBucketKey(targetTask.plannedOn, false)
-                let activeTasks = [...currentStorageData[activeBucketKey] || [], targetTask]
+                let activeTasks = [...(currentStorageData[activeBucketKey] || []), targetTask]
                 syncState[currentlyCompleteKey] = newCompleteTasks
                 syncState[activeBucketKey] = activeTasks
                 break;

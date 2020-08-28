@@ -145,7 +145,7 @@ export class TasksState {
     private internalAddOrUpdateTaskTo(key: number, task: Task | CompletedTask,
                                     tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
 
-        const reducedList = [...tasks.get(key) || []].filter(t => t.id !== task.id)
+        const reducedList = [...(tasks.get(key) || [])].filter(t => t.id !== task.id)
         reducedList.push(task)
         const newTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(tasks)
         newTasks.set(key, reducedList)
@@ -154,7 +154,7 @@ export class TasksState {
 
     private internalRemoveTaskFrom(key: number, task: Task | CompletedTask,
                                tasks: Map<number, Task[] | CompletedTask[]>): Map<number, Task[] | CompletedTask[]> {
-        const reducedList = [...tasks.get(key) || []].filter(t => t.id !== task.id)
+        const reducedList = [...(tasks.get(key) || [])].filter(t => t.id !== task.id)
         const newTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(tasks)
         newTasks.set(key, Array.from(reducedList))
         return newTasks

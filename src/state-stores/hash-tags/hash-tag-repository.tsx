@@ -8,10 +8,31 @@ export class HashTagRepository {
         const deltaHashState = BucketUtils.getHashTagBuckets(deltaHashTags)
 
         if (hasChromeStoragePermission()) {
-            chrome.storage.sync.set(deltaHashState)
+
+            const hashTagStateToUpdate: any = {}
+            const keysToDelete: string[] = []
+            for (let key in deltaHashState) {
+                if (deltaHashState[key].length > 0) {
+                    hashTagStateToUpdate[key] = deltaHashState[key]
+                } else {
+                    keysToDelete.push(key)
+                }
+            }
+
+            if (hashTagStateToUpdate !== {}) {
+                chrome.storage.sync.set(hashTagStateToUpdate)
+            }
+
+            if (keysToDelete.length > 0) {
+                chrome.storage.sync.remove(keysToDelete)
+            }
         } else {
             for (let key in deltaHashState) {
-                localStorage.setItem(key, JSON.stringify(deltaHashState[key]))
+                if (deltaHashState[key].length > 0) {
+                    localStorage.setItem(key, JSON.stringify(deltaHashState[key]))
+                } else {
+                    localStorage.removeItem(key)
+                }
             }
         }
     }

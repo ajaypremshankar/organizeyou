@@ -51,8 +51,22 @@ class BrowserSyncStorageRepository {
 
             let syncState: any = BucketUtils.getBucketedState(action, plannedOn, targetTask, currentSyncState)
 
+            const toUpdate: any = {}
+            const keysToDelete: string[] = []
+            for (let key in syncState) {
+                if (syncState[key].length > 0) {
+                    toUpdate[key] = syncState[key]
+                } else {
+                    keysToDelete.push(key)
+                }
+            }
+
             if (syncState !== {}) {
-                chrome.storage.sync.set(syncState)
+                chrome.storage.sync.set(toUpdate)
+            }
+
+            if (keysToDelete.length > 0) {
+                chrome.storage.sync.remove(keysToDelete)
             }
         })
     }
@@ -93,7 +107,11 @@ class LocalStorageRepository {
         let stateToUpdate: any = BucketUtils.getBucketedState(action, plannedOn, targetTask, persistedState)
 
         for (let key in stateToUpdate) {
-            localStorage.setItem(key, JSON.stringify(stateToUpdate[key]))
+            if (stateToUpdate[key].length > 0) {
+                localStorage.setItem(key, JSON.stringify(stateToUpdate[key]))
+            } else {
+                localStorage.removeItem(key)
+            }
         }
     }
 

@@ -121,7 +121,7 @@ const getMigratedSyncState = (syncState: any, action: TASK_STATE_ACTION, planned
         // Add to completed tasks bucket
         case TASK_STATE_ACTION.COMPLETE_TASK:
             const completedBucketKey = BucketUtils.getBucketKey(targetTask.plannedOn, true)
-            const completedTasks = [...syncState[completedBucketKey] || [], targetTask]
+            const completedTasks = [...(syncState[completedBucketKey] || []), targetTask]
             syncState[completedBucketKey] = completedTasks
             break;
     }

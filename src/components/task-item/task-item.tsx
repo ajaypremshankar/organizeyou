@@ -15,7 +15,7 @@ import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
 import { AppStateService } from "../../state-stores/tasks/app-state-service";
 import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
-import { TagUtils } from "../../utils/tag-utils";
+import { HashTagUtils } from "../../utils/hash-tag-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -93,7 +93,7 @@ export default function TaskItem(props: TaskItemProps) {
     };
 
     const updateTask = (value: string) => {
-        const tags = TagUtils.getTags(value)
+        const tags = HashTagUtils.parseHashTags(value)
         AppStateService.handleTaskAdditionOrUpdation(props.task,
             {
                 ...props.task,

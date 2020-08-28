@@ -1,10 +1,10 @@
 import { CompletedTask, HashTagTaskMapping, Task } from "../types/types";
 
-export class TagUtils {
+export class HashTagUtils {
 
     private static regexp = /\B#\w\w+\b/g
-    public static getTags = (content: string): string[] => {
-        return (content.match(TagUtils.regexp) || [])
+    public static parseHashTags = (content: string): string[] => {
+        return (content.match(HashTagUtils.regexp) || [])
             .map(function (s) {
                 return s.trim().replace("#", "").toLowerCase()
             });
@@ -55,8 +55,8 @@ export class TagUtils {
         if (existingTags === newTags) return new Map<string, HashTagTaskMapping[]>()
 
         return new Map([
-            ...(currentTask ? Array.from(TagUtils.deleteHashTags(currentTask, allTagsMap).entries()) : []),
-            ...(updatedTask ? Array.from(TagUtils.addHashTags(updatedTask, allTagsMap).entries()) : []),
+            ...(currentTask ? Array.from(HashTagUtils.deleteHashTags(currentTask, allTagsMap).entries()) : []),
+            ...(updatedTask ? Array.from(HashTagUtils.addHashTags(updatedTask, allTagsMap).entries()) : []),
         ])
     }
 
@@ -94,7 +94,7 @@ export class TagUtils {
             tagTaskMap.set(existingTag, tagTaskArr.map(value => {
                 return {
                     ...value,
-                    completed: true,
+                    completed: completedTask.id === value.taskId ? true : value.completed,
                 }
             }))
         })
@@ -115,7 +115,7 @@ export class TagUtils {
             tagTaskMap.set(existingTag, tagTaskArr.map(value => {
                 return {
                     ...value,
-                    completed: false,
+                    completed: undoCompletedTask.id === value.taskId ? false : value.completed,
                 }
             }))
         })
