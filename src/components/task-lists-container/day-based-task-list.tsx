@@ -65,7 +65,7 @@ export default function DayBasedTaskList(props: DayBasedTaskListProps) {
             const labelId = `checkbox-list-label-${value.id}`;
             return (
                 <TaskItem
-                    showPlannedOn={SettingsStateService.isShowAllTasks() || SettingsStateService.isHashTagsVisible()}
+                    showPlannedOn={SettingsStateService.isShowAllTasks() || SettingsStateService.isHashTagListVisible()}
                     key={labelId}
                     task={value}/>
             );

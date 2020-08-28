@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme: Theme) =>
         textField: {
             font: 'inherit',
             width: '100%',
+            wordWrap: 'break-word'
         },
     }),
 );
@@ -33,6 +34,7 @@ export default function EditTaskItem(props: AddNewTaskProps) {
 
     return (
         <InputBase
+            multiline
             className={classes.textField}
             id="input-base-edit-task"
             defaultValue={taskContentState}

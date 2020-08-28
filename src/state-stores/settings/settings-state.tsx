@@ -97,7 +97,7 @@ export class SettingsStateService {
         });
     }
 
-    public static isHashTagsVisible = () => {
+    public static isHashTagListVisible = () => {
         return SettingsStateService.isEnabled(SettingsType.SHOWING_HASH_TAG_BASED_LIST)
     }
 

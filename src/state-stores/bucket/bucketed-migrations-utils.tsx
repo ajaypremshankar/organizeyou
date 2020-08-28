@@ -4,7 +4,6 @@ import { hasBrowserStoragePermission } from "../../utils/platform-utils";
 import { TasksState } from "../tasks/tasks-state";
 import { getTodayKey } from "../../utils/date-utils";
 import { AppStateService } from "../tasks/app-state-service";
-import { KeyTitleUtils } from "../../utils/key-title-utils";
 
 const loadNonBucketedStorage = (): Promise<TasksState> => {
     if (hasBrowserStoragePermission()) {

@@ -16,17 +16,19 @@ import AppDatePicker from "../common/date-picker";
 import { AppStateService } from "../../state-stores/tasks/app-state-service";
 import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
 import { HashTagUtils } from "../../utils/hash-tag-utils";
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
+const urlRegex = /(https?:\/\/[^ ]*)/
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         itemText: {
             font: 'inherit',
             width: '92%',
-            cursor: 'pointer',
+            cursor: 'text',
             fontWeight: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold' : 'normal',
             fontSize: '16px',
             fontFamily: '"Helvetica-Neue", Helvetica, Arial',
-            wordWrap: 'break-word'
+            wordWrap: 'break-word',
         },
         textField: {
             width: '100%',
@@ -40,12 +42,16 @@ interface TaskItemProps {
 }
 
 const getTaskContentWithTooltip = (value: string, props: TaskItemProps) => {
+    const testUrl = value.match(urlRegex);
+    const onlyUrl = testUrl && testUrl[1];
+
     return (
         <span>
             {value}
             <span style={{color: 'lightgray', font: 'caption'}}>
                 {props.showPlannedOn ? ` (planned on ${formatToListTitle(props.task.plannedOn)})` : ''}
             </span>
+            <span>{onlyUrl && <a href={onlyUrl} target={'_blank'} rel={'noopener noreferrer'}><OpenInNewIcon cursor={'pointer'} fontSize={"small"} color={"primary"}></OpenInNewIcon></a>}</span>
         </span>)
 }
 

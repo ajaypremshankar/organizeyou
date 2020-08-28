@@ -1,5 +1,5 @@
 import { CompletedTask, HashTagTaskMapping, Task } from "../../types/types";
-import { getCurrentMillis, getTodayKey } from "../../utils/date-utils";
+import { getTodayKey } from "../../utils/date-utils";
 
 /***
  * This class functionalities should be accessed through `StateStore`.

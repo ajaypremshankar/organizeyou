@@ -21,7 +21,6 @@ interface AddNewTaskProps {
 
 export default function AddNewTask(props: AddNewTaskProps) {
     const classes = useStyles();
-
     const [taskContentState, setTaskContentState] = useState('');
 
     const handleKeyPressChange = (event: React.KeyboardEvent<HTMLInputElement>) => {

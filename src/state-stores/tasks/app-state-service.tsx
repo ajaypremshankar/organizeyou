@@ -97,7 +97,7 @@ export class AppStateService {
             return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(ListType.ALL), reducedList, (a: Task | CompletedTask, b: Task | CompletedTask) => {
                 return a.plannedOn - b.plannedOn
             })
-        } else if (AppStateService.baseState.selectedList && AppStateService.baseState.selectedList !== '') {
+        } else if (SettingsStateService.isHashTagListVisible()) {
             return AppStateService.getSelectedListTasks(sorter)
         } else {
             return AppStateService.getSelectedDateTasks(sorter)
@@ -128,7 +128,7 @@ export class AppStateService {
         const reducedList: Task[] = []
         if (SettingsStateService.isEnabled(SettingsType.SHOW_ALL_TASKS)) {
             reducedList.push(...AppStateService.baseState.completedTasks)
-        } else if (SettingsStateService.isHashTagsVisible()) {
+        } else if (SettingsStateService.isHashTagListVisible()) {
             const tagTaskArr = AppStateService.baseState.hashTags.get(AppStateService.baseState.selectedList) || []
             tagTaskArr.forEach(tag => {
                 reducedList.push(...(AppStateService.baseState.completedTasks.filter(x => x.id === tag.taskId)))
@@ -141,7 +141,7 @@ export class AppStateService {
 
     public static getOverdueTasks = (sorter?: TaskSorter) => {
         const reducedList: Task[] = AppStateService.computeOverdueTasks(AppStateService.getTasks())
-        if (SettingsStateService.isHashTagsVisible()) {
+        if (SettingsStateService.isHashTagListVisible()) {
             const tagTaskArr = AppStateService.baseState.hashTags.get(AppStateService.baseState.selectedList) || []
             const furtherReducedList: Task[] = []
             tagTaskArr.forEach(tag => {

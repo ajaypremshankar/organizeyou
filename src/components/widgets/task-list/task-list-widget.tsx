@@ -53,7 +53,7 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
                     label="Show all tasks"
                 />
             </div>
-            {!SettingsStateService.isShowAllTasks() && !SettingsStateService.isHashTagsVisible() && <OverdueTaskList/> }
+            {!SettingsStateService.isShowAllTasks() && !SettingsStateService.isHashTagListVisible() && <OverdueTaskList/> }
             {getSelectedDateList()}
             {SettingsStateService.isEnabled(SettingsType.SHOW_COMPLETED_TASKS) && props.showCompleted && <CompletedTaskList/>}
         </div>
