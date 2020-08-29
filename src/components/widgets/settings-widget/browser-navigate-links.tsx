@@ -7,7 +7,7 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import HomeIcon from '@material-ui/icons/Home';
 import AppsIcon from '@material-ui/icons/Apps';
 import Tooltip from '@material-ui/core/Tooltip';
-import { SettingsStateStore, SettingsType } from "../../../state-stores/settings/settings-state";
+import { SettingsStateService, SettingsType } from "../../../state-stores/settings/settings-state";
 import { getTransparentBackgroundColor } from "../../../utils/theme-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,7 +67,7 @@ export default function NavigationLinks(props: TopButtonGroupProps) {
     return (
         <div className={classes.fullWidth}>
             <ToggleButtonGroup
-                style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.3)}}
+                style={{background: getTransparentBackgroundColor(SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE), 0.3)}}
                 exclusive
                 size={"small"}
                 orientation="vertical"

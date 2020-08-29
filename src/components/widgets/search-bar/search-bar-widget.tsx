@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import { hasChromeTabsPermission } from "../../../utils/platform-utils";
+import { hasBrowserTabsPermission } from "../../../utils/platform-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +32,7 @@ export default function SearchBarWidget() {
     const classes = useStyles();
     const [keywordContentState, setKeywordContentState] = useState('');
     const setCurrentTab = (keyword: string) => {
-        if (hasChromeTabsPermission()) {
+        if (hasBrowserTabsPermission()) {
             window.chrome.tabs.getCurrent(tab => {
                 if (tab && tab.id) {
                     window.chrome.tabs.update(tab.id, {url: `http://www.google.com/search?q=${keyword}`})

@@ -6,14 +6,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper, { PaperProps } from '@material-ui/core/Paper';
-import { clearAppState } from "../../state-stores/tasks/app-state-facade-utils";
 import ClearAllIcon from '@material-ui/icons/ClearAll';
-import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
 import { getTransparentBackgroundColor } from "../../utils/theme-utils";
+import { AppStateRepository } from "../../state-stores/tasks/app-state-repository";
 
 function PaperComponent(props: PaperProps) {
     return (
-            <Paper style={{background: getTransparentBackgroundColor(SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE), 0.6)}} {...props} />
+        <Paper
+            style={{background: getTransparentBackgroundColor(SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE), 0.6)}} {...props} />
     );
 }
 
@@ -31,19 +32,24 @@ export default function ClearAppData(props: ClearAppDataProps) {
         setOpen(false);
     };
 
+    const handleClearAppState = () => {
+        AppStateRepository.clearAppState()
+        handleClose()
+    }
+
     return (
         <div>
             <Button
-                startIcon={<ClearAllIcon/>} size={"small"} variant="outlined" color="secondary" onClick={handleClickOpen}>
+                startIcon={<ClearAllIcon/>} size={"small"} variant="outlined" color="secondary"
+                onClick={handleClickOpen}>
                 Clear app data
             </Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 PaperComponent={PaperComponent}
-                aria-labelledby="draggable-dialog-title"
-            >
-                <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                aria-labelledby="draggable-dialog-title">
+                <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
                     Clear app data
                 </DialogTitle>
                 <DialogContent>
@@ -55,10 +61,7 @@ export default function ClearAppData(props: ClearAppDataProps) {
                     <Button autoFocus onClick={handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={() => {
-                        clearAppState()
-                        handleClose()
-                    }} color="secondary">
+                    <Button onClick={handleClearAppState} color="secondary">
                         Clear app data
                     </Button>
                 </DialogActions>

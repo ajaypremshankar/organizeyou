@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme: Theme) =>
         textField: {
             font: 'inherit',
             width: '100%',
+            wordWrap: 'break-word'
         },
     }),
 );
@@ -26,22 +27,25 @@ export default function EditTaskItem(props: AddNewTaskProps) {
         if (event.key === 'Escape') {
             props.editBlur()
         } else if (taskContentState.trim() !== '' && event.key === 'Enter') {
-            props.updateTask(taskContentState)
+            props.updateTask(taskContentState.trim())
             setTaskContentState('')
         }
     }
 
     return (
         <InputBase
+            autoFocus
+            multiline
             className={classes.textField}
             id="input-base-edit-task"
             defaultValue={taskContentState}
-            autoFocus
             inputProps={{
                 'aria-label': 'naked',
                 minLength: 1,
                 maxLength: process.env.REACT_APP_TASK_MAX_LIMIT
             }}
+            // Set focus to end of the task
+            onFocus={event => event.target.selectionStart = taskContentState.length}
             onBlur={props.editBlur}
             onChange={(event) => setTaskContentState(event.target.value)}
             onKeyDown={handleKeyPressChange}

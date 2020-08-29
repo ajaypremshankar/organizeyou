@@ -1,5 +1,5 @@
 import { getTodayKey } from "../../utils/date-utils";
-import { migrateToBucketedKeySupport } from "../tasks/bucketed-migrations-utils";
+import { migrateToBucketedKeySupport } from "../bucket/bucketed-migrations-utils";
 
 /***
  * Enum type used as key for settings
@@ -15,7 +15,8 @@ export enum SettingsType {
     BACKGROUND_MODE = 'Daily background wallpaper',
     FULL_MODE = 'Full mode',
     BUCKETED_STORE_MIGRATION_COMPLETE = 'oy_m_t_b_s',
-    APP_LOADING = 'loading',
+    APP_LOADING = 'app_loading',
+    SHOWING_HASH_TAG_BASED_LIST = 'showing_hash_tag_based_list',
 }
 
 /***
@@ -31,51 +32,42 @@ interface SettingsState {
  * * Get settings
  * * Add/update settings
  */
-export class SettingsStateStore {
+export class SettingsStateService {
     private static settingsState: SettingsState
     private static setSettingsState: any
 
     public static initStore = (state: SettingsState, setState: any) => {
-        SettingsStateStore.settingsState = state
-        SettingsStateStore.setSettingsState = setState;
+        SettingsStateService.settingsState = state
+        SettingsStateService.setSettingsState = setState;
     }
 
     public static loadState = () => {
-        SettingsStateStore.setDefaultsIfNotAvailable()
+        SettingsStateService.setDefaultsIfNotAvailable()
     }
 
     private static setToStore = (state: SettingsState) => {
-        SettingsStateStore.setSettingsState(state)
-        SettingsStateStore.settingsState = state
+        SettingsStateService.setSettingsState(state)
+        SettingsStateService.settingsState = state
     }
 
     private static setDefaultsIfNotAvailable = () => {
-        let toggleSettings = new Map<SettingsType, boolean>();
-        let objectSettings = new Map<SettingsType, any>();
-        const stateFromStorage = SettingsStateStorage.load()
+        let {toggleSettings, objectSettings} = SettingsStateService.loadSettings();
 
-        if (stateFromStorage !== undefined) {
-            toggleSettings = stateFromStorage.toggleSettings
-            objectSettings = stateFromStorage.objectSettings
-        } else {
-            SettingsStateStore.toggleAppLoader(true)
-            toggleSettings.set(SettingsType.FULL_MODE, true)
-            toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
-            toggleSettings.set(SettingsType.SHOW_AM_PM, true)
-        }
-
-        if(!toggleSettings.get(SettingsType.BUCKETED_STORE_MIGRATION_COMPLETE)) {
+        if (!toggleSettings.get(SettingsType.BUCKETED_STORE_MIGRATION_COMPLETE)) {
             migrateToBucketedKeySupport();
             // Mark migration complete
             toggleSettings.set(SettingsType.BUCKETED_STORE_MIGRATION_COMPLETE, true)
         }
+
+        // Every app load should reset hash-tags showing
+        toggleSettings.set(SettingsType.SHOWING_HASH_TAG_BASED_LIST, false)
 
         const background = objectSettings.get(SettingsType.BACKGROUND_MODE)
 
         //https://source.unsplash.com/featured/3200x1800?scenery,nature,wallpapers,hd
         if (!background || Number(background.day) < getTodayKey()) {
             fetch(`https://source.unsplash.com/collection/220388/1920x1080`).then(value => {
-                SettingsStateStore.loadAndCacheImage(value.url).then(url => {
+                SettingsStateService.loadAndCacheImage(value.url).then(url => {
                     objectSettings.set(SettingsType.BACKGROUND_MODE, {
                         day: getTodayKey(),
                         url: url,
@@ -83,87 +75,112 @@ export class SettingsStateStore {
 
                     // Update state & store only after loading image.
                     // DO-NOT take this state-update out of promise.then
-                    toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
-                    toggleSettings.set(SettingsType.APP_LOADING, false)
-                    SettingsStateStore.updateState({
-                        toggleSettings: toggleSettings,
-                        objectSettings: objectSettings
-                    });
+                    SettingsStateService.saveSettings(toggleSettings, objectSettings);
                 }).catch(reason => {
-                    toggleSettings.set(SettingsType.APP_LOADING, false)
-                    toggleSettings.set(SettingsType.BACKGROUND_MODE, false)
-                    SettingsStateStore.updateState({
-                        toggleSettings: toggleSettings,
-                        objectSettings: objectSettings
-                    })
+                    SettingsStateService.saveSettings(toggleSettings, objectSettings);
                 })
             }).catch(reason => {
-                toggleSettings.set(SettingsType.APP_LOADING, false)
-                toggleSettings.set(SettingsType.BACKGROUND_MODE, false)
-                SettingsStateStore.updateState({
-                    toggleSettings: toggleSettings,
-                    objectSettings: objectSettings
-                })
+                SettingsStateService.saveSettings(toggleSettings, objectSettings);
             })
         } else {
-            toggleSettings.set(SettingsType.APP_LOADING, false)
-            SettingsStateStore.updateState({
-                toggleSettings: toggleSettings,
-                objectSettings: objectSettings
-            })
+            SettingsStateService.saveSettings(toggleSettings, objectSettings);
         }
+    }
+
+    private static saveSettings(toggleSettings: Map<SettingsType, boolean>, objectSettings: Map<SettingsType, any>) {
+
+        toggleSettings.set(SettingsType.APP_LOADING, false)
+
+        SettingsStateService.updateState({
+            toggleSettings: toggleSettings,
+            objectSettings: objectSettings
+        });
+    }
+
+    public static isHashTagListVisible = () => {
+        return SettingsStateService.isEnabled(SettingsType.SHOWING_HASH_TAG_BASED_LIST)
+    }
+
+    public static setShowHashTags = (toValue: boolean) => {
+        const toggleSettings = new Map<SettingsType, boolean>(SettingsStateService.settingsState.toggleSettings)
+        toggleSettings.set(SettingsType.SHOWING_HASH_TAG_BASED_LIST, toValue)
+
+        const settings: SettingsState = {
+            toggleSettings: toggleSettings,
+            objectSettings: SettingsStateService.settingsState.objectSettings
+        }
+
+        SettingsStateService.updateState(settings, false)
+    }
+
+    private static loadSettings() {
+        let toggleSettings = new Map<SettingsType, boolean>();
+        let objectSettings = new Map<SettingsType, any>();
+        const stateFromStorage = SettingsStateRepository.load()
+
+        if (stateFromStorage !== undefined) {
+            toggleSettings = stateFromStorage.toggleSettings
+            objectSettings = stateFromStorage.objectSettings
+        } else {
+            SettingsStateService.toggleAppLoader(true)
+            toggleSettings.set(SettingsType.FULL_MODE, true)
+            toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
+            toggleSettings.set(SettingsType.SHOW_AM_PM, true)
+            toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
+        }
+        return {toggleSettings, objectSettings};
     }
 
     public static updateState = (newState: SettingsState, persist: boolean = true) => {
         if (persist) {
-            SettingsStateStorage.update(newState)
+            SettingsStateRepository.update(newState)
         }
-        SettingsStateStore.setToStore(newState)
+        SettingsStateService.setToStore(newState)
     }
 
     public static getToggleSettings = () => {
-        return new Map<SettingsType, boolean>(SettingsStateStore.settingsState.toggleSettings)
+        return new Map<SettingsType, boolean>(SettingsStateService.settingsState.toggleSettings)
     }
 
     public static toggleSetting = (type: SettingsType, setValueTo?: boolean) => {
-        const toggleSettings = new Map<SettingsType, boolean>(SettingsStateStore.settingsState.toggleSettings)
+        const toggleSettings = new Map<SettingsType, boolean>(SettingsStateService.settingsState.toggleSettings)
         toggleSettings.set(type, setValueTo !== undefined ? setValueTo : !toggleSettings.get(type))
 
         const settings: SettingsState = {
             toggleSettings: toggleSettings,
-            objectSettings: SettingsStateStore.settingsState.objectSettings
+            objectSettings: SettingsStateService.settingsState.objectSettings
         }
 
-        SettingsStateStore.updateState(settings)
+        SettingsStateService.updateState(settings)
         return settings
     }
 
     public static updateObjectSetting = (type: SettingsType, value: Object) => {
-        const objectSettings = new Map<SettingsType, Object>(SettingsStateStore.settingsState.objectSettings)
+        const objectSettings = new Map<SettingsType, Object>(SettingsStateService.settingsState.objectSettings)
         objectSettings.set(type, {...objectSettings.get(type), ...value})
 
         const settings: SettingsState = {
-            toggleSettings: new Map<SettingsType, boolean>(SettingsStateStore.settingsState.toggleSettings),
+            toggleSettings: new Map<SettingsType, boolean>(SettingsStateService.settingsState.toggleSettings),
             objectSettings: objectSettings
         }
 
-        SettingsStateStore.updateState(settings)
+        SettingsStateService.updateState(settings)
     }
 
     public static handleShowAllToggle = () => {
-        SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.SHOW_ALL_TASKS))
+        SettingsStateService.updateState(SettingsStateService.toggleSetting(SettingsType.SHOW_ALL_TASKS))
     }
 
     public static handleFullModeToggle = (setTo: boolean) => {
-        SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.FULL_MODE, setTo))
+        SettingsStateService.updateState(SettingsStateService.toggleSetting(SettingsType.FULL_MODE, setTo))
     }
 
     public static toggleAppLoader = (setToValue: boolean) => {
-        SettingsStateStore.updateState(SettingsStateStore.toggleSetting(SettingsType.APP_LOADING, setToValue), false)
+        SettingsStateService.updateState(SettingsStateService.toggleSetting(SettingsType.APP_LOADING, setToValue), false)
     }
 
     public static getTodayBgUrl = (): string => {
-        const background = SettingsStateStore.settingsState?.objectSettings?.get(SettingsType.BACKGROUND_MODE)
+        const background = SettingsStateService.settingsState?.objectSettings?.get(SettingsType.BACKGROUND_MODE)
         if (!background || Number(background.day) < getTodayKey()) {
             return './default_bg.jpg'
         }
@@ -177,7 +194,7 @@ export class SettingsStateStore {
                 imageLoader.onload = () => {
                     resolve(url)
                 };
-                imageLoader.src = SettingsStateStore.getTodayBgUrl()
+                imageLoader.src = SettingsStateService.getTodayBgUrl()
             } catch (ex) {
                 reject(ex);
             }
@@ -185,23 +202,23 @@ export class SettingsStateStore {
     }
 
     public static clear = () => {
-        SettingsStateStorage.clear()
+        SettingsStateRepository.clear()
     }
 
     public static isEnabled = (name: SettingsType) => {
-        return SettingsStateStore.settingsState.toggleSettings.get(name) || false
+        return SettingsStateService.settingsState.toggleSettings.get(name) || false
     }
 
     public static getAsObject = (name: SettingsType) => {
-        return SettingsStateStore.settingsState.objectSettings.get(name) || {}
+        return SettingsStateService.settingsState.objectSettings.get(name) || {}
     }
 
     public static isFullMode = () => {
-        return SettingsStateStore.settingsState.toggleSettings.get(SettingsType.FULL_MODE) || false
+        return SettingsStateService.settingsState.toggleSettings.get(SettingsType.FULL_MODE) || false
     }
 
     public static isShowAllTasks = () => {
-        return SettingsStateStore.settingsState.toggleSettings.get(SettingsType.SHOW_ALL_TASKS) || false
+        return SettingsStateService.settingsState.toggleSettings.get(SettingsType.SHOW_ALL_TASKS) || false
     }
 
     public static emptyState = (): SettingsState => {
@@ -218,11 +235,11 @@ export class SettingsStateStore {
 /***
  * Settings interaction with local-storage goes here.
  */
-class SettingsStateStorage {
+class SettingsStateRepository {
     private static key: string = "oy-settings"
 
     public static update = (updatedState: any) => {
-        localStorage.setItem(SettingsStateStorage.key, JSON.stringify({
+        localStorage.setItem(SettingsStateRepository.key, JSON.stringify({
             toggleSettings: [...Array.from(updatedState.toggleSettings || new Map())],
             objectSettings: [...Array.from(updatedState.objectSettings || new Map())],
         }))
@@ -230,9 +247,9 @@ class SettingsStateStorage {
 
     public static load = (): any => {
 
-        const persistedState = localStorage.getItem(SettingsStateStorage.key);
+        const persistedState = localStorage.getItem(SettingsStateRepository.key);
 
-        if(persistedState === null){
+        if (persistedState === null) {
             return undefined
         }
 
@@ -245,7 +262,7 @@ class SettingsStateStorage {
     }
 
     public static clear = () => {
-        localStorage.removeItem(SettingsStateStorage.key)
+        localStorage.removeItem(SettingsStateRepository.key)
     }
 }
 

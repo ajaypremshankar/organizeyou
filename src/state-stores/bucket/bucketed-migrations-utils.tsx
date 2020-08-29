@@ -1,18 +1,18 @@
-import { CompletedTask, Task } from "../../types/types";
+import { CompletedTask, HashTagTaskMapping, Task } from "../../types/types";
 import { BucketUtils, TASK_STATE_ACTION } from "./bucket-utils";
-import { hasChromeStoragePermission } from "../../utils/platform-utils";
-import { BaseTasksState } from "./base-tasks-state";
+import { hasBrowserStoragePermission } from "../../utils/platform-utils";
+import { TasksState } from "../tasks/tasks-state";
 import { getTodayKey } from "../../utils/date-utils";
-import { StateStore } from "./state-store";
+import { AppStateService } from "../tasks/app-state-service";
 
-const loadNonBucketedStorage = (): Promise<BaseTasksState> => {
-    if (hasChromeStoragePermission()) {
+const loadNonBucketedStorage = (): Promise<TasksState> => {
+    if (hasBrowserStoragePermission()) {
         return getNonBucketedBrowserStorage()
     } else {
         return getNonBucketedLocalStorage()
     }
 }
-const getNonBucketedBrowserStorage = (): Promise<BaseTasksState> => {
+const getNonBucketedBrowserStorage = (): Promise<TasksState> => {
     return new Promise((resolve, reject) => {
         try {
             chrome.storage.sync.get([
@@ -27,11 +27,13 @@ const getNonBucketedBrowserStorage = (): Promise<BaseTasksState> => {
                     const completedTasks = JSON.parse(value['organizeyou_completed_tasks'] || '[]')
                     const allTasks: Map<number, Task[] | CompletedTask[]> = new Map<number, Task[] | CompletedTask[]>(currentTasks.tasks)
 
-                    resolve(BaseTasksState.newStateFrom(
+                    resolve(TasksState.newStateFrom(
                         // Load today by default.
                         getTodayKey(),
+                        "",
                         allTasks,
-                        completedTasks
+                        completedTasks,
+                        new Map<string, HashTagTaskMapping[]>()
                         )
                     )
                 } else {
@@ -44,7 +46,7 @@ const getNonBucketedBrowserStorage = (): Promise<BaseTasksState> => {
     });
 }
 
-const getNonBucketedLocalStorage = (): Promise<BaseTasksState> => {
+const getNonBucketedLocalStorage = (): Promise<TasksState> => {
     const persistedState = localStorage.getItem("organizeyou-base-app-2");
 
     if (!persistedState) {
@@ -54,11 +56,13 @@ const getNonBucketedLocalStorage = (): Promise<BaseTasksState> => {
     }
 
     const updatedState = JSON.parse(persistedState)
-    const loadedLocalBaseState = BaseTasksState.newStateFrom(
+    const loadedLocalBaseState = TasksState.newStateFrom(
         // Load today by default
         getTodayKey(),
+        "",
         new Map<number, Task[]>(updatedState.tasks),
         updatedState.completedTasks,
+        new Map<string, HashTagTaskMapping[]>()
     )
 
     return new Promise((resolve, reject) => {
@@ -85,11 +89,11 @@ export const migrateToBucketedKeySupport = () => {
 
         // clear old state
         if (bucketedData !== {}) {
-            if (hasChromeStoragePermission()) {
+            if (hasBrowserStoragePermission()) {
                 chrome.storage.sync.clear(() => {
                     // Once clear, persist new state
                     chrome.storage.sync.set(bucketedData)
-                    StateStore.loadState()
+                    AppStateService.loadState()
                 })
             } else {
                 localStorage.removeItem('organizeyou-base-app-2')
@@ -97,7 +101,7 @@ export const migrateToBucketedKeySupport = () => {
                 for (let key in bucketedData) {
                     localStorage.setItem(key, JSON.stringify(bucketedData[key]))
                 }
-                StateStore.loadState()
+                AppStateService.loadState()
             }
         }
     })
@@ -116,7 +120,7 @@ const getMigratedSyncState = (syncState: any, action: TASK_STATE_ACTION, planned
         // Add to completed tasks bucket
         case TASK_STATE_ACTION.COMPLETE_TASK:
             const completedBucketKey = BucketUtils.getBucketKey(targetTask.plannedOn, true)
-            const completedTasks = [...syncState[completedBucketKey] || [], targetTask]
+            const completedTasks = [...(syncState[completedBucketKey] || []), targetTask]
             syncState[completedBucketKey] = completedTasks
             break;
     }

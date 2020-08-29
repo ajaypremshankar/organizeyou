@@ -1,14 +1,14 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme, createMuiTheme } from '@material-ui/core/styles';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
 import { Task } from "../../types/types";
-import { StateStore } from "../../state-stores/tasks/state-store";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { AppStateService } from "../../state-stores/tasks/app-state-service";
 import { ThemeProvider } from "@material-ui/styles";
-import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,20 +49,38 @@ export default function AppDatePicker(props: AppDatePickerProps) {
         overrides: {
             MuiPaper: {
                 root: {
-                    opacity: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 0.8 : 1
+                    opacity: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 0.8 : 1
                 }
             }
         },
         palette: {
-            type: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) && !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'dark' : 'light',
+            type: SettingsStateService.isEnabled(SettingsType.DARK_THEME) && !SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 'dark' : 'light',
             primary: {
-                main: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) && !SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? '#FFFF' : '#1976d2',
+                main: SettingsStateService.isEnabled(SettingsType.DARK_THEME) && !SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? '#FFFF' : '#1976d2',
             },
         },
 
     });
 
-    const tasksMap: Map<number, Task[]> = StateStore.getTasks()
+    const tasksMap: Map<number, Task[]> = AppStateService.getTasks()
+
+    function getRenderDay(day: MaterialUiPickersDate, selectedDate: MaterialUiPickersDate, dayInCurrentMonth: boolean, dayComponent: JSX.Element) {
+        if (day == null) return dayComponent
+
+        const currentKey = formatToKey(day)
+        const tasksOnDay = tasksMap.get(currentKey)
+        const isSelected = !isPastKey(currentKey) && dayInCurrentMonth
+            && tasksOnDay && tasksOnDay.length > 0;
+
+        // You can also use our internal <Day /> component
+        return isSelected ? <Badge
+            overlap="circle"
+            badgeContent={isSelected && tasksOnDay ? tasksOnDay.length : undefined}
+            variant={"dot"}
+            classes={{badge: classes.customBadge}}
+            color={"secondary"}>{dayComponent}</Badge> : dayComponent;
+
+    }
 
     return (
 
@@ -81,22 +99,7 @@ export default function AppDatePicker(props: AppDatePickerProps) {
                         format='yyyyMMdd'
                         open={props.open}
                         onClose={() => props.close()}
-                        renderDay={(day, selectedDate, isInCurrentMonth, dayComponent) => {
-                            if (day == null) return dayComponent
-
-                            const currentKey = formatToKey(day)
-                            const tasksOnDay = tasksMap.get(currentKey)
-                            const isSelected = !isPastKey(currentKey) && isInCurrentMonth
-                                && tasksOnDay && tasksOnDay.length > 0;
-
-                            // You can also use our internal <Day /> component
-                            return isSelected ? <Badge
-                                overlap="circle"
-                                badgeContent={isSelected && tasksOnDay ? tasksOnDay.length : undefined}
-                                variant={"dot"}
-                                classes={{badge: classes.customBadge}}
-                                color={"secondary"}>{dayComponent}</Badge> : dayComponent;
-                        }}
+                        renderDay={getRenderDay}
                     />
                 </MuiPickersUtilsProvider>
             </ThemeProvider>

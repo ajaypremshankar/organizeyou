@@ -3,14 +3,14 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import { getTodayKey, getTomorrowKey, neitherTodayNorTomorrow } from "../../../utils/date-utils";
-import { KeyTitlePair } from "../../../types/key-title-pair";
+import { getTodayKey, getTomorrowKey, isPastKey, neitherTodayNorTomorrow } from "../../../utils/date-utils";
+import { KeyTitleUtils } from "../../../utils/key-title-utils";
 import AppDatePicker from "../../common/date-picker";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         fullWidth: {
-            width: '100%'
+            width: '100%',
         },
         datePicker: {
             '& > *': {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface DaySelectButtonGroupProps {
-    keyTitle: KeyTitlePair,
+    date: number,
     chooseDate: (date: number) => void,
 }
 
@@ -42,6 +42,9 @@ export default function DaySelectButtonGroup(props: DaySelectButtonGroupProps) {
         <div className={classes.fullWidth}>
             <ButtonGroup
                 size="large"
+                disableRipple
+                disableFocusRipple
+                disableElevation
                 color="primary"
                 className={classes.buttonGroup}
                 aria-label="large button group"
@@ -55,17 +58,17 @@ export default function DaySelectButtonGroup(props: DaySelectButtonGroupProps) {
                     close={() => setDatePickerState(false)}/>
 
                 <Button
-                    variant={props.keyTitle.key === getTodayKey() ? 'contained' : 'outlined'}
+                    variant={props.date === getTodayKey() ? 'contained' : 'outlined'}
                     onClick={() => props.chooseDate(getTodayKey())}>Today</Button>
                 <Button
-                    variant={props.keyTitle.key === getTomorrowKey() ? 'contained' : 'outlined'}
+                    variant={props.date === getTomorrowKey() ? 'contained' : 'outlined'}
                     onClick={() => props.chooseDate(getTomorrowKey())}>Tomorrow</Button>
                 <Button
                     startIcon={<CalendarTodayIcon/>}
-                    variant={neitherTodayNorTomorrow(props.keyTitle.key) ? 'contained' : 'outlined'}
+                    variant={neitherTodayNorTomorrow(props.date) ? 'contained' : 'outlined'}
                     onClick={() => {
                         setDatePickerState(true)
-                    }}>{neitherTodayNorTomorrow(props.keyTitle.key) ? props.keyTitle.title : 'Date'}</Button>
+                    }}>{ !isPastKey(props.date) && neitherTodayNorTomorrow(props.date) ? KeyTitleUtils.getTitleByKey(props.date) : 'Date'}</Button>
             </ButtonGroup>
         </div>
     );

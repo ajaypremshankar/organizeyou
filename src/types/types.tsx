@@ -4,6 +4,7 @@ export interface Task {
     plannedOn: number;
     createdOn: number;
     updatedOn: number;
+    tags?: string[]
 }
 
 export interface CompletedTask extends Task {
@@ -20,6 +21,13 @@ export enum ListTitleType {
     TODAY = 'today',
     TOMORROW = 'tomorrow',
     ALL = 'all',
+}
+
+export interface HashTagTaskMapping {
+    value: string
+    plannedOn: number
+    taskId: number
+    completed: boolean
 }
 
 export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => number

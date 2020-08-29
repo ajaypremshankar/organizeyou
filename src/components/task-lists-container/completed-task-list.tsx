@@ -10,8 +10,10 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RestoreIcon from '@material-ui/icons/Restore';
 import { formatToListTitle } from "../../utils/date-utils";
 import AppAccordion from "../common/app-accordian";
-import { StateStore } from "../../state-stores/tasks/state-store";
-import { SettingsStateStore, SettingsType } from "../../state-stores/settings/settings-state";
+import { AppStateService } from "../../state-stores/tasks/app-state-service";
+import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
+import Tooltip from "@material-ui/core/Tooltip";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,55 +43,87 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
 
     const classes = useStyles();
 
+    const completedTasks = AppStateService.getCompletedTasks()
+
+    if (completedTasks.isEmpty()) {
+        return null
+    }
+
+    const handleUndoComplete = (value: CompletedTask) => {
+
+        const task = {...value}
+        delete task.completedDate
+
+        AppStateService.handleUndoComplete(task)
+    }
+
+    function getSummary() {
+        return <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
+            {completedTasks.title.toUpperCase()} {SettingsStateService.isShowAllTasks() ? "" : ` (${AppStateService.getEffectiveTitle().toUpperCase()})`}
+        </Typography>;
+    }
+
+    function getListItem(value: CompletedTask) {
+        const labelId = `completed-task-list-label-${value.id}`;
+        return (
+            <ListItem
+                divider={true}
+                key={labelId}
+                role={undefined} dense button>
+                <ListItemText
+                    id={labelId}
+                    primaryTypographyProps={{
+                        style: {
+                            textDecoration: 'line-through',
+                            fontWeight: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold' : 'normal',
+                            fontSize: '16px',
+                            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+                            width: '92%',
+                            cursor: 'pointer',
+                            wordWrap: 'break-word'
+                        }
+                    }}
+                    primary={value.value}
+                    secondary={` — On ${formatToListTitle(new Date(value.completedDate))}`}
+                />
+                <ListItemSecondaryAction>
+                    <IconButton edge="start" aria-label="restore"
+                                onClick={() => handleUndoComplete(value)}>
+                        <Tooltip title="Restore to pending"
+                                 aria-label={`restore-task-tooltip-${labelId}`}>
+                            <RestoreIcon/>
+                        </Tooltip>
+                    </IconButton>
+                    <IconButton edge="end" aria-label={`delete-${labelId}`}
+                                onClick={() => AppStateService.handleCompletedTaskDeletion(value)}>
+                        <Tooltip title="Delete task" aria-label={`delete-task-tooltip-${labelId}`}>
+                            <DeleteIcon fontSize={"small"}/>
+                        </Tooltip>
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
+        );
+    }
+
+    function getDetails() {
+        return <List className={classes.list}>
+            {
+                (completedTasks.tasks as CompletedTask[])
+                    .map((value, index) => {
+
+                        return getListItem(value);
+                    })}
+        </List>;
+    }
+
     return (
         <div>
             <AppAccordion
                 id={'completed-task'}
                 initialExpanded={false}
-                summary={
-                    <Typography variant="subtitle1" gutterBottom className={classes.title} color="primary">
-                        {StateStore.getCompletedTasks().title.toUpperCase()}
-                    </Typography>
-                }
-                details={
-                    <List className={classes.list}>
-                        {
-                            (StateStore.getCompletedTasks().tasks as CompletedTask[])
-                                .map((value, index) => {
-                                    const labelId = `completed-task-list-label-${value.id}`;
-
-                                    return (
-                                        <ListItem
-                                            divider={true}
-                                            key={labelId}
-                                            role={undefined} dense button>
-                                            <ListItemText
-                                                id={labelId}
-                                                primaryTypographyProps={{
-                                                    style: {
-                                                        textDecoration: 'line-through',
-                                                        fontWeight: SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE) ? 'bold': 'normal',
-                                                        fontSize: '16px',
-                                                        fontFamily: '"Helvetica-Neue", Helvetica, Arial',
-                                                        width: '93%',
-                                                        cursor: 'pointer',
-                                                        wordWrap: 'break-word'
-                                                    }
-                                                }}
-                                                primary={value.value}
-                                                secondary={` — On ${formatToListTitle(new Date(value.completedDate))}`}
-                                            />
-                                            <ListItemSecondaryAction>
-                                                <IconButton edge="start" aria-label="restore"
-                                                            onClick={() => StateStore.handleUndoComplete(value)}>
-                                                    <RestoreIcon/>
-                                                </IconButton>
-                                            </ListItemSecondaryAction>
-                                        </ListItem>
-                                    );
-                                })}
-                    </List>
-                }/>
+                summary={getSummary()}
+                details={getDetails()}
+            />
         </div>
     );
 }

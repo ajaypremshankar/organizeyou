@@ -2,21 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { getTimeInFormatAsPerSettings, getDate } from '../../../utils/date-utils'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { SettingsStateStore } from "../../../state-stores/settings/settings-state";
+import { SettingsStateService } from "../../../state-stores/settings/settings-state";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         clock: {
-            letterSpacing: SettingsStateStore.isFullMode() ? '0px' : '-4px',
-            fontSize: SettingsStateStore.isFullMode() ? '2.5em' : '3em',
+            letterSpacing: SettingsStateService.isFullMode() ? '0px' : '-4px',
+            fontSize: SettingsStateService.isFullMode() ? '2.3em' : '3em',
             fontWeight: 500,
-            marginBottom: SettingsStateStore.isFullMode() ? '-25px' : '-40px',
+            marginBottom: SettingsStateService.isFullMode() ? '-25px' : '-40px',
         },
         date: {
             fontWeight: 400,
-            letterSpacing: SettingsStateStore.isFullMode() ? '0px' : '-1px',
-            fontSize: SettingsStateStore.isFullMode() ? '0.7em' : '0.9em',
-            marginBottom: SettingsStateStore.isFullMode() ? '70px' : '110px',
+            letterSpacing: SettingsStateService.isFullMode() ? '0px' : '-1px',
+            fontSize: SettingsStateService.isFullMode() ? '0.6em' : '0.9em',
+            marginBottom: SettingsStateService.isFullMode() ? '50px' : '110px',
         }
     }),
 );
@@ -39,7 +39,7 @@ export default function Clock(props: ClockProps) {
         return () => {
             clearInterval(interval);
         };
-    }, [props, SettingsStateStore.getToggleSettings()]);
+    }, [props, SettingsStateService.getToggleSettings()]);
 
     return (
         <div className={classes.clock}>

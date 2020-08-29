@@ -1,9 +1,9 @@
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import { SettingsStateStore, SettingsType } from "../state-stores/settings/settings-state";
+import { SettingsStateService, SettingsType } from "../state-stores/settings/settings-state";
+import { createMuiTheme } from '@material-ui/core/styles';
 
 export const getTheme = () => {
 
-    if (!SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE)) {
+    if (!SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE)) {
         return createMuiTheme({
             overrides: {
                 MuiPaper: {
@@ -13,9 +13,9 @@ export const getTheme = () => {
                 }
             },
             palette: {
-                type: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) ? 'dark' : 'light',
+                type: SettingsStateService.isEnabled(SettingsType.DARK_THEME) ? 'dark' : 'light',
                 primary: {
-                    main: SettingsStateStore.isEnabled(SettingsType.DARK_THEME) ? '#FFFF' : '#1976d2',
+                    main: SettingsStateService.isEnabled(SettingsType.DARK_THEME) ? '#FFFF' : '#1976d2',
                 },
             }
         });
@@ -47,7 +47,7 @@ export const getTheme = () => {
 }
 
 export const getRootPaperStyle = (): any => {
-    if (!SettingsStateStore.isEnabled(SettingsType.BACKGROUND_MODE)) {
+    if (!SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE)) {
         return {
             width: '100%',
             minHeight: '100%',
@@ -65,7 +65,7 @@ export const getRootPaperStyle = (): any => {
         minHeight: '100%',
         height: '100%',
         position: 'absolute',
-        backgroundImage: `url(${SettingsStateStore.getTodayBgUrl()})`,
+        backgroundImage: `url(${SettingsStateService.getTodayBgUrl()})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         overflow: 'auto',

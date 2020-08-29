@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { KeyTitlePair } from "../../../types/key-title-pair";
+import { KeyTitleUtils } from "../../../utils/key-title-utils";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -15,13 +15,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface AddNewTaskProps {
-    keyTitle: KeyTitlePair,
+    date: number,
     addTask: (value: string) => void
 }
 
 export default function AddNewTask(props: AddNewTaskProps) {
     const classes = useStyles();
-
     const [taskContentState, setTaskContentState] = useState('');
 
     const handleKeyPressChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -35,7 +34,7 @@ export default function AddNewTask(props: AddNewTaskProps) {
         <TextField
             className={classes.textField}
             id="outlined-basic"
-            label={`Add task for ${props.keyTitle.title}`}
+            label={`Add task for ${KeyTitleUtils.getTitleByKey(props.date)}`}
             variant="outlined"
             size={'medium'}
             autoComplete={'off'}
