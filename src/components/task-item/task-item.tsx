@@ -15,7 +15,7 @@ import EventIcon from '@material-ui/icons/Event';
 import AppDatePicker from "../common/date-picker";
 import { AppStateService } from "../../state-stores/tasks/app-state-service";
 import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
-import { HashTagUtils } from "../../utils/hash-tag-utils";
+import { HashTagUtils } from "../../state-stores/hash-tags/hash-tag-utils";
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const urlRegex = /(https?:\/\/[^ ]*)/
@@ -46,13 +46,18 @@ const getTaskContentWithTooltip = (value: string, props: TaskItemProps) => {
     const onlyUrl = testUrl && testUrl[1];
 
     return (
+        <Tooltip title="Click to edit" aria-label={`click-to-edit-tooltip`}>
         <span>
             {value}
             <span style={{color: 'lightgray', font: 'caption'}}>
                 {props.showPlannedOn ? ` (planned on ${formatToListTitle(props.task.plannedOn)})` : ''}
             </span>
-            <span>{onlyUrl && <a href={onlyUrl} target={'_blank'} rel={'noopener noreferrer'}><OpenInNewIcon cursor={'pointer'} fontSize={"small"} color={"primary"}></OpenInNewIcon></a>}</span>
-        </span>)
+            <span>{onlyUrl &&
+            <a href={onlyUrl} target={'_blank'} rel={'noopener noreferrer'}><OpenInNewIcon cursor={'pointer'}
+                                                                                           fontSize={"small"}
+                                                                                           color={"primary"}></OpenInNewIcon></a>}</span>
+        </span>
+        </Tooltip>)
 }
 
 export default function TaskItem(props: TaskItemProps) {

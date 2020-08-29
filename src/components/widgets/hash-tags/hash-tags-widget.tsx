@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         sup: {
             fontWeight: 'normal',
-            fontSize: 'xx-small'
+            fontSize: '50%'
         },
         noHashtags: {
             fontSize: "small",
-            color: 'secondary'
+            color: '#adadad'
         }
     }),
 );
@@ -33,11 +33,12 @@ export default function HashTagsWidget(props: HashTagsWidgetProps) {
         .map(value => [value[0], [...value[1].filter(x => !x.completed)]])
         .filter(value => value[1].length > 0)
         .sort((a, b) => b[1].length - a[1].length)
-        .slice(0, 5)
+        .slice(0, process.env.REACT_APP_MAX_HASH_TAGS ? Number(process.env.REACT_APP_MAX_HASH_TAGS) : 5)
 
     if (sortedKeyValueArr.length === 0) {
         return <div className={classes.root}>
-            <span className={classes.noHashtags}>Your top 5 #tags will appear here.</span>
+            <span
+                className={classes.noHashtags}>Your top {process.env.REACT_APP_MAX_HASH_TAGS ? Number(process.env.REACT_APP_MAX_HASH_TAGS) : 5} #tags will appear here.</span>
         </div>
     }
 
@@ -50,7 +51,9 @@ export default function HashTagsWidget(props: HashTagsWidgetProps) {
 
     return (
         <Tooltip title='click to see tagged tasks'>
-            <div className={classes.root}>{
+            <div className={classes.root}>
+                <span style={{fontWeight: 'bold', opacity: '20%'}}>#&nbsp;&nbsp;</span>
+                {
                 sortedKeyValueArr
                     .map((value, index) => {
 
@@ -60,7 +63,7 @@ export default function HashTagsWidget(props: HashTagsWidgetProps) {
                                          cursor: 'pointer',
                                          color: `${color}`,
                                          fontWeight: AppStateService.getSelectedList() === value[0] ? "bold" : "normal",
-                                         fontSize: AppStateService.getSelectedList() === value[0] ? 'large' : 'medium'
+                                         fontSize: AppStateService.getSelectedList() === value[0] ? 'medium' : 'small'
                                      }} onClick={() => AppStateService.updateCurrentlySelectedList(value[0] as string)}>
                             {getSupSuffix(value[0] as string, value[1].length)}
                         </span>

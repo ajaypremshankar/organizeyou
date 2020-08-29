@@ -19,14 +19,14 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "prebuild": "react-scripts test --watchAll",
-    "postbuild": "echo $npm_package_version",
+    "prestart": "react-scripts test --watchAll",
+    "prebuild": "CI=true react-scripts test",
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prezip": "npm run build",
-    "zip": "cd build && zip -r -X ../OY_$npm_package_version.zip ."
+    "zip": "rm OY_$npm_package_version.zip && cd build && zip -r -X ../OY_$npm_package_version.zip ."
   },
   "eslintConfig": {
     "extends": "react-app"

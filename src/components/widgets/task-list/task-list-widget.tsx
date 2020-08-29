@@ -50,7 +50,7 @@ export default function TaskListWidget(props: TaskListWidgetProps) {
                             size="small"
                         />
                     }
-                    label="Show all tasks"
+                    label="All tasks"
                 />
             </div>
             {!SettingsStateService.isShowAllTasks() && !SettingsStateService.isHashTagListVisible() && <OverdueTaskList/> }

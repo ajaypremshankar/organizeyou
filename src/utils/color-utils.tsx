@@ -25,10 +25,6 @@ export class ColorUtils {
     public static getColorAt = (index: number) => {
         return SettingsStateService.isEnabled(SettingsType.DARK_THEME)
         || SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ?
-            ColorUtils.Color[index][1] : ColorUtils.invertHex(ColorUtils.Color[index][1]);
-    }
-
-    private static invertHex(hex: string) {
-        return (Number(`0x1${hex}`) ^ 0xFFFFFF).toString(16).substr(1).toUpperCase()
+            ColorUtils.Color[index][1] : '#adadad';
     }
 }

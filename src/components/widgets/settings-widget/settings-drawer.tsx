@@ -44,7 +44,7 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
             onClose={props.toggleDrawer(false)}
             onOpen={props.toggleDrawer(true)}>
             <div
-                style={{background: getTransparentBackgroundColor(SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE), 0.3)}}
+                style={{background: getTransparentBackgroundColor(SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE), 0.5)}}
                 role="presentation">
                 <SettingsList/>
             </div>

@@ -239,7 +239,6 @@ describe("TaskState: undoCompleteTask", () => {
 //TODO Add task
 //TODO remove task
 //TODO remove completed task
-//TODO hashtags
 //TODO selectedDate & selectedList
 
 export {}

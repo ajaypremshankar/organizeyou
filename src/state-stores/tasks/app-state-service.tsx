@@ -6,7 +6,7 @@ import { formatToKey, getTodayKey } from "../../utils/date-utils";
 import { KeyTitleUtils } from "../../utils/key-title-utils";
 import { SettingsStateService, SettingsType } from "../settings/settings-state";
 import { TASK_STATE_ACTION } from "../bucket/bucket-utils";
-import { HashTagUtils } from "../../utils/hash-tag-utils";
+import { HashTagUtils } from "../hash-tags/hash-tag-utils";
 import { HashTagRepository } from "../hash-tags/hash-tag-repository";
 
 /**
