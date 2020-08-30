@@ -12,8 +12,10 @@ export class HashTagRepository {
             const hashTagStateToUpdate: any = {}
             const keysToDelete: string[] = []
             for (let key in deltaHashState) {
-                if (deltaHashState[key].length > 0) {
-                    hashTagStateToUpdate[key] = deltaHashState[key]
+                const uniqueValues = Array.from(new Set(deltaHashState[key]))
+                if (uniqueValues.length > 0) {
+                    // Make sure no duplicates are being saved.
+                    hashTagStateToUpdate[key] = uniqueValues
                 } else {
                     keysToDelete.push(key)
                 }
@@ -28,8 +30,9 @@ export class HashTagRepository {
             }
         } else {
             for (let key in deltaHashState) {
-                if (deltaHashState[key].length > 0) {
-                    localStorage.setItem(key, JSON.stringify(deltaHashState[key]))
+                const uniqueValues = Array.from(new Set(deltaHashState[key]))
+                if (uniqueValues.length > 0) {
+                    localStorage.setItem(key, JSON.stringify(uniqueValues))
                 } else {
                     localStorage.removeItem(key)
                 }

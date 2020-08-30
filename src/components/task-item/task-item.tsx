@@ -44,13 +44,13 @@ interface TaskItemProps {
 const getTaskContentWithTooltip = (value: string, props: TaskItemProps) => {
     const testUrl = value.match(urlRegex);
     const onlyUrl = testUrl && testUrl[1];
-
+    const labelId = `task-item-label-${props.task.id}`;
     return (
-        <Tooltip title="Click to edit" aria-label={`click-to-edit-tooltip`}>
+        <Tooltip title="Click to edit" aria-label={`${labelId}-tooltip`}>
         <span>
             {value}
             <span style={{color: 'lightgray', font: 'caption'}}>
-                {props.showPlannedOn ? ` (planned on ${formatToListTitle(props.task.plannedOn)})` : ''}
+                {props.showPlannedOn ? ` (${formatToListTitle(props.task.plannedOn)})` : ''}
             </span>
             <span>{onlyUrl &&
             <a href={onlyUrl} target={'_blank'} rel={'noopener noreferrer'}><OpenInNewIcon cursor={'pointer'}

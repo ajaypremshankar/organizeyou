@@ -54,8 +54,9 @@ class BrowserSyncStorageRepository {
             const toUpdate: any = {}
             const keysToDelete: string[] = []
             for (let key in syncState) {
-                if (syncState[key].length > 0) {
-                    toUpdate[key] = syncState[key]
+                const uniqueValues = Array.from(new Set(syncState[key]))
+                if (uniqueValues.length > 0) {
+                    toUpdate[key] = uniqueValues
                 } else {
                     keysToDelete.push(key)
                 }
@@ -107,8 +108,9 @@ class LocalStorageRepository {
         let stateToUpdate: any = BucketUtils.getBucketedState(action, plannedOn, targetTask, persistedState)
 
         for (let key in stateToUpdate) {
-            if (stateToUpdate[key].length > 0) {
-                localStorage.setItem(key, JSON.stringify(stateToUpdate[key]))
+            const uniqueValues = Array.from(new Set(stateToUpdate[key]))
+            if (uniqueValues.length > 0) {
+                localStorage.setItem(key, JSON.stringify(uniqueValues))
             } else {
                 localStorage.removeItem(key)
             }
