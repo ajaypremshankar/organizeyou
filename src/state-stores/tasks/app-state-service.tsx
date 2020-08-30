@@ -94,7 +94,7 @@ export class AppStateService {
                 reducedList.push(...value)
             })
 
-            return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(ListType.ALL), reducedList, (a: Task | CompletedTask, b: Task | CompletedTask) => {
+            return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(ListType.ALL),  Array.from(new Set(reducedList)), (a: Task | CompletedTask, b: Task | CompletedTask) => {
                 return a.plannedOn - b.plannedOn
             })
         } else if (SettingsStateService.isHashTagListVisible()) {
@@ -115,13 +115,13 @@ export class AppStateService {
             reducedList.push(...(taskArr.filter(x => x.id === tag.taskId)))
         })
 
-        return new DisplayableTaskList(AppStateService.baseState.selectedList, reducedList, sorter)
+        return new DisplayableTaskList(AppStateService.baseState.selectedList, Array.from(new Set(reducedList)), sorter)
     }
 
     public static getSelectedDateTasks(sorter?: TaskSorter): DisplayableTaskList {
         const reducedList: Task[] = []
         reducedList.push(...(AppStateService.getTasks().get(AppStateService.baseState.selectedDate) || []))
-        return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(AppStateService.baseState.selectedDate), reducedList, sorter)
+        return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(AppStateService.baseState.selectedDate),  Array.from(new Set(reducedList)), sorter)
     }
 
     public static getCompletedTasks = (sorter?: TaskSorter) => {
