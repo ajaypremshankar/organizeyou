@@ -85,17 +85,12 @@ describe("HashTagUtils: addOrUpdateHashTags", () => {
         )
 
         expect(deltaMap).not.toBeNull()
-        expect(deltaMap.size).toEqual(3)
+        expect(deltaMap.size).toEqual(2)
 
         expect(deltaMap.get('tag1')).not.toBeNull()
         expect(deltaMap.get('tag1')?.length).toEqual(0)
 
-        expect(deltaMap.get('tag2')).toContainEqual({
-            value: 'tag2',
-            plannedOn: currentTask.plannedOn,
-            taskId: currentTask.id,
-            completed: false
-        })
+        expect(deltaMap.get('tag2')).toBeUndefined()
 
         expect(deltaMap.get('tag3')).not.toBeNull()
         expect(deltaMap.get('tag3')?.length).toEqual(2)

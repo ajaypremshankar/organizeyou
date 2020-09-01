@@ -1,6 +1,6 @@
 {
   "name": "organizeyou",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
@@ -19,14 +19,14 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "prestart": "react-scripts test --watchAll",
+    "prestart": "CI=true react-scripts test",
     "prebuild": "CI=true react-scripts test",
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prezip": "npm run build",
-    "zip": "rm OY_$npm_package_version.zip && cd build && zip -r -X ../OY_$npm_package_version.zip ."
+    "zip": "rm -f OY_$npm_package_version.zip && cd build && zip -r -X ../OY_$npm_package_version.zip ."
   },
   "eslintConfig": {
     "extends": "react-app"

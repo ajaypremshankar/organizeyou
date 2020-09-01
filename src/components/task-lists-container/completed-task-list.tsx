@@ -87,14 +87,14 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
                     secondary={` — On ${formatToListTitle(new Date(value.completedDate))}`}
                 />
                 <ListItemSecondaryAction>
-                    <IconButton edge="start" aria-label="restore"
+                    <IconButton edge="start" aria-label={`restore-task-${labelId}`}
                                 onClick={() => handleUndoComplete(value)}>
                         <Tooltip title="Restore to pending"
                                  aria-label={`restore-task-tooltip-${labelId}`}>
                             <RestoreIcon/>
                         </Tooltip>
                     </IconButton>
-                    <IconButton edge="end" aria-label={`delete-${labelId}`}
+                    <IconButton edge="end" aria-label={`delete-task-${labelId}`}
                                 onClick={() => AppStateService.handleCompletedTaskDeletion(value)}>
                         <Tooltip title="Delete task" aria-label={`delete-task-tooltip-${labelId}`}>
                             <DeleteIcon fontSize={"small"}/>

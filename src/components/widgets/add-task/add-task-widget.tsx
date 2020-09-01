@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import DaySelectButtonGroup from "./day-select-button-group";
 import AddNewTask from "./add-new-task";
@@ -50,6 +50,8 @@ export default function AddTaskWidget(props: AddTaskWidgetProps) {
                 updatedOn: now,
                 tags: tags
             })
+
+        AppStateService.updateCurrentlySelectedList("")
     }
 
     return (

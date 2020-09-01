@@ -94,7 +94,7 @@ export class AppStateService {
                 reducedList.push(...value)
             })
 
-            return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(ListType.ALL),  Array.from(new Set(reducedList)), (a: Task | CompletedTask, b: Task | CompletedTask) => {
+            return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(ListType.ALL), reducedList, (a: Task | CompletedTask, b: Task | CompletedTask) => {
                 return a.plannedOn - b.plannedOn
             })
         } else if (SettingsStateService.isHashTagListVisible()) {
@@ -121,7 +121,7 @@ export class AppStateService {
     public static getSelectedDateTasks(sorter?: TaskSorter): DisplayableTaskList {
         const reducedList: Task[] = []
         reducedList.push(...(AppStateService.getTasks().get(AppStateService.baseState.selectedDate) || []))
-        return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(AppStateService.baseState.selectedDate),  Array.from(new Set(reducedList)), sorter)
+        return new DisplayableTaskList(KeyTitleUtils.getTitleByKey(AppStateService.baseState.selectedDate), reducedList, sorter)
     }
 
     public static getCompletedTasks = (sorter?: TaskSorter) => {
@@ -131,7 +131,7 @@ export class AppStateService {
         } else if (SettingsStateService.isHashTagListVisible()) {
             const tagTaskArr = AppStateService.baseState.hashTags.get(AppStateService.baseState.selectedList) || []
             tagTaskArr.forEach(tag => {
-                reducedList.push(...(AppStateService.baseState.completedTasks.filter(x => x.id === tag.taskId)))
+                reducedList.push(...(Array.from(new Set(AppStateService.baseState.completedTasks.filter(x => x.id === tag.taskId)))))
             })
         } else {
             reducedList.push(...(AppStateService.baseState.completedTasks.filter(x => formatToKey(new Date(x.completedDate)) === AppStateService.getSelectedDate())))
