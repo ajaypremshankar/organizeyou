@@ -7,6 +7,18 @@ import RightGrid from "./right-grid";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        '@global': {
+            '*::-webkit-scrollbar': {
+                width: '10px',
+                height: '10px',
+            },
+            '*::-webkit-scrollbar-thumb': {
+                background: 'lightgray',
+            },
+            '*::-webkit-scrollbar-track': {
+                background: 'transparent',
+            }
+        },
         root: {
             flexGrow: 0,
             width: '99vw',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme, createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
@@ -99,8 +99,7 @@ export default function AppDatePicker(props: AppDatePickerProps) {
                         format='yyyyMMdd'
                         open={props.open}
                         onClose={() => props.close()}
-                        renderDay={getRenderDay}
-                    />
+                        renderDay={getRenderDay} />
                 </MuiPickersUtilsProvider>
             </ThemeProvider>
         </div>

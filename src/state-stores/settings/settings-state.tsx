@@ -1,5 +1,7 @@
 import { getTodayKey } from "../../utils/date-utils";
 import { migrateToBucketedKeySupport } from "../bucket/bucketed-migrations-utils";
+import { WorldClock } from "../../components/widgets/world-clock/work-clock-setting";
+import moment from "moment-timezone";
 
 /***
  * Enum type used as key for settings
@@ -9,14 +11,17 @@ export enum SettingsType {
     SHOW_SECONDS = 'Seconds on clock',
     SHOW_AM_PM = "Show AM/PM",
     SHOW_ALL_TASKS = 'Show all tasks list',
-    SHOW_COMPLETED_TASKS = 'Show completed tasks list',
+    SHOW_COMPLETED_TASKS = 'Show completed tasks',
     ABOUT_US = 'Who are we?',
     DARK_THEME = 'Dark theme',
-    BACKGROUND_MODE = 'Daily background wallpaper',
+    BACKGROUND_MODE = 'Background mode',
     FULL_MODE = 'Full mode',
     BUCKETED_STORE_MIGRATION_COMPLETE = 'oy_m_t_b_s',
     APP_LOADING = 'app_loading',
     SHOWING_HASH_TAG_BASED_LIST = 'showing_hash_tag_based_list',
+    WORLD_CLOCK_DATA = 'w_c_data',
+    SHOW_WORLD_CLOCK = "Show world clock",
+    LOCK_CURRENT_WALLPAPER = "Lock current wallpaper",
 }
 
 /***
@@ -65,7 +70,18 @@ export class SettingsStateService {
         const background = objectSettings.get(SettingsType.BACKGROUND_MODE)
 
         //https://source.unsplash.com/featured/3200x1800?scenery,nature,wallpapers,hd
-        if (!background || Number(background.day) < getTodayKey()) {
+        if (background && Number(background.day) < getTodayKey()
+            && toggleSettings.get(SettingsType.LOCK_CURRENT_WALLPAPER)) {
+            objectSettings.set(SettingsType.BACKGROUND_MODE, {
+                day: getTodayKey(),
+                url: background.url,
+            })
+
+            // Update state & store only after loading image.
+            // DO-NOT take this state-update out of promise.then
+            SettingsStateService.saveSettings(toggleSettings, objectSettings);
+        } else if (!background || Number(background.day) < getTodayKey()) {
+
             fetch(`https://source.unsplash.com/collection/220388/1920x1080`).then(value => {
                 SettingsStateService.loadAndCacheImage(value.url).then(url => {
                     objectSettings.set(SettingsType.BACKGROUND_MODE, {
@@ -127,7 +143,16 @@ export class SettingsStateService {
             toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
             toggleSettings.set(SettingsType.SHOW_AM_PM, true)
             toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
+
+            toggleSettings.set(SettingsType.LOCK_CURRENT_WALLPAPER, false)
+            objectSettings.set(SettingsType.WORLD_CLOCK_DATA, SettingsStateService.getDefaultClocks)
         }
+
+        // Enable world clock for the first time.
+        if (toggleSettings.get(SettingsType.SHOW_WORLD_CLOCK) === undefined) {
+            toggleSettings.set(SettingsType.SHOW_WORLD_CLOCK, true)
+        }
+
         return {toggleSettings, objectSettings};
     }
 
@@ -140,6 +165,17 @@ export class SettingsStateService {
 
     public static getToggleSettings = () => {
         return new Map<SettingsType, boolean>(SettingsStateService.settingsState.toggleSettings)
+    }
+
+    public static getWorldClockData = () => {
+        const clocks = SettingsStateService.getAsObject(SettingsType.WORLD_CLOCK_DATA) as WorldClock[]
+        const clockArr: WorldClock[] = []
+        Object.keys(clocks).map(function (key: string) {
+            clockArr.push(clocks[Number(key)])
+            return clockArr;
+        });
+
+        return clockArr.length > 0 ? clockArr : SettingsStateService.getDefaultClocks()
     }
 
     public static toggleSetting = (type: SettingsType, setValueTo?: boolean) => {
@@ -155,9 +191,29 @@ export class SettingsStateService {
         return settings
     }
 
+    private static getDefaultClocks = () => {
+        return [{
+            id: 0,
+            title: 'Europe/London',
+            timezone: 'Europe/London',
+            ampmEnabled: true,
+        }, {
+            id: 1,
+            title: moment.tz.guess(),
+            timezone: moment.tz.guess(),
+            ampmEnabled: true,
+        }, {
+            id: 2,
+            title: 'America/New_York',
+            timezone: 'America/New_York',
+            ampmEnabled: true,
+        }]
+
+    }
+
     public static updateObjectSetting = (type: SettingsType, value: Object) => {
         const objectSettings = new Map<SettingsType, Object>(SettingsStateService.settingsState.objectSettings)
-        objectSettings.set(type, {...objectSettings.get(type), ...value})
+        objectSettings.set(type, {...value})
 
         const settings: SettingsState = {
             toggleSettings: new Map<SettingsType, boolean>(SettingsStateService.settingsState.toggleSettings),

@@ -172,6 +172,11 @@ export class AppStateService {
         SettingsStateService.setShowHashTags(true)
     }
 
+    public static clearCurrentlySelectedList = () => {
+        AppStateService.setToStore(AppStateService.baseState.updateCurrentlySelectedList(""))
+        SettingsStateService.setShowHashTags(false)
+    }
+
     public static handleTaskCompletion = (task: CompletedTask) => {
 
         AppStateService.updateBaseState(

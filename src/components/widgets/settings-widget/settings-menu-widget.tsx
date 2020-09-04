@@ -16,11 +16,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface LeftMenuWidgetProps {
+interface SettingsMenuWidgetProps {
 
 }
 
-export default function SettingsMenuWidget(props: LeftMenuWidgetProps) {
+export default function SettingsMenuWidget(props: SettingsMenuWidgetProps) {
 
     const classes = useStyles();
     const [drawerState, setDrawerState] = React.useState(false);

@@ -15,6 +15,7 @@ import PaletteIcon from '@material-ui/icons/Palette';
 import ImageIcon from '@material-ui/icons/Image';
 import { SettingsStateService, SettingsType } from "../../../state-stores/settings/settings-state";
 import Typography from "@material-ui/core/Typography";
+import LockIcon from '@material-ui/icons/Lock';
 
 const useStyles = makeStyles({
     listItemReleased: {
@@ -42,34 +43,18 @@ export default function SettingsList(props: SettingsListProps) {
                     </Typography>}/>
             </ListItem>
             <Divider/>
-            <ListItem className={classes.listItemReleased} style={{display: 'none'}}>
-                <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
-                <ListItemText
-                    id={SettingsType.SHOW_SECONDS}
-                    primary={SettingsType.SHOW_SECONDS}/>
-                <ListItemSecondaryAction className={classes.secondaryAction} style={{display: 'none'}}>
-                    <Switch
-                        style={{display: 'none'}}
-                        color={'primary'}
-                        edge="end"
-                        onChange={() => SettingsStateService.toggleSetting(SettingsType.SHOW_SECONDS)}
-                        checked={SettingsStateService.isEnabled(SettingsType.SHOW_SECONDS)}
-                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_SECONDS}`}}
-                    />
-                </ListItemSecondaryAction>
-            </ListItem>
             <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
                 <ListItemText
-                    id={SettingsType.SHOW_AM_PM}
-                    primary={SettingsType.SHOW_AM_PM}/>
+                    id={SettingsType.SHOW_WORLD_CLOCK}
+                    primary={SettingsType.SHOW_WORLD_CLOCK}/>
                 <ListItemSecondaryAction className={classes.secondaryAction}>
                     <Switch
                         color={'primary'}
                         edge="end"
-                        onChange={() => SettingsStateService.toggleSetting(SettingsType.SHOW_AM_PM)}
-                        checked={SettingsStateService.isEnabled(SettingsType.SHOW_AM_PM)}
-                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_AM_PM}`}}
+                        onChange={() => SettingsStateService.toggleSetting(SettingsType.SHOW_WORLD_CLOCK)}
+                        checked={SettingsStateService.isEnabled(SettingsType.SHOW_WORLD_CLOCK)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_WORLD_CLOCK}`}}
                     />
                 </ListItemSecondaryAction>
             </ListItem>
@@ -89,7 +74,23 @@ export default function SettingsList(props: SettingsListProps) {
                     />
                 </ListItemSecondaryAction>
             </ListItem>
-
+            <Divider/>
+            <ListItem className={classes.listItemReleased}>
+                <ListItemIcon><ImageIcon/></ListItemIcon>
+                <ListItemText
+                    id={SettingsType.BACKGROUND_MODE}
+                    primary={SettingsType.BACKGROUND_MODE}
+                    secondary={'Credits: Unsplash.com'}/>
+                <ListItemSecondaryAction className={classes.secondaryAction}>
+                    <Switch
+                        color={'primary'}
+                        edge="end"
+                        onChange={() => SettingsStateService.toggleSetting(SettingsType.BACKGROUND_MODE)}
+                        checked={SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.BACKGROUND_MODE}`}}/>
+                </ListItemSecondaryAction>
+            </ListItem>
+            {!SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) &&
             <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><PaletteIcon/></ListItemIcon>
                 <ListItemText
@@ -99,30 +100,28 @@ export default function SettingsList(props: SettingsListProps) {
                     <Switch
                         color={'primary'}
                         edge="end"
-                        disabled={SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE)}
                         onChange={() => SettingsStateService.toggleSetting(SettingsType.DARK_THEME)}
                         checked={SettingsStateService.isEnabled(SettingsType.DARK_THEME)}
                         inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.DARK_THEME}`}}
                     />
                 </ListItemSecondaryAction>
-            </ListItem>
+            </ListItem>}
+            {SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) &&
             <ListItem className={classes.listItemReleased}>
-                <ListItemIcon><ImageIcon/></ListItemIcon>
+                <ListItemIcon><LockIcon/></ListItemIcon>
                 <ListItemText
-                    id={SettingsType.BACKGROUND_MODE}
-                    primary={SettingsType.BACKGROUND_MODE}
-                    secondary={'Credits: Unsplash.com'}
-                />
+                    id={SettingsType.LOCK_CURRENT_WALLPAPER}
+                    primary={SettingsType.LOCK_CURRENT_WALLPAPER}/>
                 <ListItemSecondaryAction className={classes.secondaryAction}>
                     <Switch
                         color={'primary'}
                         edge="end"
-                        onChange={() => SettingsStateService.toggleSetting(SettingsType.BACKGROUND_MODE)}
-                        checked={SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE)}
-                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.BACKGROUND_MODE}`}}
+                        onChange={() => SettingsStateService.toggleSetting(SettingsType.LOCK_CURRENT_WALLPAPER)}
+                        checked={SettingsStateService.isEnabled(SettingsType.LOCK_CURRENT_WALLPAPER)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.LOCK_CURRENT_WALLPAPER}`}}
                     />
                 </ListItemSecondaryAction>
-            </ListItem>
+            </ListItem>}
             <Divider/>
             <ListItem className={classes.listItemReleased}>
                 <ListItemText

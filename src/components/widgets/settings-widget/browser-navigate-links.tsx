@@ -58,7 +58,7 @@ export default function NavigationLinks(props: TopButtonGroupProps) {
 
     const setCurrentTab = (link: string) => {
         window.chrome.tabs.getCurrent(tab => {
-            if(tab && tab.id) {
+            if (tab && tab.id) {
                 window.chrome.tabs.update(tab.id, {url: link})
             }
         })
@@ -72,14 +72,16 @@ export default function NavigationLinks(props: TopButtonGroupProps) {
                 size={"small"}
                 orientation="vertical"
                 aria-label="text alignment">
-                <ToggleButton onClick={() => handleOnClick(NAVIGATION_TYPE.NEW_TAB)} value="new tab" aria-label="centered">
-                    <Tooltip title={'Default new tab'}><HomeIcon /></Tooltip>
+                <ToggleButton onClick={() => handleOnClick(NAVIGATION_TYPE.NEW_TAB)} value="new tab"
+                              aria-label="centered">
+                    <Tooltip title={'Default new tab'}><HomeIcon/></Tooltip>
                 </ToggleButton>
-                <ToggleButton onClick={() => handleOnClick(NAVIGATION_TYPE.BOOKMARKS)} value="bookmarks" aria-label="centered">
-                    <Tooltip title={'Bookmarks'}><BookmarkIcon /></Tooltip>
+                <ToggleButton onClick={() => handleOnClick(NAVIGATION_TYPE.BOOKMARKS)} value="bookmarks"
+                              aria-label="centered">
+                    <Tooltip title={'Bookmarks'}><BookmarkIcon/></Tooltip>
                 </ToggleButton>
                 <ToggleButton onClick={() => handleOnClick(NAVIGATION_TYPE.APPS)} value="apps" aria-label="centered">
-                    <Tooltip title={'Apps'}><AppsIcon /></Tooltip>
+                    <Tooltip title={'Apps'}><AppsIcon/></Tooltip>
                 </ToggleButton>
             </ToggleButtonGroup>
         </div>
