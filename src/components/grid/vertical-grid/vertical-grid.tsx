@@ -9,8 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         '@global': {
             '*::-webkit-scrollbar': {
-                width: '10px',
-                height: '10px',
+                width: '12px',
             },
             '*::-webkit-scrollbar-thumb': {
                 background: 'lightgray',

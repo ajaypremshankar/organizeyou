@@ -70,6 +70,8 @@ export class SettingsStateService {
         const background = objectSettings.get(SettingsType.BACKGROUND_MODE)
 
         //https://source.unsplash.com/featured/3200x1800?scenery,nature,wallpapers,hd
+
+        //if lock is enabled. just change the date to current
         if (background && Number(background.day) < getTodayKey()
             && toggleSettings.get(SettingsType.LOCK_CURRENT_WALLPAPER)) {
             objectSettings.set(SettingsType.BACKGROUND_MODE, {
@@ -77,8 +79,6 @@ export class SettingsStateService {
                 url: background.url,
             })
 
-            // Update state & store only after loading image.
-            // DO-NOT take this state-update out of promise.then
             SettingsStateService.saveSettings(toggleSettings, objectSettings);
         } else if (!background || Number(background.day) < getTodayKey()) {
 
@@ -169,13 +169,7 @@ export class SettingsStateService {
 
     public static getWorldClockData = () => {
         const clocks = SettingsStateService.getAsObject(SettingsType.WORLD_CLOCK_DATA) as WorldClock[]
-        const clockArr: WorldClock[] = []
-        Object.keys(clocks).map(function (key: string) {
-            clockArr.push(clocks[Number(key)])
-            return clockArr;
-        });
-
-        return clockArr.length > 0 ? clockArr : SettingsStateService.getDefaultClocks()
+        return clocks && clocks.length > 0 ? clocks : SettingsStateService.getDefaultClocks()
     }
 
     public static toggleSetting = (type: SettingsType, setValueTo?: boolean) => {
@@ -213,7 +207,7 @@ export class SettingsStateService {
 
     public static updateObjectSetting = (type: SettingsType, value: Object) => {
         const objectSettings = new Map<SettingsType, Object>(SettingsStateService.settingsState.objectSettings)
-        objectSettings.set(type, {...value})
+        objectSettings.set(type, value)
 
         const settings: SettingsState = {
             toggleSettings: new Map<SettingsType, boolean>(SettingsStateService.settingsState.toggleSettings),
