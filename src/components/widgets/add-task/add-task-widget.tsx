@@ -51,7 +51,7 @@ export default function AddTaskWidget(props: AddTaskWidgetProps) {
                 tags: tags
             })
 
-        AppStateService.updateCurrentlySelectedList("")
+        AppStateService.clearCurrentlySelectedList()
     }
 
     return (

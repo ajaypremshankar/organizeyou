@@ -37,7 +37,7 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
             }}
 
             PaperProps={{
-                style: {width: '25%'}
+                style: {width: '23%',}
             }}
             anchor={'right'}
             open={props.open}

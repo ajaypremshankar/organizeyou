@@ -21,7 +21,7 @@ export default function RightGrid() {
         <SettingsMenuWidget/>
     ]
     return (
-        <Grid item xs={3} key={`right-grid-item`}>
+        <Grid item key={`right-grid-item`}>
             {[0, 1].map((value) => (
                 <Grid key={`right-grid-container-${value}`} container justify="center">
                     <Grid key={`right-grid-item-${value}`} item>

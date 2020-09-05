@@ -3,7 +3,7 @@
   "short_name": "OrganizeYou - A simple task board",
   "name": "OrganizeYou - A simple task board",
   "description": "Keep your todos always in-front of you",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",

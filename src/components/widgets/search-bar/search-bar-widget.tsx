@@ -9,15 +9,15 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: '15px',
             display: 'flex',
             alignItems: 'center',
-            width: '100%',
+            width: '96%',
             height: '5vw',
             '& > *': {
                 margin: theme.spacing(4),
             },
         },
         textField: {
-            width: '100%',
-            marginBottom: '10px',
+            width: '96%',
+            margin: '10px',
         },
         input: {
             flex: 1,
