@@ -7,6 +7,7 @@ import Moment from "react-moment";
 import { ClassNameMap } from "@material-ui/styles/withStyles";
 import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from "@material-ui/core/Tooltip";
+import { getCurrentMillis } from "../../../utils/date-utils";
 
 interface ClockProps {
     useStyle: (props?: any) => ClassNameMap<any>
@@ -17,13 +18,13 @@ interface ClockProps {
 export default function Clock(props: ClockProps) {
 
     const classes = props.useStyle();
-    const [ctime, setCtime] = useState(Math.round(new Date().getTime() / 1000))
+    const [ctime, setCtime] = useState(Math.round(getCurrentMillis()/ 1000))
     const [hover, setHover] = useState(false)
 
     useEffect(() => {
 
         const updateTime = () => {
-            setCtime(Math.round(new Date().getTime() / 1000))
+            setCtime(Math.round(getCurrentMillis() / 1000))
         }
 
         const interval = setInterval(updateTime, 1000);
