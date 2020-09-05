@@ -3,7 +3,7 @@ import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/co
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
-import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
+import { formatToKey, getTodayKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
 import { Task } from "../../types/types";
 import { AppStateService } from "../../state-stores/tasks/app-state-service";
@@ -94,7 +94,7 @@ export default function AppDatePicker(props: AppDatePickerProps) {
                         disablePast
                         variant="dialog"
                         label={props.label}
-                        value={parseFromKey(props.value)}
+                        value={parseFromKey(getTodayKey())}
                         onChange={handleDateChange}
                         autoOk={true}
                         format='YYYYMMDD'
