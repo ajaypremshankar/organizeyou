@@ -1,8 +1,9 @@
 import React from 'react';
 import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
+import MomentUtils from "@date-io/moment";
+import moment from "moment";
+import { formatToKey, getTodayKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
 import { Task } from "../../types/types";
 import { AppStateService } from "../../state-stores/tasks/app-state-service";
@@ -38,9 +39,9 @@ interface AppDatePickerProps {
 
 export default function AppDatePicker(props: AppDatePickerProps) {
     const classes = useStyles();
-    const handleDateChange = (date: Date | null) => {
+    const handleDateChange = (date: MaterialUiPickersDate) => {
         if (date) {
-            props.dateChange(formatToKey(date))
+            props.dateChange(formatToKey(date.toDate()))
         }
         props.close()
     };
@@ -67,7 +68,7 @@ export default function AppDatePicker(props: AppDatePickerProps) {
     function getRenderDay(day: MaterialUiPickersDate, selectedDate: MaterialUiPickersDate, dayInCurrentMonth: boolean, dayComponent: JSX.Element) {
         if (day == null) return dayComponent
 
-        const currentKey = formatToKey(day)
+        const currentKey = formatToKey(day.toDate())
         const tasksOnDay = tasksMap.get(currentKey)
         const isSelected = !isPastKey(currentKey) && dayInCurrentMonth
             && tasksOnDay && tasksOnDay.length > 0;
@@ -87,16 +88,16 @@ export default function AppDatePicker(props: AppDatePickerProps) {
         <div style={{display: 'none'}}>
             <ThemeProvider theme={defaultMaterialTheme}>
                 <MuiPickersUtilsProvider
-                    utils={DateFnsUtils}>
+                    libInstance={moment} utils={MomentUtils}>
                     <DatePicker
                         disableToolbar
                         disablePast
                         variant="dialog"
                         label={props.label}
-                        value={parseFromKey(props.value)}
+                        value={parseFromKey(getTodayKey())}
                         onChange={handleDateChange}
                         autoOk={true}
-                        format='yyyyMMdd'
+                        format='YYYYMMDD'
                         open={props.open}
                         onClose={() => props.close()}
                         renderDay={getRenderDay} />

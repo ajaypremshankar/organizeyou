@@ -57,7 +57,7 @@ export default function WorldClockSetting(props: WorldClockSettingProps) {
                     value={wcTitleState}
                     fullWidth
                     autoComplete={'off'}
-                    label="What do you want to call this clock?"
+                    label="Name this clock"
                     onChange={(event) => setWcTitleState(event.target.value)}
                     variant="outlined"/>
             </div>
