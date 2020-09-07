@@ -30,4 +30,28 @@ export interface HashTagTaskMapping {
     completed: boolean
 }
 
+export enum TASK_FREQUENCY_TYPE {
+    NO_REPEAT,
+    DAILY,
+    EVERY_WEEKDAY,
+    WEEKLY,
+    MONTHLY_DATE,
+    MONTHLY_DAY,
+    YEARLY,
+    CUSTOM,
+}
+
+export interface TaskFrequencyMeta {
+    day: number /* 1 - mon to 7-sun */
+    date: number /* 1 to 31 */
+    week: number /* 1 to 4 */
+    month: number /* 1 - 12 */
+}
+
+export interface TaskFrequencyVO {
+    id: number
+    meta: Partial<TaskFrequencyMeta>
+    nextDateKey: number
+}
+
 export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => number

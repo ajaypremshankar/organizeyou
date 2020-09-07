@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import { getCurrentMillis } from "../../../utils/date-utils";
 import { AppStateService } from "../../../state-stores/tasks/app-state-service";
 import { HashTagUtils } from "../../../state-stores/hash-tags/hash-tag-utils";
+import { TASK_FREQUENCY_TYPE } from "../../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -17,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
             align: 'center',
             '& > *': {
-                margin: theme.spacing(2),
+                margin: theme.spacing(1),
             },
         }
     }),
@@ -31,6 +32,8 @@ export default function AddTaskWidget(props: AddTaskWidgetProps) {
     const classes = useStyles()
 
     const [addTaskState, setAddTaskState] = useState(AppStateService.getSelectedDate())
+
+    const [taskFrequency, setTaskFrequency] = useState(TASK_FREQUENCY_TYPE.YEARLY)
 
     const handleDateChange = (date: number) => {
         setAddTaskState(date)
@@ -61,7 +64,10 @@ export default function AddTaskWidget(props: AddTaskWidgetProps) {
                 chooseDate={handleDateChange}/> }
             <AddNewTask
                 date={addTaskState}
-                addTask={handleAddTask}/>
+                addTask={handleAddTask}
+                taskFrequency={taskFrequency}
+                changeTaskFrequency={setTaskFrequency}
+            />
         </Grid>
     );
 }
