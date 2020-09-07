@@ -71,7 +71,7 @@ const useStylesClockCenter = makeStyles((theme: Theme) =>
         },
         clock: {
             letterSpacing: SettingsStateService.isFullMode() ? '-1px' : '2px',
-            fontSize: SettingsStateService.isFullMode() ? '5em' : '7em',
+            fontSize: SettingsStateService.isFullMode() ? '4em' : '7em',
             fontWeight: 500,
             marginBottom: SettingsStateService.isFullMode() ? '-10px' : '-20px',
             marginTop: SettingsStateService.isFullMode() ? '-10px' : '-20px',
@@ -169,7 +169,7 @@ export default function WorldClockWidget() {
                                 {clockComponentList[0]}
                             </Paper>
                         </Grid> : null}
-                    <Grid xs={5} key={`world-clock-grid-item-1`} item>
+                    <Grid xs={6} key={`world-clock-grid-item-1`} item>
                         <Paper key={`world-clock-grid-paper-1`} className={classes.paperCenter} elevation={0}>
                             {clockComponentList[1]}
                         </Paper>
