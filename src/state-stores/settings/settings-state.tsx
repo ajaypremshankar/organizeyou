@@ -217,6 +217,25 @@ export class SettingsStateService {
         SettingsStateService.updateState(settings)
     }
 
+    public static fetchAndSetNewWallpaper = () => {
+
+        SettingsStateService.toggleSetting(SettingsType.APP_LOADING)
+
+        fetch(`https://source.unsplash.com/collection/220388/1920x1080`).then(value => {
+            SettingsStateService.loadAndCacheImage(value.url).then(url => {
+                SettingsStateService.updateObjectSetting(SettingsType.BACKGROUND_MODE, {
+                    day: getTodayKey(),
+                    url: url,
+                });
+                SettingsStateService.toggleSetting(SettingsType.APP_LOADING)
+            }).catch(() => {
+                SettingsStateService.toggleSetting(SettingsType.APP_LOADING)
+            })
+        }).catch(() => {
+            SettingsStateService.toggleSetting(SettingsType.APP_LOADING)
+        })
+    }
+
     public static handleShowAllToggle = () => {
         SettingsStateService.updateState(SettingsStateService.toggleSetting(SettingsType.SHOW_ALL_TASKS))
     }

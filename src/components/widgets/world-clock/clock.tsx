@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography';
 import { SettingsStateService, SettingsType } from "../../../state-stores/settings/settings-state";
 import { WorldClock } from "./work-clock-setting";
-import moment from "moment-timezone";
 import Moment from "react-moment";
 import { ClassNameMap } from "@material-ui/styles/withStyles";
 import EditIcon from '@material-ui/icons/Edit';

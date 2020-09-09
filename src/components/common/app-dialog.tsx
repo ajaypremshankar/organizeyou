@@ -24,7 +24,6 @@ export default function AppDialog(props: AppDialogProps) {
             MuiPaper: {
                 root: {
                     opacity: SettingsStateService.isEnabled(SettingsType.BACKGROUND_MODE) ? 0.8 : 1,
-                    textAlign: 'center'
                 }
             }
         },
