@@ -71,10 +71,10 @@ const useStylesClockCenter = makeStyles((theme: Theme) =>
         },
         clock: {
             letterSpacing: SettingsStateService.isFullMode() ? '-1px' : '2px',
-            fontSize: SettingsStateService.isFullMode() ? '5em' : '7em',
+            fontSize: SettingsStateService.isFullMode() ? '4em' : '7em',
             fontWeight: 500,
             marginBottom: SettingsStateService.isFullMode() ? '-10px' : '-20px',
-            marginTop: SettingsStateService.isFullMode() ? '-10px' : '-20px',
+            marginTop: SettingsStateService.isFullMode() ? '-10px' : '-10px',
         },
         date: {
             fontWeight: 400,
@@ -139,18 +139,70 @@ export default function WorldClockWidget() {
 
     const clockComponentList: JSX.Element[] = [
         <Clock
+            key={'clock-0'}
             useStyle={useStylesClock}
             onOpen={loadEditClockDialog}
             data={all[0]}/>,
         <Clock
+            key={'clock-1'}
             useStyle={useStylesClockCenter}
             onOpen={loadEditClockDialog}
             data={all[1]}/>,
         <Clock
+            key={'clock-2'}
             useStyle={useStylesClock}
             onOpen={loadEditClockDialog}
             data={all[2]}/>,
     ]
+
+    function getCompactModeClockWidget() {
+        return <Grid item xs={12} key={`world-clock-compact-item`}>
+            <Grid container alignItems="center" justify="center" direction="row">
+                <Grid xs={12} key={`world-clock-compact-item-1`} item>
+                    <Paper key={`world-clock-grid-paper-1`} className={classes.paperCenter} elevation={0}>
+                        {clockComponentList[1]}
+                    </Paper>
+                </Grid>
+            </Grid>
+            {SettingsStateService.isEnabled(SettingsType.SHOW_WORLD_CLOCK) ?
+                <Grid container alignItems="center" justify="center" direction="row">
+                    <Grid xs={6} key={`world-clock-compact-item-0`} item>
+                        <Paper key={`world-clock-grid-paper-0`} className={classes.paperCenter} elevation={0}>
+                            {clockComponentList[0]}
+                        </Paper>
+                    </Grid>
+                    <Grid xs={6} key={`world-clock-compact-item-2`} item>
+                        <Paper key={`world-clock-grid-paper-2`} className={classes.paperCenter} elevation={0}>
+                            {clockComponentList[2]}
+                        </Paper>
+                    </Grid>
+                </Grid> : null}
+        </Grid>;
+    }
+
+    function getFullModeClockWidget() {
+        return <Grid item xs={12} key={`world-clock-full-item`}>
+            <Grid container alignItems="center" justify="center" direction="row">
+                {SettingsStateService.isEnabled(SettingsType.SHOW_WORLD_CLOCK) ?
+                    <Grid xs={3} key={`world-clock-full-item-0`} item>
+                        <Paper key={`world-clock-full-paper-0`} className={classes.paperCenter} elevation={0}>
+                            {clockComponentList[0]}
+                        </Paper>
+                    </Grid> : null}
+                <Grid xs={6} key={`world-clock-full-item-1`} item>
+                    <Paper key={`world-clock-full-paper-1`} className={classes.paperCenter} elevation={0}>
+                        {clockComponentList[1]}
+                    </Paper>
+                </Grid>
+                {SettingsStateService.isEnabled(SettingsType.SHOW_WORLD_CLOCK) ?
+                    <Grid xs={3} key={`world-clock-full-item-2`} item>
+                        <Paper key={`world-clock-full-paper-2`} className={classes.paperCenter} elevation={0}>
+                            {clockComponentList[2]}
+                        </Paper>
+                    </Grid> : null}
+            </Grid>
+        </Grid>;
+    }
 
     return (
         <div className={classes.root}>
@@ -161,47 +213,6 @@ export default function WorldClockWidget() {
                 data={clockDialogState.current}
                 onSave={saveClock}
                 mode={'Edit'}/>}
-            {SettingsStateService.isFullMode() ? <Grid item xs={12} key={`world-clock-grid-item`}>
-                <Grid container alignItems="center" justify="center" direction="row">
-                    {SettingsStateService.isEnabled(SettingsType.SHOW_WORLD_CLOCK) ?
-                        <Grid xs={3} key={`world-clock-grid-item-0`} item>
-                            <Paper key={`world-clock-grid-paper-0`} className={classes.paperCenter} elevation={0}>
-                                {clockComponentList[0]}
-                            </Paper>
-                        </Grid> : null}
-                    <Grid xs={5} key={`world-clock-grid-item-1`} item>
-                        <Paper key={`world-clock-grid-paper-1`} className={classes.paperCenter} elevation={0}>
-                            {clockComponentList[1]}
-                        </Paper>
-                    </Grid>
-                    {SettingsStateService.isEnabled(SettingsType.SHOW_WORLD_CLOCK) ?
-                        <Grid xs={3} key={`world-clock-grid-item-2`} item>
-                            <Paper key={`world-clock-grid-paper-2`} className={classes.paperCenter} elevation={0}>
-                                {clockComponentList[2]}
-                            </Paper>
-                        </Grid> : null}
-                </Grid>
-            </Grid> : <Grid item xs={12} key={`world-clock-grid-item`}>
-                <Grid container alignItems="center" justify="center" direction="row">
-                    <Grid xs={12} key={`world-clock-grid-item-1`} item>
-                        <Paper key={`world-clock-grid-paper-1`} className={classes.paperCenter} elevation={0}>
-                            {clockComponentList[1]}
-                        </Paper>
-                    </Grid>
-                </Grid>
-                {SettingsStateService.isEnabled(SettingsType.SHOW_WORLD_CLOCK) ?
-                    <Grid container alignItems="center" justify="center" direction="row">
-                        <Grid xs={6} key={`world-clock-grid-item-0`} item>
-                            <Paper key={`world-clock-grid-paper-0`} className={classes.paperCenter} elevation={0}>
-                                {clockComponentList[0]}
-                            </Paper>
-                        </Grid>
-                        <Grid xs={6} key={`world-clock-grid-item-2`} item>
-                            <Paper key={`world-clock-grid-paper-2`} className={classes.paperCenter} elevation={0}>
-                                {clockComponentList[2]}
-                            </Paper>
-                        </Grid>
-                    </Grid> : null}
-            </Grid>}
+            {SettingsStateService.isFullMode() ? getFullModeClockWidget() : getCompactModeClockWidget()}
         </div>);
 }

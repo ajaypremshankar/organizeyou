@@ -1,2 +1,4 @@
 node_modules/
 build/
+.idea/codeStyles/
+OY_*.zip

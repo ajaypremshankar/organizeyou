@@ -5,6 +5,7 @@ import NavigationLinks from "./browser-navigate-links";
 import AppMode from "./app-mode-toggle";
 import SettingsDrawer from "./settings-drawer";
 import SettingsGear from "./settings-gear";
+import QuickSettings from "./quick-settings";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -46,6 +47,7 @@ export default function SettingsMenuWidget(props: SettingsMenuWidgetProps) {
             <SettingsDrawer open={drawerState} toggleDrawer={toggleDrawer}/>
             {!drawerState && <AppMode/>}
             {!drawerState && !isFirefox && <NavigationLinks/>}
+            {!drawerState && <QuickSettings/>}
         </div>
     )
 }

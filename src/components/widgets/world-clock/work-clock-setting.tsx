@@ -5,8 +5,6 @@ import AppDialog from "../../common/app-dialog";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import moment from "moment-timezone";
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 export interface WorldClock {
     id: number,
@@ -27,7 +25,6 @@ export default function WorldClockSetting(props: WorldClockSettingProps) {
 
     const [wcTitleState, setWcTitleState] = useState(props.data.title);
     const [wcTimezoneState, setWcTimezoneState] = useState(props.data.timezone);
-    const [twelveOr24HourState, setTwelveOr24HourState] = useState(props.data.ampmEnabled ? '12h' : '24h');
 
     const handleTimezoneChange = (event: ChangeEvent<{}>, value: string | null) => {
         if (value) {
@@ -41,11 +38,10 @@ export default function WorldClockSetting(props: WorldClockSettingProps) {
     }
 
     const handleOnSaveClock = () => {
-        return () => props.onSave({
+        props.onSave({
             ...props.data,
             title: wcTitleState,
             timezone: wcTimezoneState,
-            ampmEnabled: twelveOr24HourState === '12h' ? true : false
         });
     }
 
@@ -70,19 +66,6 @@ export default function WorldClockSetting(props: WorldClockSettingProps) {
                 value={wcTimezoneState}
                 renderInput={(params) => <TextField {...params} label="Search timezone" variant="outlined"/>}
             />
-            <ToggleButtonGroup
-                style={{width: '100%'}}
-                value={twelveOr24HourState}
-                exclusive
-                onChange={(event, value) => setTwelveOr24HourState(value)}
-                aria-label="text clock-hours">
-                <ToggleButton style={{width: '100%'}} value="12h" aria-label="clock-hours 12h">
-                    12h
-                </ToggleButton>
-                <ToggleButton style={{width: '100%'}} value="24h" aria-label="clock-hours 24h">
-                    24h
-                </ToggleButton>
-            </ToggleButtonGroup>
         </span>);
     }
 
@@ -90,7 +73,7 @@ export default function WorldClockSetting(props: WorldClockSettingProps) {
         return <Button
             variant={"outlined"}
             style={{width: 300, marginBottom: '10px'}}
-            onClick={handleOnSaveClock()}>Save</Button>;
+            onClick={handleOnSaveClock}>Save</Button>;
     }
 
     return (

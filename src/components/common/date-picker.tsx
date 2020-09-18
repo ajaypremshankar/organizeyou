@@ -3,7 +3,7 @@ import { createMuiTheme, createStyles, makeStyles, Theme } from '@material-ui/co
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
-import { formatToKey, getTodayKey, isPastKey, parseFromKey } from "../../utils/date-utils";
+import { formatToKey, isPastKey, parseFromKey } from "../../utils/date-utils";
 import { Badge } from "@material-ui/core";
 import { Task } from "../../types/types";
 import { AppStateService } from "../../state-stores/tasks/app-state-service";
@@ -25,7 +25,11 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: "#4791db",
             color: "white",
             fontSize: 'smaller'
-        }
+        },
+        displayNone: {
+            display: 'none'
+        },
+        display: {}
     }),
 );
 
@@ -33,8 +37,9 @@ interface AppDatePickerProps {
     label: string
     open: boolean
     value: number
+    variant: 'dialog' | 'inline' | 'static'
     dateChange: (date: number) => void
-    close: () => void
+    close?: () => void
 }
 
 export default function AppDatePicker(props: AppDatePickerProps) {
@@ -43,7 +48,6 @@ export default function AppDatePicker(props: AppDatePickerProps) {
         if (date) {
             props.dateChange(formatToKey(date.toDate()))
         }
-        props.close()
     };
 
     const defaultMaterialTheme = createMuiTheme({
@@ -84,26 +88,24 @@ export default function AppDatePicker(props: AppDatePickerProps) {
     }
 
     return (
-
-        <div style={{display: 'none'}}>
+        <div className={props.variant === 'dialog' ? classes.displayNone : classes.display}>
             <ThemeProvider theme={defaultMaterialTheme}>
                 <MuiPickersUtilsProvider
                     libInstance={moment} utils={MomentUtils}>
                     <DatePicker
                         disableToolbar
                         disablePast
-                        variant="dialog"
+                        variant={props.variant}
                         label={props.label}
-                        value={parseFromKey(getTodayKey())}
+                        value={parseFromKey(props.value)}
                         onChange={handleDateChange}
                         autoOk={true}
                         format='YYYYMMDD'
                         open={props.open}
-                        onClose={() => props.close()}
-                        renderDay={getRenderDay} />
+                        onClose={() => props.close ? props.close() : {}}
+                        renderDay={getRenderDay}/>
                 </MuiPickersUtilsProvider>
             </ThemeProvider>
         </div>
-
     );
 }

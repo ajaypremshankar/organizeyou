@@ -5,6 +5,7 @@ export interface Task {
     createdOn: number;
     updatedOn: number;
     tags?: string[]
+    taskTemplateId?: number
 }
 
 export interface CompletedTask extends Task {
@@ -31,27 +32,21 @@ export interface HashTagTaskMapping {
 }
 
 export enum TASK_FREQUENCY_TYPE {
-    NO_REPEAT,
-    DAILY,
-    EVERY_WEEKDAY,
-    WEEKLY,
-    MONTHLY_DATE,
-    MONTHLY_DAY,
-    YEARLY,
-    CUSTOM,
-}
-
-export interface TaskFrequencyMeta {
-    day: number /* 1 - mon to 7-sun */
-    date: number /* 1 to 31 */
-    week: number /* 1 to 4 */
-    month: number /* 1 - 12 */
-}
-
-export interface TaskFrequencyVO {
-    id: number
-    meta: Partial<TaskFrequencyMeta>
-    nextDateKey: number
+    NO_REPEAT = '',
+    DAILY = 'Daily',
+    WEEKDAYS = 'Weekday',
+    WEEKLY = 'Weekly',
+    MONTHLY = 'Monthly',
+    YEARLY = 'Yearly',
 }
 
 export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => number
+
+export interface TaskTemplate {
+    id: number
+    nextPlannedOn: number;
+    createdOn: number;
+    taskFrequency: TASK_FREQUENCY_TYPE
+    currentlyActiveTaskId: number
+    currentlyActiveTaskPlannedOn: number
+}

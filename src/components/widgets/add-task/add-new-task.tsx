@@ -6,6 +6,9 @@ import Button from '@material-ui/core/Button';
 import AppDialog from "../../common/app-dialog";
 import TaskFrequencyOptions from "./task-frequency";
 import { TASK_FREQUENCY_TYPE } from "../../../types/types";
+import { formatToDay, formatToListTitle } from "../../../utils/date-utils";
+import { ordinalSuffixOf } from "../../../utils/object-utils";
+import RepeatIcon from '@material-ui/icons/Repeat';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -17,12 +20,14 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '80%',
             fontWeight: 'bold',
             fontSize: '16px',
+            float: 'right',
             fontFamily: '"Helvetica-Neue", Helvetica, Arial',
         },
         button: {
-            width: '18%',
+            width: '15%',
             minHeight: '55px',
             marginRight: '15px',
+            textTransform: 'none',
         }
     }),
 );
@@ -52,6 +57,24 @@ export default function AddNewTask(props: AddNewTaskProps) {
         }
     }
 
+    function getLabel() {
+
+        switch (props.taskFrequency) {
+            case TASK_FREQUENCY_TYPE.DAILY:
+                return `Add task to ${KeyTitleUtils.getTitleByKey(props.date)} (repeats every-day)`;
+            case TASK_FREQUENCY_TYPE.WEEKDAYS:
+                return `Add task to ${KeyTitleUtils.getTitleByKey(props.date)} (repeats mon to fri)`;
+            case TASK_FREQUENCY_TYPE.WEEKLY:
+                return `Add task to ${KeyTitleUtils.getTitleByKey(props.date)} (repeats every ${formatToDay(props.date)})`;
+            case TASK_FREQUENCY_TYPE.MONTHLY:
+                return `Add task to ${KeyTitleUtils.getTitleByKey(props.date)} (repeats monthly on ${ordinalSuffixOf(props.date % 100)})`;
+            case TASK_FREQUENCY_TYPE.YEARLY:
+                return `Add task to ${KeyTitleUtils.getTitleByKey(props.date)} (repeats yearly on ${formatToListTitle(props.date, false)})`;
+            default:
+                return `Add task for ${KeyTitleUtils.getTitleByKey(props.date)}`;
+        }
+    }
+
     return (
         <div className={classes.root}>
             <span style={{display: 'none'}}>
@@ -66,18 +89,23 @@ export default function AddNewTask(props: AddNewTaskProps) {
                     onClose={() => setShowTaskFrequencyOptions(false)}/>
                 </span>
             <Button
-                variant="outlined"
+                color={"primary"}
+                variant={TASK_FREQUENCY_TYPE.NO_REPEAT !== props.taskFrequency ? 'contained' : 'outlined'}
                 className={classes.button}
                 onClick={() => setShowTaskFrequencyOptions(true)}
-                size={'large'}>{TASK_FREQUENCY_TYPE[props.taskFrequency]}</Button>
+                size={'large'}
+                startIcon={<RepeatIcon fontSize={"large"}/>}>
+                {props.taskFrequency}
+            </Button>
 
             <TextField
                 className={classes.textField}
                 id="outlined-basic"
-                label={`Add task for ${KeyTitleUtils.getTitleByKey(props.date)}`}
+                label={getLabel()}
                 variant="outlined"
                 size={'medium'}
                 autoComplete={'off'}
+                color={"primary"}
                 value={taskContentState}
                 autoFocus
                 inputProps={{minLength: 1, maxLength: process.env.REACT_APP_TASK_MAX_LIMIT}}

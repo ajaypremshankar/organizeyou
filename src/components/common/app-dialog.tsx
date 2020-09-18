@@ -15,8 +15,6 @@ interface AppDialogProps {
     onClose: any
 }
 
-
-
 export default function AppDialog(props: AppDialogProps) {
 
     const defaultMaterialTheme = createMuiTheme({
@@ -37,21 +35,19 @@ export default function AppDialog(props: AppDialogProps) {
     });
 
     return (
-        <div>
-            <ThemeProvider theme={defaultMaterialTheme}>
-                <Dialog
-                    open={props.open}
-                    onClose={props.onClose}
-                    aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">{props.title}</DialogTitle>
-                    <DialogContent>
-                        {props.content}
-                    </DialogContent>
-                    <DialogActions style={{justifyContent: 'center'}}>
-                        {props.actions}
-                    </DialogActions>
-                </Dialog>
-            </ThemeProvider>
-        </div>
+        <ThemeProvider theme={defaultMaterialTheme}>
+            <Dialog
+                open={props.open}
+                onClose={props.onClose}
+                aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">{props.title}</DialogTitle>
+                <DialogContent>
+                    {props.content}
+                </DialogContent>
+                <DialogActions style={{justifyContent: 'center'}}>
+                    {props.actions}
+                </DialogActions>
+            </Dialog>
+        </ThemeProvider>
     );
 }

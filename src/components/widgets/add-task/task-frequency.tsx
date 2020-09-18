@@ -5,13 +5,22 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Radio from '@material-ui/core/Radio';
-import { TASK_FREQUENCY_TYPE, TaskFrequencyMeta } from "../../../types/types";
+import { TASK_FREQUENCY_TYPE } from "../../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             fontSize: '16px',
-            fontFamily: '"Helvetica-Neue", Helvetica, Arial',
+            fontWeight: 'bold',
+            maxWidth: '20%',
+            marginLeft: '-10px',
+        },
+        item: {
+            maxWidth: '20%',
+            marginBottom: '-8px',
+        },
+        itemText: {
+            marginLeft: '-10px',
         },
     }),
 );
@@ -26,75 +35,49 @@ export default function TaskFrequencyOptions(props: TaskFrequencyProps) {
 
     return (
         <List className={classes.root}>
-            <Option
-                type={TASK_FREQUENCY_TYPE.NO_REPEAT}
-                label={'No repeat'}
-                currentFrequency={props.taskFrequency}
-                selectFrequency={props.selectFrequency}/>
-
-            <Option
-                type={TASK_FREQUENCY_TYPE.DAILY}
-                label={'Daily'}
-                currentFrequency={props.taskFrequency}
-                selectFrequency={props.selectFrequency}/>
-
-            <Option
-                type={TASK_FREQUENCY_TYPE.EVERY_WEEKDAY}
-                label={'Weekday'}
-                currentFrequency={props.taskFrequency}
-                selectFrequency={props.selectFrequency}/>
-
-            <Option
-                type={TASK_FREQUENCY_TYPE.WEEKLY}
-                currentFrequency={props.taskFrequency}
-                selectFrequency={props.selectFrequency}/>
-
-            <Option
-                type={TASK_FREQUENCY_TYPE.MONTHLY_DATE}
-                currentFrequency={props.taskFrequency}
-                selectFrequency={props.selectFrequency}/>
-
-            <Option
-                type={TASK_FREQUENCY_TYPE.MONTHLY_DAY}
-                currentFrequency={props.taskFrequency}
-                selectFrequency={props.selectFrequency}/>
-
-            <Option
-                type={TASK_FREQUENCY_TYPE.YEARLY}
-                currentFrequency={props.taskFrequency}
-                selectFrequency={props.selectFrequency}/>
+            {Object.values(TASK_FREQUENCY_TYPE)
+                .map(type => <Option
+                    key={type}
+                    type={type}
+                    currentFrequency={props.taskFrequency}
+                    selectFrequency={props.selectFrequency}/>)}
         </List>
+
     );
 }
 
 interface OptionProps {
     type: TASK_FREQUENCY_TYPE
-    meta: Partial<TaskFrequencyMeta>
-    label: string
     currentFrequency: TASK_FREQUENCY_TYPE
     selectFrequency: (tf: TASK_FREQUENCY_TYPE) => void
 }
 
-export function Option(props: OptionProps) {
+function Option(props: OptionProps) {
+    const classes = useStyles();
 
     const currentFrequencyIsEquals = (value: TASK_FREQUENCY_TYPE) => {
         return value === props.currentFrequency
     }
 
     return (
-        <ListItem
-            key={`task-frequency-${props.type}`}
-            dense role={undefined} button
-            onClick={() => props.selectFrequency(props.type)}>
-            <ListItemIcon>
-                <Radio
-                    edge="start"
-                    tabIndex={-1}
-                    disableRipple
-                    checked={currentFrequencyIsEquals(props.type)}
-                    inputProps={{'aria-labelledby': `task-frequency-${props.type}`}}/>
-            </ListItemIcon>
-            <ListItemText id={`task-frequency-${props.type}`} primary={props.label}/>
-        </ListItem>
+        <div>
+            <ListItem
+                className={classes.item}
+                key={`task-frequency-${props.type}`}
+                dense role={undefined} button={true}
+                onClick={() => props.selectFrequency(props.type)}>
+                <ListItemIcon>
+                    <Radio
+                        edge="start"
+                        tabIndex={-1}
+                        checked={currentFrequencyIsEquals(props.type)}
+                        inputProps={{'aria-labelledby': `task-frequency-${props.type}`}}/>
+                </ListItemIcon>
+                <ListItemText
+                    className={classes.itemText}
+                    id={`task-frequency-${props.type}`}
+                    primary={TASK_FREQUENCY_TYPE.NO_REPEAT !== props.type ? props.type : 'Once'}/>
+            </ListItem>
+        </div>
     )
 }

@@ -49,25 +49,34 @@ export default function HashTagsWidget(props: HashTagsWidgetProps) {
             &nbsp;&nbsp;&nbsp;</span>;
     }
 
+    const handleHashTagClick = (hashtag: string) => {
+        if (AppStateService.getSelectedList() === hashtag) {
+            AppStateService.clearCurrentlySelectedList()
+        } else {
+            AppStateService.updateCurrentlySelectedList(hashtag)
+        }
+    }
+
     return (
         <Tooltip title='click to see tagged tasks'>
             <div className={classes.root}>
                 <span style={{fontWeight: 'bold', opacity: '20%'}}>#&nbsp;&nbsp;</span>
                 {
-                sortedKeyValueArr
-                    .map((value, index) => {
+                    sortedKeyValueArr
+                        .map((value, index) => {
 
-                        const color = ColorUtils.getColorAt(index)
-                        return <span key={value[0] as string}
-                                     style={{
-                                         cursor: 'pointer',
-                                         color: `${color}`,
-                                         fontWeight: AppStateService.getSelectedList() === value[0] ? "bold" : "normal",
-                                         fontSize: AppStateService.getSelectedList() === value[0] ? 'medium' : 'small'
-                                     }} onClick={() => AppStateService.updateCurrentlySelectedList(value[0] as string)}>
+                            const color = ColorUtils.getColorAt(index)
+                            return <span key={value[0] as string}
+                                         style={{
+                                             cursor: 'pointer',
+                                             color: `${color}`,
+                                             fontWeight: AppStateService.getSelectedList() === value[0] ? "bold" : "normal",
+                                             fontSize: AppStateService.getSelectedList() === value[0] ? 'medium' : 'small'
+                                         }}
+                                         onClick={() => handleHashTagClick(value[0] as string)}>
                             {getSupSuffix(value[0] as string, value[1].length)}
                         </span>
-                    })}
+                        })}
             </div>
         </Tooltip>
     )

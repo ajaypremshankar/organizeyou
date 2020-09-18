@@ -6,7 +6,6 @@ import { formatToKey, getTodayKey } from "../../utils/date-utils";
 import { KeyTitleUtils } from "../../utils/key-title-utils";
 import { SettingsStateService, SettingsType } from "../settings/settings-state";
 import { TASK_STATE_ACTION } from "../bucket/bucket-utils";
-import { HashTagUtils } from "../hash-tags/hash-tag-utils";
 import { HashTagRepository } from "../hash-tags/hash-tag-repository";
 
 /**
@@ -46,15 +45,15 @@ export class AppStateService {
         })
     }
 
-    public static updateBaseState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task,
-                                     newState: TasksState, persist: boolean = true) => {
+    private static updateBaseState = (action: TASK_STATE_ACTION, plannedOn: number, targetTask: Task,
+                                      newState: TasksState, persist: boolean = true) => {
         if (persist) {
             AppStateRepository.updateAppState(action, plannedOn, targetTask)
         }
         AppStateService.setToStore(newState)
     }
 
-    private static updateHashTagState(deltaHashTags: Map<string, HashTagTaskMapping[]>) {
+    public static updateHashTagState(deltaHashTags: Map<string, HashTagTaskMapping[]>) {
 
         if (deltaHashTags.size > 0) {
             HashTagRepository.update(deltaHashTags)
@@ -158,6 +157,17 @@ export class AppStateService {
             + (AppStateService.getTasks().get(getTodayKey()) || []).length
     }
 
+    public static getTaskBy = (plannedOn: number, id: number): Task | undefined => {
+        let task = undefined;
+        (AppStateService.getTasks().get(plannedOn) || []).forEach((value: Task) => {
+            if (id === value.id) {
+                task = value
+            }
+        })
+
+        return task
+    }
+
     // GETTERS - END --------------------------------------------
 
     // SETTERS - START ------------------------------------------
@@ -178,52 +188,39 @@ export class AppStateService {
     }
 
     public static handleTaskCompletion = (task: CompletedTask) => {
-
         AppStateService.updateBaseState(
             TASK_STATE_ACTION.COMPLETE_TASK, task.plannedOn, task,
             AppStateService.baseState.completeTask(task))
-
-        AppStateService.updateHashTagState(HashTagUtils.completeHashTags(task, AppStateService.baseState.hashTags));
     }
 
     public static handleTaskAdditionOrUpdation = (currentTask: Task | null, newTask: Task) => {
         AppStateService.updateBaseState(
             TASK_STATE_ACTION.ADD_UPDATE_TASK, newTask.plannedOn, newTask,
             AppStateService.baseState.addOrUpdateTask(newTask))
-
-        AppStateService.updateHashTagState(HashTagUtils.addOrUpdateHashTags(currentTask, newTask, AppStateService.baseState.hashTags));
     }
 
     public static handleTaskDeletion = (task: Task) => {
         AppStateService.updateBaseState(
             TASK_STATE_ACTION.DELETE_TASK, task.plannedOn, task,
             AppStateService.baseState.removeTask(task))
-
-        AppStateService.updateHashTagState(HashTagUtils.deleteHashTags(task, AppStateService.baseState.hashTags));
     }
 
     public static handleCompletedTaskDeletion = (task: CompletedTask) => {
         AppStateService.updateBaseState(
             TASK_STATE_ACTION.DELETE_COMPLETED_TASK, task.plannedOn, task,
             AppStateService.baseState.removeCompletedTask(task))
-
-        AppStateService.updateHashTagState(HashTagUtils.deleteHashTags(task, AppStateService.baseState.hashTags));
     }
 
     public static handleTaskMovement = (from: number, task: Task) => {
         AppStateService.updateBaseState(
             TASK_STATE_ACTION.MOVE_TASK, from, task,
             AppStateService.baseState.moveTask(from, task))
-
-        AppStateService.updateHashTagState(HashTagUtils.moveHashTags(task, AppStateService.baseState.hashTags));
     }
 
     public static handleUndoComplete = (task: Task) => {
         AppStateService.updateBaseState(
             TASK_STATE_ACTION.UNDO_COMPLETE_TASK, task.plannedOn, task,
             AppStateService.baseState.undoCompleteTask(task))
-
-        AppStateService.updateHashTagState(HashTagUtils.undoCompleteHashTags(task, AppStateService.baseState.hashTags));
     }
 
     // SETTERS - END --------------------------------------------
@@ -242,5 +239,4 @@ export class AppStateService {
 
         return reducedList
     }
-
 }

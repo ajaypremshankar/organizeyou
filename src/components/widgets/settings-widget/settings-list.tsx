@@ -16,12 +16,17 @@ import ImageIcon from '@material-ui/icons/Image';
 import { SettingsStateService, SettingsType } from "../../../state-stores/settings/settings-state";
 import Typography from "@material-ui/core/Typography";
 import LockIcon from '@material-ui/icons/Lock';
+import WatchLaterIcon from '@material-ui/icons/WatchLater';
 
 const useStyles = makeStyles({
     listItemReleased: {
         width: '100%',
         margin: 'auto',
         marginBottom: '5px',
+    },
+    title: {
+        maxWidth: '70%',
+        wordWrap: 'normal',
     },
     secondaryAction: {
         marginRight: '20px'
@@ -44,8 +49,9 @@ export default function SettingsList(props: SettingsListProps) {
             </ListItem>
             <Divider/>
             <ListItem className={classes.listItemReleased}>
-                <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
+                <ListItemIcon><WatchLaterIcon/></ListItemIcon>
                 <ListItemText
+                    className={classes.title}
                     id={SettingsType.SHOW_WORLD_CLOCK}
                     primary={SettingsType.SHOW_WORLD_CLOCK}/>
                 <ListItemSecondaryAction className={classes.secondaryAction}>
@@ -60,8 +66,27 @@ export default function SettingsList(props: SettingsListProps) {
             </ListItem>
 
             <ListItem className={classes.listItemReleased}>
+                <ListItemIcon><QueryBuilderIcon/></ListItemIcon>
+                <ListItemText
+                    className={classes.title}
+                    id={SettingsType.SHOW_AM_PM}
+                    primary={SettingsType.SHOW_AM_PM}/>
+                <ListItemSecondaryAction className={classes.secondaryAction}>
+                    <Switch
+                        color={'primary'}
+                        edge="end"
+                        onChange={() => SettingsStateService.toggleSetting(SettingsType.SHOW_AM_PM)}
+                        checked={SettingsStateService.isEnabled(SettingsType.SHOW_AM_PM)}
+                        inputProps={{'aria-labelledby': `switch-list-label-${SettingsType.SHOW_AM_PM}`}}
+                    />
+                </ListItemSecondaryAction>
+            </ListItem>
+
+            <Divider/>
+            <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><FormatListBulletedIcon/></ListItemIcon>
                 <ListItemText
+                    className={classes.title}
                     id={SettingsType.SHOW_COMPLETED_TASKS}
                     primary={SettingsType.SHOW_COMPLETED_TASKS}/>
                 <ListItemSecondaryAction className={classes.secondaryAction}>
@@ -78,6 +103,7 @@ export default function SettingsList(props: SettingsListProps) {
             <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><ImageIcon/></ListItemIcon>
                 <ListItemText
+                    className={classes.title}
                     id={SettingsType.BACKGROUND_MODE}
                     primary={SettingsType.BACKGROUND_MODE}
                     secondary={'Credits: Unsplash.com'}/>
@@ -94,6 +120,7 @@ export default function SettingsList(props: SettingsListProps) {
             <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><PaletteIcon/></ListItemIcon>
                 <ListItemText
+                    className={classes.title}
                     id={SettingsType.DARK_THEME}
                     primary={SettingsType.DARK_THEME}/>
                 <ListItemSecondaryAction className={classes.secondaryAction}>
@@ -110,6 +137,7 @@ export default function SettingsList(props: SettingsListProps) {
             <ListItem className={classes.listItemReleased}>
                 <ListItemIcon><LockIcon/></ListItemIcon>
                 <ListItemText
+                    className={classes.title}
                     id={SettingsType.LOCK_CURRENT_WALLPAPER}
                     primary={SettingsType.LOCK_CURRENT_WALLPAPER}/>
                 <ListItemSecondaryAction className={classes.secondaryAction}>

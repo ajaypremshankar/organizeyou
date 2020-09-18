@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography';
-import { SettingsStateService } from "../../../state-stores/settings/settings-state";
+import { SettingsStateService, SettingsType } from "../../../state-stores/settings/settings-state";
 import { WorldClock } from "./work-clock-setting";
-import moment from "moment-timezone";
 import Moment from "react-moment";
 import { ClassNameMap } from "@material-ui/styles/withStyles";
 import EditIcon from '@material-ui/icons/Edit';
@@ -18,7 +17,7 @@ interface ClockProps {
 export default function Clock(props: ClockProps) {
 
     const classes = props.useStyle();
-    const [ctime, setCtime] = useState(Math.round(getCurrentMillis()/ 1000))
+    const [ctime, setCtime] = useState(Math.round(getCurrentMillis() / 1000))
     const [hover, setHover] = useState(false)
 
     useEffect(() => {
@@ -33,6 +32,7 @@ export default function Clock(props: ClockProps) {
         };
     }, [props, SettingsStateService.getToggleSettings()]);
 
+
     return (
         <div
             className={classes.root}
@@ -40,17 +40,18 @@ export default function Clock(props: ClockProps) {
             onMouseOut={() => setHover(false)}>
             <Typography variant={"caption"} style={{textAlign: "center"}}>
                 <Tooltip title={'click to edit clock'}>
-                <EditIcon
-                    className={classes.arrow}
-                    style={{opacity: hover ? '1.0' : '0.0', fontSize: '120%'}}
-                    onClick={() => props.onOpen(props.data)}
-                    fontSize={"small"}/>
-                    </Tooltip><br/>
-                <span className={classes.title}>{props.data.title || moment.tz.guess()}</span>
+                    <EditIcon
+                        className={classes.arrow}
+                        style={{opacity: hover ? '1.0' : '0.0', fontSize: '120%'}}
+                        onClick={() => props.onOpen(props.data)}
+                        fontSize={"small"}/>
+                </Tooltip><br/>
+                {SettingsStateService.isEnabled(SettingsType.SHOW_WORLD_CLOCK) ?
+                    <span className={classes.title}>{props.data.title}</span> : null}
             </Typography>
             <Typography variant="subtitle1" gutterBottom className={classes.clock} color="primary">
                 <Moment unix tz={props.data.timezone}
-                        format={props.data.ampmEnabled ? 'hh:mm A' : 'HH:mm'}>
+                        format={SettingsStateService.isEnabled(SettingsType.SHOW_AM_PM) ? 'hh:mm A' : 'HH:mm'}>
                     {ctime}
                 </Moment>
             </Typography>

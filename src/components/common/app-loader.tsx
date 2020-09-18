@@ -26,12 +26,12 @@ export default function AppLoader() {
             <Backdrop
                 className={classes.backdrop}
                 open={SettingsStateService.isEnabled(SettingsType.APP_LOADING)}>
-                <CircularProgress color="inherit"/>
+                <CircularProgress color="primary"/>
             </Backdrop>
 
             <Snackbar open={SettingsStateService.isEnabled(SettingsType.APP_LOADING)} autoHideDuration={6000}>
                 <Alert severity="info">
-                    Initializing app state
+                    Loading...
                 </Alert>
             </Snackbar>
         </div>

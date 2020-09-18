@@ -1,0 +1,166 @@
+import { HashTagUtils } from "./hash-tags/hash-tag-utils";
+import { TaskTemplateStateService } from "./task-template/task-template-state-service";
+import { TasksState } from "./tasks/tasks-state";
+import { AppStateService } from "./tasks/app-state-service";
+import { CompletedTask, Task, TASK_FREQUENCY_TYPE } from "../types/types";
+import { getCurrentMillis } from "../utils/date-utils";
+
+export class AppStateFacade {
+
+    public static addTask = (taskFrequency: TASK_FREQUENCY_TYPE,
+                             plannedOn: number,
+                             value: string) => {
+
+        const now = getCurrentMillis()
+        const tags = HashTagUtils.parseHashTags(value)
+
+        let taskTemplateId = undefined
+        if (taskFrequency !== TASK_FREQUENCY_TYPE.NO_REPEAT) {
+            TaskTemplateStateService.handleTemplateAdditionOrUpdation({
+                id: now,
+                currentlyActiveTaskId: now,
+                createdOn: now,
+                nextPlannedOn: TaskTemplateStateService.getNextPlannedOn(plannedOn, taskFrequency)!,
+                taskFrequency: taskFrequency,
+                currentlyActiveTaskPlannedOn: plannedOn,
+            })
+
+            taskTemplateId = now
+        }
+
+        const newTask = {
+            id: now,
+            plannedOn: plannedOn,
+            value: value,
+            createdOn: now,
+            updatedOn: now,
+            tags: tags,
+            taskTemplateId: taskTemplateId
+        }
+
+        AppStateService.handleTaskAdditionOrUpdation(null, newTask)
+        AppStateService.updateHashTagState(
+            HashTagUtils.addOrUpdateHashTags(null, newTask, AppStateService.getHashTags())
+        );
+    }
+
+    public static updateTask = (currentTask: Task, newValue: string) => {
+
+        const tags = HashTagUtils.parseHashTags(newValue)
+        const updatedTask = {
+            ...currentTask,
+            value: newValue,
+            updatedOn: getCurrentMillis(),
+            tags: tags,
+        }
+
+        AppStateService.handleTaskAdditionOrUpdation(currentTask, updatedTask)
+        AppStateService.updateHashTagState(
+            HashTagUtils.addOrUpdateHashTags(currentTask, updatedTask, AppStateService.getHashTags())
+        );
+    }
+
+    public static moveTask = (currentTask: Task, newPlannedOn: number, moveSeries: boolean = false) => {
+
+        const from = currentTask.plannedOn
+        const updatedTask = {
+            ...currentTask,
+            plannedOn: newPlannedOn,
+            updatedOn: getCurrentMillis()
+        }
+
+        //Task
+        AppStateService.handleTaskMovement(from, updatedTask)
+
+        //Hashtag
+        AppStateService.updateHashTagState(HashTagUtils.moveHashTags(updatedTask, AppStateService.getHashTags()));
+
+        //Template
+        if (moveSeries && updatedTask.taskTemplateId) {
+            TaskTemplateStateService.updateTemplateByTask(updatedTask)
+        }
+    }
+
+    public static deleteTask = (task: Task, deleteSeries: boolean = false) => {
+        //Task
+        AppStateService.handleTaskDeletion(task)
+
+        //Hashtag
+        AppStateService.updateHashTagState(HashTagUtils.deleteHashTags(task, AppStateService.getHashTags()));
+
+        //Template
+        if (deleteSeries && task.taskTemplateId) {
+            TaskTemplateStateService.deleteTemplate(task.taskTemplateId);
+        } else if (!deleteSeries && task.taskTemplateId) {
+            const nextTask = TaskTemplateStateService.getNextTask(task)
+
+            if (nextTask && nextTask.taskTemplateId) {
+                AppStateService.handleTaskAdditionOrUpdation(null, nextTask)
+                TaskTemplateStateService.updateTemplateByTask(nextTask)
+            }
+        }
+    }
+
+    public static completeTask = (currentTask: Task) => {
+
+        const updatedTask: CompletedTask = {
+            ...currentTask,
+            updatedOn: getCurrentMillis(),
+            completedDate: getCurrentMillis()
+        }
+        //Task
+        AppStateService.handleTaskCompletion(updatedTask)
+
+        //Hashtag
+        AppStateService.updateHashTagState(HashTagUtils.completeHashTags(updatedTask, AppStateService.getHashTags()));
+
+        // Template
+        const nextTask = TaskTemplateStateService.getNextTask(TasksState.toTask(updatedTask))
+
+        if (nextTask && nextTask.taskTemplateId) {
+            AppStateService.handleTaskAdditionOrUpdation(null, nextTask)
+            TaskTemplateStateService.updateTemplateByTask(nextTask)
+        }
+    }
+
+
+    public static undoCompleteTask = (currentTask: CompletedTask) => {
+
+        const updatedTask = TasksState.toTask(currentTask)
+
+        //Task
+        AppStateService.handleUndoComplete(updatedTask)
+
+        //Hashtag
+        AppStateService.updateHashTagState(HashTagUtils.undoCompleteHashTags(updatedTask, AppStateService.getHashTags()));
+
+        //Template
+        if (updatedTask.taskTemplateId) {
+            const taskTemplate = TaskTemplateStateService.getById(updatedTask.taskTemplateId)
+
+            if (taskTemplate) {
+                const activeTask = AppStateService.getTaskBy(taskTemplate.currentlyActiveTaskPlannedOn, taskTemplate.currentlyActiveTaskId)
+
+                if (activeTask) {
+                    AppStateService.handleTaskDeletion(activeTask)
+                    AppStateService.updateHashTagState(HashTagUtils.deleteHashTags(activeTask, AppStateService.getHashTags()));
+                }
+            }
+
+            TaskTemplateStateService.updateTemplateByTask(updatedTask)
+        }
+    }
+
+    public static deleteCompletedTask = (task: CompletedTask, deleteSeries: boolean = false) => {
+        //Task
+        AppStateService.handleCompletedTaskDeletion(task)
+
+        //Hashtag
+        AppStateService.updateHashTagState(HashTagUtils.deleteHashTags(task, AppStateService.getHashTags()));
+
+        //Template
+        if (deleteSeries && task.taskTemplateId) {
+            TaskTemplateStateService.deleteTemplate(task.taskTemplateId)
+        }
+    }
+}

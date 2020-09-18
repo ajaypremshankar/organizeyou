@@ -189,4 +189,10 @@ export class TasksState {
             new Map<string, HashTagTaskMapping[]>(toBeMerged.hashTags || this.hashTags)
         )
     }
+
+    public static toTask = (completedTask: CompletedTask): Task => {
+        const task = {...completedTask}
+        delete task.completedDate
+        return task as Task
+    }
 }

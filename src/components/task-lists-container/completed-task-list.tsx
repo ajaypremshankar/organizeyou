@@ -14,6 +14,7 @@ import { AppStateService } from "../../state-stores/tasks/app-state-service";
 import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { AppStateFacade } from "../../state-stores/app-state-facade";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,11 +51,7 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
     }
 
     const handleUndoComplete = (value: CompletedTask) => {
-
-        const task = {...value}
-        delete task.completedDate
-
-        AppStateService.handleUndoComplete(task)
+        AppStateFacade.undoCompleteTask(value)
     }
 
     function getSummary() {
@@ -89,13 +86,13 @@ export default function CompletedTaskList(props: CompletedTaskProps) {
                 <ListItemSecondaryAction>
                     <IconButton edge="start" aria-label={`restore-task-${labelId}`}
                                 onClick={() => handleUndoComplete(value)}>
-                        <Tooltip title="Restore to pending"
+                        <Tooltip title="Undo complete"
                                  aria-label={`restore-task-tooltip-${labelId}`}>
                             <RestoreIcon/>
                         </Tooltip>
                     </IconButton>
                     <IconButton edge="end" aria-label={`delete-task-${labelId}`}
-                                onClick={() => AppStateService.handleCompletedTaskDeletion(value)}>
+                                onClick={() => AppStateFacade.deleteCompletedTask(value)}>
                         <Tooltip title="Delete task" aria-label={`delete-task-tooltip-${labelId}`}>
                             <DeleteIcon fontSize={"small"}/>
                         </Tooltip>
