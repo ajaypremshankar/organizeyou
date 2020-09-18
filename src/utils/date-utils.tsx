@@ -33,6 +33,10 @@ export const isPastKey = (key: number): boolean => {
     return getTodayKey() > key
 }
 
+export const getPrevDayKey = (key: number): number => {
+    return parseInt(moment(key.toString(), 'YYYYMMDD').subtract(1, 'days').format('YYYYMMDD'))
+}
+
 export const getNextDayKey = (key: number): number => {
     return parseInt(moment(key.toString(), 'YYYYMMDD').add(1, 'days').format('YYYYMMDD'))
 }

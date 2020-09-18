@@ -2,7 +2,6 @@ export interface Task {
     id: number,
     value: string;
     plannedOn: number;
-    createdOn: number;
     updatedOn: number;
     tags?: string[]
     taskTemplateId?: number
@@ -45,7 +44,6 @@ export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => n
 export interface TaskTemplate {
     id: number
     nextPlannedOn: number;
-    createdOn: number;
     taskFrequency: TASK_FREQUENCY_TYPE
     currentlyActiveTaskId: number
     currentlyActiveTaskPlannedOn: number

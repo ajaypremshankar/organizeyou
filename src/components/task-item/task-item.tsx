@@ -169,7 +169,7 @@ export default function TaskItem(props: TaskItemProps) {
                 content={
                     <span>
                         {props.task.taskTemplateId ? `Repeats:  ${TaskTemplateStateService.getFrequencyById(props.task.taskTemplateId)}`
-                            : 'Never re-occurs'}
+                            : ''}
                     </span>}
                 actions={
                     <div>

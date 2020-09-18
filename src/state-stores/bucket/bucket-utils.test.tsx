@@ -9,59 +9,50 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
                 "completedDate": 1598126195038
             }, {
                 "id": 1598030370042,
                 "plannedOn": 20200828,
                 "value": "load and loki",
-                "createdOn": 1598030370042,
                 "updatedOn": 1598128090602
             }, {
                 "id": 1598176239318,
                 "plannedOn": 20200823,
                 "value": "Add to today.",
-                "createdOn": 1598176239318,
                 "updatedOn": 1598176239318
             }, {
                 "id": 1598176250847,
                 "plannedOn": 20200823,
                 "value": "overflow: overlay;",
-                "createdOn": 1598176250847,
                 "updatedOn": 1598176250847
             }, {
                 "id": 1598176260591,
                 "plannedOn": 20200823,
                 "value": "But putting this in a HTML file should go fine.",
-                "createdOn": 1598176260591,
                 "updatedOn": 1598176260591
             }],
             oy_at_29: [{
                 "id": 1598126372283,
                 "plannedOn": 20200924,
                 "value": "Here you can find the full list and description for DatePicker props.",
-                "createdOn": 1598126372283,
                 "updatedOn": 1598128099727
             }],
             oy_ct_28: [{
                 "id": 1598080240647,
                 "plannedOn": 20200821,
                 "value": "This wiki will be the first port of call of many thousands of Manjaro users, bot",
-                "createdOn": 1598080240647,
                 "updatedOn": 1598080240647,
                 "completedDate": 1598127472017
             }, {
                 "id": 1598125838045,
                 "plannedOn": 20200823,
                 "value": "import { DatePicker } from '@material-ui/pickers'",
-                "createdOn": 1598125838045,
                 "updatedOn": 1598125838045,
                 "completedDate": 1598127472803
             }]
@@ -79,7 +70,6 @@ describe("BucketUtils", () => {
             "id": 1598176260591,
             "plannedOn": 20200823,
             "value": "But putting this in a HTML file should go fine.",
-            "createdOn": 1598176260591,
             "updatedOn": 1598176260591
         })
 
@@ -91,7 +81,6 @@ describe("BucketUtils", () => {
             "id": 1598030370042,
             "plannedOn": 20200828,
             "value": "load and loki",
-            "createdOn": 1598030370042,
             "updatedOn": 1598128090602
         })
 
@@ -103,7 +92,6 @@ describe("BucketUtils", () => {
             "id": 1598125838045,
             "plannedOn": 20200823,
             "value": "import { DatePicker } from '@material-ui/pickers'",
-            "createdOn": 1598125838045,
             "updatedOn": 1598125838045,
             "completedDate": 1598127472803
         })
@@ -115,13 +103,11 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
                 "completedDate": 1598126195038
             },
@@ -132,7 +118,6 @@ describe("BucketUtils", () => {
             "id": 1598030370042,
             "plannedOn": 20200828,
             "value": "load and loki",
-            "createdOn": 1598030370042,
             "updatedOn": 1598128090602
         }, bucketedData)
 
@@ -142,7 +127,6 @@ describe("BucketUtils", () => {
             "id": 1598030370042,
             "plannedOn": 20200828,
             "value": "load and loki",
-            "createdOn": 1598030370042,
             "updatedOn": 1598128090602
         })
     })
@@ -153,7 +137,6 @@ describe("BucketUtils", () => {
             "id": 1598030370042,
             "plannedOn": 20200830,
             "value": "load and loki",
-            "createdOn": 1598030370042,
             "updatedOn": 1598128090602
         }, undefined)
 
@@ -163,7 +146,6 @@ describe("BucketUtils", () => {
             "id": 1598030370042,
             "plannedOn": 20200830,
             "value": "load and loki",
-            "createdOn": 1598030370042,
             "updatedOn": 1598128090602
         })
     })
@@ -174,7 +156,6 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             },
             ]
@@ -184,7 +165,6 @@ describe("BucketUtils", () => {
             "id": 1598030370042,
             "plannedOn": 20200831,
             "value": "load and loki",
-            "createdOn": 1598030370042,
             "updatedOn": 1598128090602
         }, bucketedData)
 
@@ -195,7 +175,6 @@ describe("BucketUtils", () => {
             "id": 1598030370042,
             "plannedOn": 20200831,
             "value": "load and loki",
-            "createdOn": 1598030370042,
             "updatedOn": 1598128090602
         })
     })
@@ -206,13 +185,11 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
             }
             ]
@@ -222,7 +199,6 @@ describe("BucketUtils", () => {
             "id": 1598125854668,
             "plannedOn": 20200824,
             "value": "bbbbbbbbbb",
-            "createdOn": 1598125854668,
             "updatedOn": 1598126195038,
         }, bucketedData)
 
@@ -232,7 +208,6 @@ describe("BucketUtils", () => {
             "id": 1598125854668,
             "plannedOn": 20200824,
             "value": "bbbbbbbbbb",
-            "createdOn": 1598125854668,
             "updatedOn": 1598126195038,
         })
 
@@ -240,7 +215,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136
         })
 
@@ -248,7 +222,6 @@ describe("BucketUtils", () => {
             "id": 1598125854668,
             "plannedOn": 20200824,
             "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "createdOn": 1598125854668,
             "updatedOn": 1598128081131,
         })
     })
@@ -259,13 +232,11 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
             }
             ]
@@ -275,7 +246,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200831,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         }, bucketedData)
 
@@ -286,7 +256,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         })
 
@@ -294,7 +263,6 @@ describe("BucketUtils", () => {
             "id": 1598125854668,
             "plannedOn": 20200824,
             "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "createdOn": 1598125854668,
             "updatedOn": 1598128081131,
         })
 
@@ -302,7 +270,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200831,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         })
     })
@@ -313,13 +280,11 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
             }
             ]
@@ -329,7 +294,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200829,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         }, bucketedData)
 
@@ -340,7 +304,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         })
 
@@ -348,7 +311,6 @@ describe("BucketUtils", () => {
             "id": 1598125854668,
             "plannedOn": 20200824,
             "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "createdOn": 1598125854668,
             "updatedOn": 1598128081131,
         })
 
@@ -356,7 +318,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200829,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         })
     })
@@ -367,13 +328,11 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
             }
             ]
@@ -383,7 +342,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         }, bucketedData)
 
@@ -394,7 +352,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         })
 
@@ -402,7 +359,6 @@ describe("BucketUtils", () => {
             "id": 1598125854668,
             "plannedOn": 20200824,
             "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "createdOn": 1598125854668,
             "updatedOn": 1598128081131,
         })
     })
@@ -413,13 +369,11 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
             }
             ]
@@ -429,7 +383,6 @@ describe("BucketUtils", () => {
             "id": 1598126372283,
             "plannedOn": 20200828,
             "value": "Here you can find the full list and description for DatePicker props.",
-            "createdOn": 1598126372283,
             "updatedOn": 1598128099727,
         }, bucketedData)
 
@@ -440,7 +393,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
         })
 
@@ -448,7 +400,6 @@ describe("BucketUtils", () => {
             "id": 1598125854668,
             "plannedOn": 20200824,
             "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "createdOn": 1598125854668,
             "updatedOn": 1598128081131,
         })
 
@@ -456,7 +407,6 @@ describe("BucketUtils", () => {
             "id": 1598126372283,
             "plannedOn": 20200828,
             "value": "Here you can find the full list and description for DatePicker props.",
-            "createdOn": 1598126372283,
             "updatedOn": 1598128099727,
         })
     })
@@ -467,13 +417,11 @@ describe("BucketUtils", () => {
                 "id": 1598030364799,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
             }
             ]
@@ -483,7 +431,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
             "completedDate": 1598127472017,
         }, bucketedData)
@@ -495,7 +442,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136
         })
 
@@ -505,7 +451,6 @@ describe("BucketUtils", () => {
             "id": 1598030364799,
             "plannedOn": 20200828,
             "value": "load and lock",
-            "createdOn": 1598030364799,
             "updatedOn": 1598030384136,
             "completedDate": 1598127472017
         })
@@ -517,27 +462,23 @@ describe("BucketUtils", () => {
                 "id": 1598030364790,
                 "plannedOn": 20200828,
                 "value": "load and lock",
-                "createdOn": 1598030364799,
                 "updatedOn": 1598030384136
             }, {
                 "id": 1598125854668,
                 "plannedOn": 20200824,
                 "value": "aaaaaaaaaaaaa",
-                "createdOn": 1598125854668,
                 "updatedOn": 1598128081131,
             }],
             oy_ct_28: [{
                 "id": 1598080240647,
                 "plannedOn": 20200821,
                 "value": "This wiki will be the first port of call of many thousands of Manjaro users, bot",
-                "createdOn": 1598080240647,
                 "updatedOn": 1598080240647,
                 "completedDate": 1598127472017,
             }, {
                 "id": 1598125838045,
                 "plannedOn": 20200823,
                 "value": "import { DatePicker } from '@material-ui/pickers'",
-                "createdOn": 1598125838045,
                 "updatedOn": 1598125838045,
                 "completedDate": 1598127472803
             }]
@@ -547,7 +488,6 @@ describe("BucketUtils", () => {
             "id": 1598080240647,
             "plannedOn": 20200821,
             "value": "This wiki will be the first port of call of many thousands of Manjaro users, bot",
-            "createdOn": 1598080240647,
             "updatedOn": 1598080240647,
             "completedDate": 1598127472017,
         }, bucketedData)
@@ -559,7 +499,6 @@ describe("BucketUtils", () => {
             "id": 1598080240647,
             "plannedOn": 20200821,
             "value": "This wiki will be the first port of call of many thousands of Manjaro users, bot",
-            "createdOn": 1598080240647,
             "updatedOn": 1598080240647,
             "completedDate": 1598127472017,
         })
@@ -570,7 +509,6 @@ describe("BucketUtils", () => {
             "id": 1598080240647,
             "plannedOn": 20200821,
             "value": "This wiki will be the first port of call of many thousands of Manjaro users, bot",
-            "createdOn": 1598080240647,
             "updatedOn": 1598080240647,
             "completedDate": 1598127472017,
         })

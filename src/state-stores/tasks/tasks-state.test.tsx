@@ -6,7 +6,6 @@ const getSampleNewTaskState = () => {
         id: 1234567,
         value: "Task value",
         plannedOn: 20200828,
-        createdOn: 78654321,
         updatedOn: 987654,
         tags: ['tag1', 'tag2']
     }
@@ -19,7 +18,6 @@ const getSampleNewTaskState = () => {
             id: 3456789,
             value: "Task value",
             plannedOn: 20200827,
-            createdOn: 12345678,
             updatedOn: 7654321,
             completedDate: 12345692,
             tags: ['tag3', 'tag4']
@@ -57,7 +55,6 @@ describe("TaskState: creation", () => {
             id: 3456789,
             value: "Task value",
             plannedOn: 20200827,
-            createdOn: 12345678,
             updatedOn: 7654321,
             completedDate: 12345692,
             tags: ['tag3', 'tag4']

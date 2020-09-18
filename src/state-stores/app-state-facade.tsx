@@ -19,7 +19,6 @@ export class AppStateFacade {
             TaskTemplateStateService.handleTemplateAdditionOrUpdation({
                 id: now,
                 currentlyActiveTaskId: now,
-                createdOn: now,
                 nextPlannedOn: TaskTemplateStateService.getNextPlannedOn(plannedOn, taskFrequency)!,
                 taskFrequency: taskFrequency,
                 currentlyActiveTaskPlannedOn: plannedOn,
@@ -32,7 +31,6 @@ export class AppStateFacade {
             id: now,
             plannedOn: plannedOn,
             value: value,
-            createdOn: now,
             updatedOn: now,
             tags: tags,
             taskTemplateId: taskTemplateId
@@ -76,8 +74,12 @@ export class AppStateFacade {
         AppStateService.updateHashTagState(HashTagUtils.moveHashTags(updatedTask, AppStateService.getHashTags()));
 
         //Template
-        if (moveSeries && updatedTask.taskTemplateId) {
-            TaskTemplateStateService.updateTemplateByTask(updatedTask)
+        if (updatedTask.taskTemplateId) {
+            if (moveSeries) {
+                TaskTemplateStateService.updateTemplateByTask(updatedTask)
+            } else {
+                TaskTemplateStateService.updateTemplateForMovedTask(updatedTask.taskTemplateId, updatedTask.plannedOn)
+            }
         }
     }
 
@@ -92,12 +94,17 @@ export class AppStateFacade {
         if (deleteSeries && task.taskTemplateId) {
             TaskTemplateStateService.deleteTemplate(task.taskTemplateId);
         } else if (!deleteSeries && task.taskTemplateId) {
-            const nextTask = TaskTemplateStateService.getNextTask(task)
+            setTimeout(() => {
+                const nextTask = TaskTemplateStateService.getNextTask(task)
 
-            if (nextTask && nextTask.taskTemplateId) {
-                AppStateService.handleTaskAdditionOrUpdation(null, nextTask)
-                TaskTemplateStateService.updateTemplateByTask(nextTask)
-            }
+                if (nextTask && nextTask.taskTemplateId) {
+                    AppStateService.handleTaskAdditionOrUpdation(null, nextTask)
+
+                    AppStateService.updateHashTagState(HashTagUtils.addOrUpdateHashTags(null, nextTask, AppStateService.getHashTags()));
+
+                    TaskTemplateStateService.updateTemplateByTask(nextTask)
+                }
+            }, 500)
         }
     }
 
@@ -115,11 +122,20 @@ export class AppStateFacade {
         AppStateService.updateHashTagState(HashTagUtils.completeHashTags(updatedTask, AppStateService.getHashTags()));
 
         // Template
-        const nextTask = TaskTemplateStateService.getNextTask(TasksState.toTask(updatedTask))
 
-        if (nextTask && nextTask.taskTemplateId) {
-            AppStateService.handleTaskAdditionOrUpdation(null, nextTask)
-            TaskTemplateStateService.updateTemplateByTask(nextTask)
+        if(currentTask.taskTemplateId) {
+            // Since Browser sync is asynchronous, let it complete
+            setTimeout(() => {
+                const nextTask = TaskTemplateStateService.getNextTask(TasksState.toTask(updatedTask))
+
+                if (nextTask) {
+                    AppStateService.handleTaskAdditionOrUpdation(null, nextTask)
+
+                    AppStateService.updateHashTagState(HashTagUtils.addOrUpdateHashTags(null, nextTask, AppStateService.getHashTags()));
+
+                    TaskTemplateStateService.updateTemplateByTask(nextTask)
+                }
+            }, 500)
         }
     }
 
@@ -135,16 +151,22 @@ export class AppStateFacade {
         AppStateService.updateHashTagState(HashTagUtils.undoCompleteHashTags(updatedTask, AppStateService.getHashTags()));
 
         //Template
+
         if (updatedTask.taskTemplateId) {
             const taskTemplate = TaskTemplateStateService.getById(updatedTask.taskTemplateId)
 
             if (taskTemplate) {
-                const activeTask = AppStateService.getTaskBy(taskTemplate.currentlyActiveTaskPlannedOn, taskTemplate.currentlyActiveTaskId)
+                setTimeout(() => {
+                    const activeTask = AppStateService.getTaskBy(taskTemplate.currentlyActiveTaskPlannedOn, taskTemplate.currentlyActiveTaskId)
 
-                if (activeTask) {
-                    AppStateService.handleTaskDeletion(activeTask)
-                    AppStateService.updateHashTagState(HashTagUtils.deleteHashTags(activeTask, AppStateService.getHashTags()));
-                }
+                    if (activeTask) {
+                        AppStateService.handleTaskDeletion(activeTask)
+
+                        AppStateService.updateHashTagState(HashTagUtils.deleteHashTags(activeTask, AppStateService.getHashTags()));
+
+                        AppStateService.updateHashTagState(HashTagUtils.deleteHashTags(activeTask, AppStateService.getHashTags()));
+                    }
+                }, 500)
             }
 
             TaskTemplateStateService.updateTemplateByTask(updatedTask)

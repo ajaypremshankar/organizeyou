@@ -5,6 +5,7 @@ import { BucketUtils, TASK_STATE_ACTION } from "../bucket/bucket-utils";
 import { wrapThrottle } from "../../utils/wrapper-utils";
 import { AppStateService } from "./app-state-service";
 import { hasBrowserStoragePermission } from "../../utils/platform-utils";
+import { AppEventStore } from "../../events/app-event-store";
 
 
 export class AppStateRepository {

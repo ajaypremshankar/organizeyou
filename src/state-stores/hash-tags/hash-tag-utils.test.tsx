@@ -7,7 +7,6 @@ describe("HashTagUtils: addOrUpdateHashTags", () => {
             id: 1234567,
             value: "Task value",
             plannedOn: 20200828,
-            createdOn: 78654321,
             updatedOn: 987654,
             tags: ['tag1', 'tag2']
         }
@@ -55,7 +54,6 @@ describe("HashTagUtils: addOrUpdateHashTags", () => {
             id: 1234567,
             value: "Task value",
             plannedOn: 20200828,
-            createdOn: 78654321,
             updatedOn: 987654,
             tags: ['tag1', 'tag2']
         }
@@ -115,7 +113,6 @@ describe("HashTagUtils: moveHashTags", () => {
             id: 1234567,
             value: "Task value",
             plannedOn: 20200828,
-            createdOn: 78654321,
             updatedOn: 987654,
             tags: ['tag1']
         }
@@ -171,7 +168,6 @@ describe("HashTagUtils: completeHashTags", () => {
             id: 1234567,
             value: "Task value",
             plannedOn: 20200828,
-            createdOn: 78654321,
             updatedOn: 987654,
             completedDate: 1212121212,
             tags: ['tag1', 'tag2']
@@ -232,7 +228,6 @@ describe("HashTagUtils: undoCompleteHashTags", () => {
             id: 1234567,
             value: "Task value",
             plannedOn: 20200828,
-            createdOn: 78654321,
             updatedOn: 987654,
             tags: ['tag1', 'tag2']
         }

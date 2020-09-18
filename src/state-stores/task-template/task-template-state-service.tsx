@@ -57,12 +57,13 @@ export class TaskTemplateStateService {
             const taskFrequency = TaskTemplateStateService.getById(task.taskTemplateId)
             if (taskFrequency) {
                 const now = getCurrentMillis()
-                const newPlannedOn = TaskTemplateStateService.getNextPlannedOn(task.plannedOn, taskFrequency.taskFrequency)
+                const newPlannedOn = taskFrequency.nextPlannedOn
                 if (newPlannedOn) {
                     return {
                         ...task,
                         id: now,
                         plannedOn: newPlannedOn,
+                        updatedOn: now,
                     }
                 }
             }
@@ -119,6 +120,16 @@ export class TaskTemplateStateService {
                     currentlyActiveTaskPlannedOn: task.plannedOn
                 })
             }
+        }
+    }
+
+    public static updateTemplateForMovedTask = (templateId: number, newPlanned: number) => {
+        const taskTemplate = TaskTemplateStateService.getById(templateId)
+        if (taskTemplate) {
+            TaskTemplateStateService.handleTemplateAdditionOrUpdation({
+                ...taskTemplate,
+                currentlyActiveTaskPlannedOn: newPlanned,
+            })
         }
     }
 
