@@ -4,6 +4,7 @@ import { TasksState } from "./tasks/tasks-state";
 import { AppStateService } from "./tasks/app-state-service";
 import { CompletedTask, Task, TASK_FREQUENCY_TYPE } from "../types/types";
 import { getCurrentMillis } from "../utils/date-utils";
+import { DateAndFrequency } from "../components/widgets/add-task/add-task-widget";
 
 export class AppStateFacade {
 
@@ -58,29 +59,43 @@ export class AppStateFacade {
         );
     }
 
-    public static moveTask = (currentTask: Task, newPlannedOn: number, moveSeries: boolean = false) => {
+    public static moveTask = (currentTask: Task, dateAndFrequency: DateAndFrequency, moveSeries: boolean = false) => {
 
-        const from = currentTask.plannedOn
-        const updatedTask = {
-            ...currentTask,
-            plannedOn: newPlannedOn,
-            updatedOn: getCurrentMillis()
+        const now = getCurrentMillis()
+        //Template
+        let taskTemplateId = currentTask.taskTemplateId
+        const currentFrequency = taskTemplateId ? TaskTemplateStateService.getFrequencyById(taskTemplateId) : TASK_FREQUENCY_TYPE.NO_REPEAT
+        if (moveSeries
+            && dateAndFrequency.frequency !== TASK_FREQUENCY_TYPE.NO_REPEAT
+            && dateAndFrequency.frequency !== currentFrequency) {
+            TaskTemplateStateService.handleTemplateAdditionOrUpdation({
+                id: now,
+                currentlyActiveTaskId: currentTask.id,
+                nextPlannedOn: TaskTemplateStateService.getNextPlannedOn(dateAndFrequency.date, dateAndFrequency.frequency)!,
+                taskFrequency: dateAndFrequency.frequency,
+                currentlyActiveTaskPlannedOn: dateAndFrequency.date,
+            })
+
+            taskTemplateId = now
+        } else if (moveSeries && dateAndFrequency.frequency === TASK_FREQUENCY_TYPE.NO_REPEAT) {
+            taskTemplateId = undefined
+        } else if (!moveSeries && taskTemplateId) {
+            TaskTemplateStateService.updateTemplateForMovedTask(taskTemplateId, dateAndFrequency.date)
         }
 
         //Task
+        const from = currentTask.plannedOn
+        const updatedTask = {
+            ...currentTask,
+            plannedOn: dateAndFrequency.date,
+            updatedOn: now,
+            taskTemplateId: taskTemplateId
+        }
+
         AppStateService.handleTaskMovement(from, updatedTask)
 
         //Hashtag
         AppStateService.updateHashTagState(HashTagUtils.moveHashTags(updatedTask, AppStateService.getHashTags()));
-
-        //Template
-        if (updatedTask.taskTemplateId) {
-            if (moveSeries) {
-                TaskTemplateStateService.updateTemplateByTask(updatedTask)
-            } else {
-                TaskTemplateStateService.updateTemplateForMovedTask(updatedTask.taskTemplateId, updatedTask.plannedOn)
-            }
-        }
     }
 
     public static deleteTask = (task: Task, deleteSeries: boolean = false) => {
@@ -123,7 +138,7 @@ export class AppStateFacade {
 
         // Template
 
-        if(currentTask.taskTemplateId) {
+        if (currentTask.taskTemplateId) {
             // Since Browser sync is asynchronous, let it complete
             setTimeout(() => {
                 const nextTask = TaskTemplateStateService.getNextTask(TasksState.toTask(updatedTask))

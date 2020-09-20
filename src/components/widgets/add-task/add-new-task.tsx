@@ -80,12 +80,14 @@ export default function AddNewTask(props: AddNewTaskProps) {
             <span style={{display: 'none'}}>
                 <AppDialog
                     open={showTaskFrequencyOptions}
-                    title={<span>Repeat</span>}
+                    title={{element: <span>Repeat</span>}}
                     content={
-                        <TaskFrequencyOptions
-                            taskFrequency={props.taskFrequency}
-                            selectFrequency={selectFrequency}/>}
-                    actions={<span></span>}
+                        {
+                            element: <TaskFrequencyOptions
+                                taskFrequency={props.taskFrequency}
+                                selectFrequency={selectFrequency}/>
+                        }}
+                    actions={{element: <span></span>}}
                     onClose={() => setShowTaskFrequencyOptions(false)}/>
                 </span>
             <Button

@@ -79,12 +79,12 @@ export default function WorldClockSetting(props: WorldClockSettingProps) {
     return (
         <AppDialog
             open={props.show}
-            title={<Typography
+            title={{element: <Typography
                 style={{fontWeight: 'bold'}}>
                 {props.mode} clock
-            </Typography>}
-            content={getContent()}
+            </Typography>}}
+            content={{element: getContent()}}
             onClose={props.onClose}
-            actions={getActions()}/>
+            actions={{element: getActions(), style: {justifyContent: "center"}}}/>
     );
 }

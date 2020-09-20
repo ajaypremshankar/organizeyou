@@ -34,20 +34,20 @@ export default function ClearAppData(props: ClearAppDataProps) {
 
             <AppDialog
                 open={open}
-                title={<span>Clear app data</span>}
-                content={
+                title={{element: <span>Clear app data</span>}}
+                content={{element:
                     <DialogContentText>
                         This will delete your existing tasks data and start app fresh.
-                    </DialogContentText>}
-                actions={
-                    <div>
+                    </DialogContentText>}}
+                actions={{
+                    element: <div>
                         <Button autoFocus onClick={handleClose} color="primary">
                             Cancel
                         </Button>
                         <Button onClick={handleClearAppState} color="secondary">
                             Clear app data
                         </Button>
-                    </div>}
+                    </div>}}
                 onClose={handleClose}/>
         </div>
     );

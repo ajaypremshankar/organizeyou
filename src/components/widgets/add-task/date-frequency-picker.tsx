@@ -6,6 +6,7 @@ import { TASK_FREQUENCY_TYPE } from "../../../types/types";
 import AppDialog from "../../common/app-dialog";
 import Grid from '@material-ui/core/Grid';
 import { DateAndFrequency } from "./add-task-widget";
+import Button from "@material-ui/core/Button";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -18,6 +19,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface DateFrequencyPickerProps {
     open: boolean
+    mode: 'add' | 'move'
+    title?: string
     dateAndFrequency: DateAndFrequency,
     onClose: any
     onSelect: any
@@ -27,7 +30,7 @@ export default function DateFrequencyPicker(props: DateFrequencyPickerProps) {
     const classes = useStyles()
 
     const [dateAndFrequencyState, setDateAndFrequencyState] = useState(props.dateAndFrequency)
-
+    console.log(dateAndFrequencyState)
     const handleFrequencySelect = (selected: TASK_FREQUENCY_TYPE) => {
         setDateAndFrequencyState({
             ...dateAndFrequencyState,
@@ -36,40 +39,72 @@ export default function DateFrequencyPicker(props: DateFrequencyPickerProps) {
     }
 
     const handleDateSelect = (date: number) => {
-        props.onSelect({
+        setDateAndFrequencyState({
             ...dateAndFrequencyState,
             date: date
         })
     }
 
+    const handlePressOk = (moveSeries: boolean) => {
+        if (props.mode === 'move') {
+            props.onSelect(dateAndFrequencyState, moveSeries)
+        } else {
+            props.onSelect(dateAndFrequencyState)
+        }
+    }
+
     function getContent() {
         return (
-            <Grid container spacing={0}>
-                <Grid item xs={4}>
-                    <TaskFrequencyOptions
-                        taskFrequency={dateAndFrequencyState.frequency}
-                        selectFrequency={handleFrequencySelect}/>
+            <div>
+                <Grid container spacing={0}>
+                    <Grid item xs={4}>
+                        <TaskFrequencyOptions
+                            taskFrequency={dateAndFrequencyState.frequency}
+                            selectFrequency={handleFrequencySelect}/>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <AppDatePicker
+                            label={''}
+                            open={props.open}
+                            variant={"static"}
+                            value={dateAndFrequencyState.date}
+                            dateChange={handleDateSelect}/>
+                    </Grid>
                 </Grid>
-                <Grid item xs={8}>
-                    <AppDatePicker
-                        label={''}
-                        open={props.open}
-                        variant={"static"}
-                        value={dateAndFrequencyState.date}
-                        dateChange={handleDateSelect}/>
-                </Grid>
-            </Grid>
+            </div>
         )
     }
 
     function getActions() {
-        return <span></span>;
+        return <div>
+            {props.mode === 'move' ?
+                <span>
+                    <Button
+                        style={{width: 200, marginRight: '20px', marginTop: '-30px'}}
+                        onClick={() => handlePressOk(true)} color="primary">
+                    This and following
+                    </Button>
+                <Button
+                    style={{width: 100, marginRight: '20px', marginTop: '-30px'}}
+                    autoFocus onClick={() => handlePressOk(false)} color="primary">
+                    This task
+                </Button></span> : <Button
+                    variant={"outlined"}
+                    style={{width: 100, marginRight: '20px', marginTop: '-30px'}}
+                    onClick={() => handlePressOk(false)}>Ok</Button>}
+        </div>;
     }
 
     return (<AppDialog
             open={props.open}
-            title={<span></span>}
-            content={getContent()}
-            actions={getActions()} onClose={props.onClose}/>
+            title={{element: <span style={{fontWeight: "bold"}}>{props.title}</span>}}
+            content={{element: getContent()}}
+            actions={
+                {
+                    element: getActions(),
+                    style: {textAlign: "right", justifyContent: "flex-end"}
+                }
+            }
+            onClose={props.onClose}/>
     );
 }

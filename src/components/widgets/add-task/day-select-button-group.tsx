@@ -61,6 +61,7 @@ export default function DaySelectButtonGroup(props: DaySelectButtonGroupProps) {
 
             {datePickerState && <DateFrequencyPicker
                 dateAndFrequency={props.dateAndFrequency}
+                mode={"add"}
                 open={datePickerState}
                 onSelect={handleSelect}
                 onClose={() => setDatePickerState(false)}/>}
