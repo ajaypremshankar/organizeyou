@@ -47,6 +47,7 @@ export class TaskTemplateStateService {
     }
 
     public static getFrequencyById = (id: number): TASK_FREQUENCY_TYPE => {
+
         let taskTemplate = TaskTemplateStateService.state.templates.get(id);
         return taskTemplate ? taskTemplate.taskFrequency : TASK_FREQUENCY_TYPE.NO_REPEAT
     }

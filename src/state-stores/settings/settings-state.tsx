@@ -137,7 +137,7 @@ export class SettingsStateService {
             toggleSettings.set(SettingsType.FULL_MODE, true)
             toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
             toggleSettings.set(SettingsType.SHOW_AM_PM, true)
-            toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
+            toggleSettings.set(SettingsType.BACKGROUND_MODE, false)
 
             toggleSettings.set(SettingsType.LOCK_CURRENT_WALLPAPER, false)
             objectSettings.set(SettingsType.WORLD_CLOCK_DATA, SettingsStateService.getDefaultClocks)

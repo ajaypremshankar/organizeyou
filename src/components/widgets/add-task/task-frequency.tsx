@@ -32,18 +32,14 @@ interface TaskFrequencyProps {
 
 export default function TaskFrequencyOptions(props: TaskFrequencyProps) {
     const classes = useStyles();
-
-    return (
-        <List className={classes.root}>
-            {Object.values(TASK_FREQUENCY_TYPE)
-                .map(type => <Option
-                    key={type}
-                    type={type}
-                    currentFrequency={props.taskFrequency}
-                    selectFrequency={props.selectFrequency}/>)}
-        </List>
-
-    );
+    return (<List className={classes.root}>
+        {Object.values(TASK_FREQUENCY_TYPE)
+            .map(type => <Option
+                key={type}
+                type={type}
+                currentFrequency={props.taskFrequency}
+                selectFrequency={props.selectFrequency}/>)}
+    </List>);
 }
 
 interface OptionProps {

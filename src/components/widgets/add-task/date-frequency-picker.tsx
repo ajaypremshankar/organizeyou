@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppDatePicker from "../../common/date-picker";
 import TaskFrequencyOptions from "./task-frequency";
@@ -30,7 +30,11 @@ export default function DateFrequencyPicker(props: DateFrequencyPickerProps) {
     const classes = useStyles()
 
     const [dateAndFrequencyState, setDateAndFrequencyState] = useState(props.dateAndFrequency)
-    console.log(dateAndFrequencyState)
+
+    useEffect(() => {
+        setDateAndFrequencyState(props.dateAndFrequency)
+    }, [props])
+
     const handleFrequencySelect = (selected: TASK_FREQUENCY_TYPE) => {
         setDateAndFrequencyState({
             ...dateAndFrequencyState,
@@ -46,7 +50,7 @@ export default function DateFrequencyPicker(props: DateFrequencyPickerProps) {
     }
 
     const handlePressOk = (moveSeries: boolean) => {
-        if (props.mode === 'move') {
+        if (isMoveMode()) {
             props.onSelect(dateAndFrequencyState, moveSeries)
         } else {
             props.onSelect(dateAndFrequencyState)
@@ -75,19 +79,23 @@ export default function DateFrequencyPicker(props: DateFrequencyPickerProps) {
         )
     }
 
+    function isMoveMode() {
+        return props.mode === 'move';
+    }
+
     function getActions() {
         return <div>
-            {props.mode === 'move' ?
+            {isMoveMode() ?
                 <span>
                     <Button
                         style={{width: 200, marginRight: '20px', marginTop: '-30px'}}
                         onClick={() => handlePressOk(true)} color="primary">
-                    This and following
+                    This and repeating
                     </Button>
                 <Button
                     style={{width: 100, marginRight: '20px', marginTop: '-30px'}}
                     autoFocus onClick={() => handlePressOk(false)} color="primary">
-                    This task
+                    Just this
                 </Button></span> : <Button
                     variant={"outlined"}
                     style={{width: 100, marginRight: '20px', marginTop: '-30px'}}

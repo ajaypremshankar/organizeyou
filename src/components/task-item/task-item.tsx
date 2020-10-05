@@ -4,7 +4,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Task, TASK_FREQUENCY_TYPE } from "../../types/types";
+import { Task, TASK_FREQUENCY_TYPE, TaskTemplate } from "../../types/types";
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -82,6 +82,17 @@ const getTaskContentWithTooltip = (value: string, props: TaskItemProps) => {
         </span>)
 }
 
+const getFrequency = (task: Task): TASK_FREQUENCY_TYPE => {
+    if (task.taskTemplateId) {
+        const template: TaskTemplate | undefined = TaskTemplateStateService.getById(task.taskTemplateId);
+
+        if (template) {
+            return template.taskFrequency
+        }
+    }
+    return TASK_FREQUENCY_TYPE.NO_REPEAT;
+}
+
 export default function TaskItem(props: TaskItemProps) {
 
     const classes = useStyles();
@@ -95,7 +106,7 @@ export default function TaskItem(props: TaskItemProps) {
             ...taskItemState,
             element: getTaskContentWithTooltip(props.task.value, props)
         })
-    }, [props])
+    }, [props, props.task])
 
     const [datePickerState, setDatePickerState] = useState(false);
 
@@ -157,7 +168,7 @@ export default function TaskItem(props: TaskItemProps) {
 
     const labelId = `task-item-label-${props.task.id}`;
 
-    function getDeleteTaskAppDialog() {
+    const getDeleteTaskAppDialog = () => {
         return <AppDialog
             open={deleteDialogOpen}
             title={{element: <span>Delete task</span>}}
@@ -184,19 +195,6 @@ export default function TaskItem(props: TaskItemProps) {
             onClose={() => setDeleteDialogOpen(false)}/>;
     }
 
-    function getMoveTaskAppDialog() {
-        return <DateFrequencyPicker
-            dateAndFrequency={{
-                date: props.task.plannedOn,
-                frequency: props.task.taskTemplateId ? TaskTemplateStateService.getFrequencyById(props.task.taskTemplateId) : TASK_FREQUENCY_TYPE.NO_REPEAT
-            }}
-            mode={"move"}
-            title={'Move task'}
-            open={datePickerState}
-            onSelect={handleMoveTask}
-            onClose={() => setDatePickerState(false)}/>
-    }
-
     return (
         <ListItem
             key={labelId}
@@ -204,7 +202,17 @@ export default function TaskItem(props: TaskItemProps) {
 
             {getDeleteTaskAppDialog()}
 
-            {getMoveTaskAppDialog()}
+            <DateFrequencyPicker
+                dateAndFrequency={{
+                    date: props.task.plannedOn,
+                    frequency: getFrequency(props.task)
+                }}
+                mode={"move"}
+                title={'Change date & repeat'}
+                open={datePickerState}
+                onSelect={handleMoveTask}
+                onClose={() => setDatePickerState(false)}/>
+
             <ListItemIcon>
                 <Checkbox
                     size={"small"}
