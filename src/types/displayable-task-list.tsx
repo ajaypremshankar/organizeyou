@@ -28,6 +28,6 @@ export class DisplayableTaskList {
     }
 
     private static defaultAscSorting = (a: Task|CompletedTask, b: Task|CompletedTask) => {
-        return a.createdOn - b.createdOn
+        return a.id - b.id
     }
 }

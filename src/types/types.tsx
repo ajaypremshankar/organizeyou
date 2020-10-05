@@ -2,9 +2,9 @@ export interface Task {
     id: number,
     value: string;
     plannedOn: number;
-    createdOn: number;
     updatedOn: number;
     tags?: string[]
+    taskTemplateId?: number
 }
 
 export interface CompletedTask extends Task {
@@ -30,4 +30,21 @@ export interface HashTagTaskMapping {
     completed: boolean
 }
 
+export enum TASK_FREQUENCY_TYPE {
+    NO_REPEAT = '',
+    DAILY = 'Daily',
+    WEEKDAYS = 'Weekday',
+    WEEKLY = 'Weekly',
+    MONTHLY = 'Monthly',
+    YEARLY = 'Yearly',
+}
+
 export type TaskSorter = (a: Task | CompletedTask, b: Task | CompletedTask) => number
+
+export interface TaskTemplate {
+    id: number
+    nextPlannedOn: number;
+    taskFrequency: TASK_FREQUENCY_TYPE
+    currentlyActiveTaskId: number
+    currentlyActiveTaskPlannedOn: number
+}

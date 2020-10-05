@@ -3,9 +3,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import DaySelectButtonGroup from "./day-select-button-group";
 import AddNewTask from "./add-new-task";
 import Grid from "@material-ui/core/Grid";
-import { getCurrentMillis } from "../../../utils/date-utils";
+import { getTodayKey } from "../../../utils/date-utils";
 import { AppStateService } from "../../../state-stores/tasks/app-state-service";
-import { HashTagUtils } from "../../../state-stores/hash-tags/hash-tag-utils";
+import { TASK_FREQUENCY_TYPE } from "../../../types/types";
+import { AppStateFacade } from "../../../state-stores/app-state-facade";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -17,11 +18,16 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
             align: 'center',
             '& > *': {
-                margin: theme.spacing(2),
+                margin: theme.spacing(1),
             },
         }
     }),
 );
+
+export interface DateAndFrequency {
+    date: number,
+    frequency: TASK_FREQUENCY_TYPE
+}
 
 interface AddTaskWidgetProps {
     showDaySelect: boolean
@@ -30,38 +36,39 @@ interface AddTaskWidgetProps {
 export default function AddTaskWidget(props: AddTaskWidgetProps) {
     const classes = useStyles()
 
-    const [addTaskState, setAddTaskState] = useState(AppStateService.getSelectedDate())
+    const [dateAndFrequencyState, setDateAndFrequencyState] = useState({
+        date: getTodayKey(),
+        frequency: TASK_FREQUENCY_TYPE.NO_REPEAT
+    })
 
-    const handleDateChange = (date: number) => {
-        setAddTaskState(date)
-        AppStateService.updateCurrentlySelectedDate(date)
+    const handleFrequencySelect = (selected: TASK_FREQUENCY_TYPE) => {
+        setDateAndFrequencyState({
+            ...dateAndFrequencyState,
+            frequency: selected
+        })
+    }
+
+    const handleDateAndFrequencySelect = (dateAndFrequency: DateAndFrequency) => {
+        setDateAndFrequencyState(dateAndFrequency)
+        AppStateService.updateCurrentlySelectedDate(dateAndFrequency.date)
     }
 
     const handleAddTask = (value: string) => {
-        const now = getCurrentMillis()
-        const tags = HashTagUtils.parseHashTags(value)
-        AppStateService.handleTaskAdditionOrUpdation(
-            null,
-            {
-                id: now,
-                plannedOn: addTaskState,
-                value: value,
-                createdOn: now,
-                updatedOn: now,
-                tags: tags
-            })
-
+        AppStateFacade.addTask(dateAndFrequencyState.frequency, dateAndFrequencyState.date, value)
         AppStateService.clearCurrentlySelectedList()
     }
 
     return (
         <Grid className={classes.container} container justify="space-around">
-            { props.showDaySelect && <DaySelectButtonGroup
-                date={addTaskState}
-                chooseDate={handleDateChange}/> }
+            {props.showDaySelect && <DaySelectButtonGroup
+                dateAndFrequency={dateAndFrequencyState}
+                onSelect={handleDateAndFrequencySelect}/>}
             <AddNewTask
-                date={addTaskState}
-                addTask={handleAddTask}/>
+                date={dateAndFrequencyState.date}
+                addTask={handleAddTask}
+                taskFrequency={dateAndFrequencyState.frequency}
+                changeTaskFrequency={handleFrequencySelect}
+            />
         </Grid>
     );
 }

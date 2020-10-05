@@ -1,5 +1,6 @@
 import { SettingsStateService, SettingsType } from "../state-stores/settings/settings-state";
 import { createMuiTheme } from '@material-ui/core/styles';
+import { getTodayBgUrl } from "./background-utils";
 
 export const getTheme = () => {
 
@@ -65,7 +66,7 @@ export const getRootPaperStyle = (): any => {
         minHeight: '100%',
         height: '100%',
         position: 'absolute',
-        backgroundImage: `url(${SettingsStateService.getTodayBgUrl()})`,
+        backgroundImage: `url(${getTodayBgUrl()})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         overflow: 'auto',

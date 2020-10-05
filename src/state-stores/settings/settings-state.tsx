@@ -2,6 +2,7 @@ import { getTodayKey } from "../../utils/date-utils";
 import { migrateToBucketedKeySupport } from "../bucket/bucketed-migrations-utils";
 import { WorldClock } from "../../components/widgets/world-clock/work-clock-setting";
 import moment from "moment-timezone";
+import { getNewWallpaper } from "../../utils/background-utils";
 
 /***
  * Enum type used as key for settings
@@ -82,22 +83,16 @@ export class SettingsStateService {
             SettingsStateService.saveSettings(toggleSettings, objectSettings);
         } else if (!background || Number(background.day) < getTodayKey()) {
 
-            fetch(`https://source.unsplash.com/collection/220388/1920x1080`).then(value => {
-                SettingsStateService.loadAndCacheImage(value.url).then(url => {
-                    objectSettings.set(SettingsType.BACKGROUND_MODE, {
-                        day: getTodayKey(),
-                        url: url,
-                    })
-
-                    // Update state & store only after loading image.
-                    // DO-NOT take this state-update out of promise.then
-                    SettingsStateService.saveSettings(toggleSettings, objectSettings);
-                }).catch(reason => {
-                    SettingsStateService.saveSettings(toggleSettings, objectSettings);
+            getNewWallpaper().then(url => {
+                objectSettings.set(SettingsType.BACKGROUND_MODE, {
+                    day: getTodayKey(),
+                    url: url,
                 })
-            }).catch(reason => {
+
+                // Update state & store only after loading image.
+                // DO-NOT take this state-update out of promise.then
                 SettingsStateService.saveSettings(toggleSettings, objectSettings);
-            })
+            }).catch(() => SettingsStateService.saveSettings(toggleSettings, objectSettings))
         } else {
             SettingsStateService.saveSettings(toggleSettings, objectSettings);
         }
@@ -142,7 +137,7 @@ export class SettingsStateService {
             toggleSettings.set(SettingsType.FULL_MODE, true)
             toggleSettings.set(SettingsType.SHOW_COMPLETED_TASKS, true)
             toggleSettings.set(SettingsType.SHOW_AM_PM, true)
-            toggleSettings.set(SettingsType.BACKGROUND_MODE, true)
+            toggleSettings.set(SettingsType.BACKGROUND_MODE, false)
 
             toggleSettings.set(SettingsType.LOCK_CURRENT_WALLPAPER, false)
             objectSettings.set(SettingsType.WORLD_CLOCK_DATA, SettingsStateService.getDefaultClocks)
@@ -221,19 +216,13 @@ export class SettingsStateService {
 
         SettingsStateService.toggleSetting(SettingsType.APP_LOADING)
 
-        fetch(`https://source.unsplash.com/collection/220388/1920x1080`).then(value => {
-            SettingsStateService.loadAndCacheImage(value.url).then(url => {
-                SettingsStateService.updateObjectSetting(SettingsType.BACKGROUND_MODE, {
-                    day: getTodayKey(),
-                    url: url,
-                });
-                SettingsStateService.toggleSetting(SettingsType.APP_LOADING)
-            }).catch(() => {
-                SettingsStateService.toggleSetting(SettingsType.APP_LOADING)
-            })
-        }).catch(() => {
+        getNewWallpaper().then(url => {
+            SettingsStateService.updateObjectSetting(SettingsType.BACKGROUND_MODE, {
+                day: getTodayKey(),
+                url: url,
+            });
             SettingsStateService.toggleSetting(SettingsType.APP_LOADING)
-        })
+        }).catch(() => SettingsStateService.toggleSetting(SettingsType.APP_LOADING))
     }
 
     public static handleShowAllToggle = () => {
@@ -248,28 +237,6 @@ export class SettingsStateService {
         SettingsStateService.updateState(SettingsStateService.toggleSetting(SettingsType.APP_LOADING, setToValue), false)
     }
 
-    public static getTodayBgUrl = (): string => {
-        const background = SettingsStateService.settingsState?.objectSettings?.get(SettingsType.BACKGROUND_MODE)
-        if (!background || Number(background.day) < getTodayKey()) {
-            return './default_bg.jpg'
-        }
-        return background.url
-    }
-
-    private static loadAndCacheImage = (url: string) => {
-        return new Promise((resolve, reject) => {
-            try {
-                const imageLoader = new Image();
-                imageLoader.onload = () => {
-                    resolve(url)
-                };
-                imageLoader.src = SettingsStateService.getTodayBgUrl()
-            } catch (ex) {
-                reject(ex);
-            }
-        })
-    }
-
     public static clear = () => {
         SettingsStateRepository.clear()
     }
@@ -279,7 +246,7 @@ export class SettingsStateService {
     }
 
     public static getAsObject = (name: SettingsType) => {
-        return SettingsStateService.settingsState.objectSettings.get(name) || {}
+        return SettingsStateService.settingsState.objectSettings?.get(name) || {}
     }
 
     public static isFullMode = () => {

@@ -51,7 +51,7 @@ export default function Clock(props: ClockProps) {
             </Typography>
             <Typography variant="subtitle1" gutterBottom className={classes.clock} color="primary">
                 <Moment unix tz={props.data.timezone}
-                        format={props.data.ampmEnabled ? 'hh:mm A' : 'HH:mm'}>
+                        format={SettingsStateService.isEnabled(SettingsType.SHOW_AM_PM) ? 'hh:mm A' : 'HH:mm'}>
                     {ctime}
                 </Moment>
             </Typography>

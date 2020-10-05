@@ -6,16 +6,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { SettingsStateService, SettingsType } from "../../state-stores/settings/settings-state";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
+import { AppComponent } from "../../types/ui-types";
 
 interface AppDialogProps {
     open: boolean
-    title: JSX.Element
-    content: JSX.Element
-    actions: JSX.Element
+    title: AppComponent
+    content: AppComponent
+    actions: AppComponent
     onClose: any
 }
-
-
 
 export default function AppDialog(props: AppDialogProps) {
 
@@ -37,21 +36,19 @@ export default function AppDialog(props: AppDialogProps) {
     });
 
     return (
-        <div>
-            <ThemeProvider theme={defaultMaterialTheme}>
-                <Dialog
-                    open={props.open}
-                    onClose={props.onClose}
-                    aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">{props.title}</DialogTitle>
-                    <DialogContent>
-                        {props.content}
-                    </DialogContent>
-                    <DialogActions style={{justifyContent: 'center'}}>
-                        {props.actions}
-                    </DialogActions>
-                </Dialog>
-            </ThemeProvider>
-        </div>
+        <ThemeProvider theme={defaultMaterialTheme}>
+            <Dialog
+                open={props.open}
+                onClose={props.onClose}
+                aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">{props.title.element}</DialogTitle>
+                <DialogContent>
+                    {props.content.element}
+                </DialogContent>
+                <DialogActions style={props.actions.style}>
+                    {props.actions.element}
+                </DialogActions>
+            </Dialog>
+        </ThemeProvider>
     );
 }

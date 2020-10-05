@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
 import { AppStateRepository } from "../../state-stores/tasks/app-state-repository";
 import AppDialog from "../common/app-dialog";
@@ -33,21 +34,20 @@ export default function ClearAppData(props: ClearAppDataProps) {
 
             <AppDialog
                 open={open}
-                title={
-                    <span style={{fontWeight: 'bold'}}>Clear app data</span>}
-                content={
-                    <span>
-                        This will delete your existing tasks data and start app as fresh.
-                    </span>}
-                actions={
-                    <div>
+                title={{element: <span>Clear app data</span>}}
+                content={{element:
+                    <DialogContentText>
+                        This will delete your existing tasks data and start app fresh.
+                    </DialogContentText>}}
+                actions={{
+                    element: <div>
                         <Button autoFocus onClick={handleClose} color="primary">
                             Cancel
                         </Button>
                         <Button onClick={handleClearAppState} color="secondary">
                             Clear app data
                         </Button>
-                    </div>}
+                    </div>}}
                 onClose={handleClose}/>
         </div>
     );

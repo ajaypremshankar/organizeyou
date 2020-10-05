@@ -8,6 +8,8 @@ import { SettingsStateService } from "../../state-stores/settings/settings-state
 import AppLoader from "../common/app-loader";
 import { AppStateRepository } from "../../state-stores/tasks/app-state-repository";
 import VerticalGrid from "../grid/vertical-grid/vertical-grid";
+import { TaskTemplateState } from "../../state-stores/task-template/task-template-state";
+import { TaskTemplateStateService } from "../../state-stores/task-template/task-template-state-service";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({}),
@@ -23,8 +25,13 @@ export default function RootApp() {
         SettingsStateService.emptyState()
     )
 
+    const [templateState, setTemplateState] = useState(
+        TaskTemplateState.emptyState()
+    )
+
     AppStateService.initStore(baseState, setBaseState)
     SettingsStateService.initStore(settingsState, setSettingsState)
+    TaskTemplateStateService.initStore(templateState, setTemplateState)
 
     useEffect(() => {
         AppStateService.loadState()
@@ -33,6 +40,10 @@ export default function RootApp() {
 
     useEffect(() => {
         SettingsStateService.loadState()
+    }, [])
+
+    useEffect(() => {
+        TaskTemplateStateService.loadState()
     }, [])
 
     useEffect(() => {
