@@ -56,7 +56,7 @@ Your app is ready to be deployed!
 ```
 "browser_specific_settings": {
     "gecko": {
-      "id": "{e1a10003-0d34-47a2-8494-531ccf9a2314}",
+      "id": "<organizeYou_key>",
       "strict_min_version": "42.0"
     }
   }
